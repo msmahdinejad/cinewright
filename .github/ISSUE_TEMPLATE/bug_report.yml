@@ -1,0 +1,27 @@
+name: Bug report
+description: Something does not render, crashes, looks wrong or the skill gives bad guidance
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks! The more exact the reproduction, the faster the fix. **Run `node skills/pure-code-video/scripts/doctor.mjs` and paste its output below.**"
+  - type: textarea
+    id: what
+    attributes: { label: What happened, description: "What did you expect, and what did you get? Screenshots / a contact sheet help (`render.mjs sheet`).", placeholder: "…" }
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes: { label: How to reproduce, description: "Commands you ran (scaffold template, render flags) or the prompt you gave your agent.", render: bash }
+    validations: { required: true }
+  - type: textarea
+    id: doctor
+    attributes: { label: "`doctor.mjs` output", render: text }
+    validations: { required: true }
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent (if the problem is about the skill's guidance)
+      options: [Not applicable, Codex CLI, Codex app, Claude Code, Cursor, Gemini CLI, Other]
+  - type: input
+    id: version
+    attributes: { label: Skill version, placeholder: "2.0.0 (see CHANGELOG / package.json)" }

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><!-- EXAMPLE — All FX.bg shader backgrounds with their default colours.
+     contact sheet:  node tools/render.mjs sheet --page examples/backgrounds.html --markers --cols 5 --tile 400
+     Read the source: it is the shortest working usage of the engine. -->
+<title>fx backgrounds</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style></head>
+<body><canvas id="out"></canvas>
+<script src="../lib/kit.js"></script><script src="../lib/post.js"></script><script src="../lib/gfx.js"></script><script src="../lib/fx.js"></script>
+<script>
+'use strict';
+const Q = K.params(), W = Q.w || 960, H = Q.h || 540, FPS = 30, names = FX.bgs, DUR = names.length;
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, markers: names.map((n, i) => ({ t: i + .5, label: n })) };
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx);
+function renderFrame(t) {
+  const i = Math.min(names.length - 1, Math.floor(t));
+  gfx.time(4 + (t - i) * 2); post.begin([0, 0, 0, 1]);
+  fx.bg(names[i], {});
+  post.end({ frame: Math.round(t * FPS), bloom: .5, threshold: .7, grain: .02, vignette: .25 });
+}
+window.renderFrame = renderFrame; window.ready = Promise.resolve(true);
+</script></body></html>

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use pure-code-video in research, a product or a publication, please cite it as below."
+title: "pure-code-video: an agent skill for making cinema-grade videos entirely from code"
+type: software
+authors:
+  - family-names: Mahdinejad
+    given-names: Mohammad Saleh
+repository-code: "https://github.com/msmahdinejad/pure-code-video"
+license: MIT
+version: 2.0.0
+date-released: "2026-10-05"
+keywords:
+  - agent-skill
+  - codex
+  - claude-code
+  - motion-graphics
+  - webgl
+  - procedural-video
+  - persian

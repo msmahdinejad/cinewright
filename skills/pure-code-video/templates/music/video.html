@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+<script id="cues" type="application/json">
+{ "bpm": 128, "duration": {{DUR}}, "t": { "title": 0.2, "drop": 3.75, "chorus": 7.5, "break": 11.25, "final": 13.125 } }
+</script>
+<script src="lib/kit.js"></script>
+<script src="lib/post.js"></script>
+<script>
+'use strict';
+/* Audio-reactive visualiser. Picture = f(t, analysis): tools/analyze-audio.mjs turned the sound into envelopes.json
+   (band levels, 32-band spectrum, onsets per band, beat grid). Nothing here listens to audio at render time — it all reads that file,
+   so any frame can be rendered in any order. To use your own song: put it at audio.wav, run  node tools/analyze-audio.mjs audio.wav . */
+const CUES = JSON.parse(document.getElementById('cues').textContent), Q = K.params();
+const W = Q.w || {{W}}, H = Q.h || {{H}}, FPS = Q.fps || {{FPS}}, DUR = CUES.duration, LANG = Q.q.get('lang') || '{{LANG}}';
+const COPY = LANG === 'fa' ? { title: 'ضرب‌آهنگ', artist: 'ساخته‌شده با کد' } : { title: 'Pulse', artist: 'made with code' };
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav', markers: Object.entries(CUES.t).map(([label, t]) => ({ t, label })) };
+
+const { E, seg, prog, clamp, lerp, TAU } = K, L = K.layout(W, H), u = L.u, T = CUES.t;
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const scene = K.canvas(W, H), g = scene.getContext('2d'), post = new Post(out);
+let A = null; const spec = new Float32Array(32);
+const font = { weight: 800, family: LANG === 'fa' ? K.FONTS.fa : K.FONTS.sans };
+const dust = K.field({ n: 220, seed: 12, life: [2, 5], t0: -3, spawn: (i, r) => ({ x: r() * W, y: r() * H, vx: (r() - .5) * 40, vy: -20 - r() * 60, size: .8 + r() * 2, color: r() < .5 ? '#ffffff' : '#99ffee' }) });
+const hueAt = t => 265 + 70 * Math.sin(t * .18) + (t > T.chorus ? 40 : 0);
+
+function renderFrame(t) {
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.shadowBlur = 0;
+  const master = A.level('master', t), sub = A.level('sub', t), high = A.level('high', t);
+  const kick = A.pulse(t, { band: 'sub', decay: .14 }), hat = A.pulse(t, { band: 'high', decay: .05 });
+  const hue = hueAt(t), c1 = K.oklch(.7, .19, hue), c2 = K.oklch(.78, .15, hue + 70), c3 = K.oklch(.72, .2, hue + 150);
+  // backdrop
+  g.fillStyle = K.gradient(g, 0, 0, 0, H, [[0, K.oklch(.1, .04, hue)], [1, K.oklch(.07, .03, hue + 40)]]); g.fillRect(0, 0, W, H);
+  K.glow(g, W / 2, H / 2, (700 + 500 * sub + 240 * kick) * u, c1, .18 + .35 * sub); K.glow(g, W * .1, H * .9, 900 * u, c3, .1 + .15 * master);
+  dust.draw(g, t, { glow: true, alpha: .4 + .5 * high });
+  g.save(); K.camera(g, W, H, { zoom: 1 + .03 * kick + .01 * master, rot: .02 * Math.sin(t * .3) });
+  // radial spectrum: 96 bars = the 32 bands mirrored three times
+  A.spectrum(t, spec); const cx = W / 2, cy = H * (L.vertical ? .42 : .5), R = 250 * u * (1 + .06 * kick), N = 96, rot = t * .12 + .5 * seg(t, T.chorus, T.chorus + 1);
+  const intro = T.drop < t ? 1 : .35 + .65 * seg(t, 0, T.drop);
+  g.save(); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
+  for (let i = 0; i < N; i++) {
+    const m = i % 32, band = (i % 64) < 32 ? m : 31 - m, v = spec[band], a = rot + i / N * TAU, len = (10 + 210 * v ** 1.4 * intro) * u;
+    g.strokeStyle = i % 3 === 0 ? c1 : i % 3 === 1 ? c2 : c3; g.globalAlpha = .55 + .45 * v; g.lineWidth = 7 * u;
+    g.beginPath(); g.moveTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); g.lineTo(cx + Math.cos(a) * (R + len), cy + Math.sin(a) * (R + len)); g.stroke();
+    g.globalAlpha *= .35; g.beginPath(); g.moveTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); g.lineTo(cx + Math.cos(a) * (R - len * .35), cy + Math.sin(a) * (R - len * .35)); g.stroke();
+  }
+  g.restore();
+  // core, kick shockwaves, snare sparks
+  K.glow(g, cx, cy, (120 + 160 * kick) * u, '#ffffff', .3 + .6 * kick); g.strokeStyle = K.rgba(c2, .8); g.lineWidth = 6 * u; K.circle(g, cx, cy, R * .93); g.stroke();
+  for (const o of A.onsets) { if (o.band !== 'sub' || o.v < .35) continue; const p = t - o.t; if (p < 0 || p > .8) continue; K.rings(g, p, cx, cy, { n: 1, life: .8, r0: R, r1: R * 3.2, width: 10 * u, color: c1 }); }
+  for (const o of A.onsets) { if (o.band !== 'mid' && o.band !== 'lowmid') continue; const p = t - o.t; if (p < 0 || p > .5) continue; K.sparks(g, p, cx, cy, { n: 40, life: .5, speed: 1400 * u, color: [c2, '#ffffff'], seed: Math.round(o.t * 100), width: 3 * u }); }
+  // line under the ring, from the spectrum
+  g.beginPath(); for (let i = 0; i < 64; i++) { const x = W * (.1 + .8 * i / 63), v = spec[Math.min(31, Math.round(Math.abs(i - 31.5)))], y = H * (L.vertical ? .82 : .86) - v * 80 * u * (1 + hat); i ? g.lineTo(x, y) : g.moveTo(x, y); } K.neon(g, c2, 4 * u, .7);
+  g.restore();
+  // titles
+  const a = seg(t, T.title, T.title + 1, E.outCubic) * (1 - seg(t, T.drop - .4, T.drop + .2));
+  if (a > 0) { K.text(g, COPY.title, W / 2, H * (L.vertical ? .12 : .15) - 24 * u * (1 - a), { ...font, size: 150 * u, fill: '#d8d8f4', alpha: a, glow: { color: c1, blur: 22 * u }, max: W * .86 }); K.text(g, COPY.artist, W / 2, H * (L.vertical ? .12 : .15) + 118 * u, { ...font, weight: 500, size: 42 * u, fill: 'rgba(225,225,245,.85)', alpha: a }); }   // kept off-white and above the ring: pure white + bloom = an unreadable blob
+  post.render(scene, { frame: K.frameIndex(t, FPS), bloom: .8, threshold: .5, streak: .25, ca: .002 + .012 * kick, grain: .04, vignette: .45, zoomBlur: .35 * kick, glitch: t > T.drop && t < T.drop + .12 ? .5 : 0,
+                       flash: [.05 * kick, .05 * kick, .08 * kick], fade: seg(t, DUR - .5, DUR - .02, E.inCubic) });
+}
+window.renderFrame = renderFrame;
+window.ready = Promise.all([K.loadFonts(['800 Inter', '500 Inter', '800 Vazirmatn', '500 Vazirmatn']), K.audioData('envelopes.json').then(a => { A = a; })]).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

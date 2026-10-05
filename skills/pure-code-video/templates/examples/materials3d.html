@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><!-- EXAMPLE — Scene3D materials × environments on a torus knot (chrome, gold, glass, toon, clay, holo, iridescent, wire…).
+     contact sheet:  node tools/render.mjs sheet --page examples/materials3d.html --markers --cols 4 --tile 500
+     Read the source: it is the shortest working usage of the engine. -->
+<title>3d materials + envs gallery</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style></head>
+<body><canvas id="out"></canvas>
+<script src="../lib/kit.js"></script><script src="../lib/post.js"></script><script src="../lib/gfx.js"></script><script src="../lib/fx.js"></script><script src="../lib/scene3d.js"></script>
+<script>
+'use strict';
+const Q = K.params(), W = Q.w || 960, H = Q.h || 540, FPS = 30;
+const items = [
+  ['chrome studio', 'studio', () => Mat.chrome()], ['gold sunset', 'sunset', () => Mat.gold()], ['glass night', 'night', () => Mat.glass({ color: '#6fe6b0', density: 1.4, thickness: 1.2 })], ['plastic softbox', 'softbox', () => Mat.plastic({ base: '#2a6bff' })],
+  ['clay gradient', 'gradient', () => Mat.clay({ base: '#ff9a7a' })], ['toon', 'gradient', () => Mat.toon({ base: '#ff4d8d', bands: 4 })], ['holo night', 'night', () => Mat.holo()], ['iridescent space', 'space', () => Mat.iridescent({ base: '#bbbbff' })],
+  ['wire', 'night', () => Mat.wire()], ['copper night', 'night', () => Mat.copper()], ['silver space', 'space', () => Mat.silver()], ['emissive', 'night', () => Mat.emissive('#ff3df2', 1.3)],
+];
+const DUR = items.length;
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, markers: items.map((n, i) => ({ t: i + .5, label: n[0] })) };
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), S3 = new Scene3D(gfx, { W, H }), fx = new FX(gfx);
+const cache = {};
+function build(i) {
+  const [, env, mk] = items[i]; const S = new Scene3D(gfx, { W, H }); S.env = Env[env](); S.floor({ y: -1.25, color: '#0a0a10', reflect: .45, fade: .03 });
+  const g = i === 8 ? Geo.torusKnot({ radius: 1.1, tube: .32, seg: 160, radial: 20 }).withBary() : Geo.torusKnot({ radius: 1.1, tube: .32, seg: 220, radial: 26 });
+  S.knot = S.mesh(g, mk()); S.cam.fov = 38; return S;
+}
+function renderFrame(t) {
+  const i = Math.min(items.length - 1, Math.floor(t)); const S = cache[i] || (cache[i] = build(i));
+  gfx.time(t); post.begin([0, 0, 0, 1]);
+  S.cam.pos = [Math.cos(t * .6) * 5.2, .9, Math.sin(t * .6) * 5.2]; S.cam.target = [0, -.1, 0]; S.knot.rot = [t * .4, t * .6, 0];
+  gfx.blit(S.render()); post.end({ frame: Math.round(t * FPS), bloom: .5, threshold: .8, grain: .02, vignette: .35 });
+}
+window.renderFrame = renderFrame; window.ready = Promise.resolve(true);
+</script></body></html>

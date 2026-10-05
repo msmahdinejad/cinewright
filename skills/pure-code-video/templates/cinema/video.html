@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- ONE timeline for picture AND sound (audio.mjs reads it). Seconds. BPM 120 → one beat = 0.5 s = 15 frames @30 fps; scenes start on bar/beat lines. -->
+<script id="cues" type="application/json">
+{ "bpm": 120, "duration": {{DUR}},
+  "t": { "open": 0, "hero": 3, "poster": 6, "city": 9, "ui": 12, "burst": 15, "end": 17 },
+  "hits": [3, 6, 7, 8, 9, 12, 15, 17] }
+</script>
+
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/gfx.js"></script><script src="lib/fx.js"></script><script src="lib/trans.js"></script>
+<script src="lib/stage.js"></script><script src="lib/scene3d.js"></script><script src="lib/parts.js"></script><script src="lib/type.js"></script><script src="lib/cine.js"></script>
+<script>
+'use strict';
+/* ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   CINEMA — a 20 s multi-technique film built on Stage (scenes + GPU transitions + camera).  Seven scenes, seven different engines:
+   1 open    GPU particles (Parts.Morph) forming the brand out of smoke over an aurora shader (FX.bg)
+   2 hero    puffy chrome 3D brand name (Geo.text + Mat.chrome) on a glossy floor, orbit camera, depth of field
+   3 poster  hard-cut kinetic typography (Type.poster / stack / outline / marquee) on flat colour
+   4 city    night-city fly-through (instanced boxes + lit windows + fog + DOF) with masked text
+   5 ui      a ring of glass-and-gradient UI cards as real 3D planes (canvas → texture), orbiting, reflected in the floor
+   6 burst   particle explosion that re-forms into the logo, shockwave refraction in post
+   7 end     calm gradient, logo mark + wordmark + tagline, long final hold
+   Replace COPY / palette, then rewrite scenes one by one — keep the structure: one idea per scene, one hero mover per moment, a transition motivated by the
+   picture. Pick ONE transition family for a real film (this file shows several so you can compare them in the contact sheet).
+   ════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════ 0. CONFIG ═══════════ */
+const CUES = JSON.parse(document.getElementById('cues').textContent), T = CUES.t, HITS = CUES.hits;
+const Q = K.params(), W = Q.w || {{W}}, H = Q.h || {{H}}, FPS = Q.fps || {{FPS}}, DUR = CUES.duration, LANG = Q.q.get('lang') || '{{LANG}}', FA = LANG === 'fa';
+const u = H / 1080, vertical = H > W * 1.1, minDim = Math.min(W, H * 1.35), vs = vertical ? .68 : 1;      // vs: scale 3D props down on tall frames
+const COPY = FA
+  ? { brand: 'آوا', poster: 'طراحی در حرکت', word: 'ریتم', city1: 'شهر بیدار می‌شود', city2: 'هر پنجره یک داستان', ui: 'همه‌چیز در یک نگاه', tag: 'هر لحظه، یک حرکت', cards: [['۱۲۰', 'فریم در ثانیه'], ['۱۲ms', 'تأخیر'], ['۲٫۴M', 'کاربر فعال']] }
+  : { brand: 'AURA', poster: 'DESIGN IN MOTION', word: 'RHYTHM', city1: 'The city wakes up', city2: 'Every window is a story', ui: 'Everything at a glance', tag: 'Every moment, in motion', cards: [['120', 'frames per second'], ['12 ms', 'latency'], ['2.4M', 'active users']] };
+const PAL = { ink: '#05060f', a: '#7cf2ff', b: '#ff4fa3', c: '#d9ff1f', paper: '#f2ede4', warm: '#ffd36b' };
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav', markers: Object.entries(T).map(([label, t]) => ({ t, label })) };
+const { E, seg, clamp } = K;
+
+/* ═══════════ 1. ENGINE ═══════════ */
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx), S = new Stage(post, gfx, { fps: FPS });
+const A = new Scene3D(gfx, { W, H }), B = new Scene3D(gfx, { W, H }), C = new Scene3D(gfx, { W, H });        // hero · city · ui worlds (scratch targets are shared)
+const R = K.rng(20260930);
+let MOR1, MOR2, EMI, cards = [];
+
+/* ═══════════ 2. WORLDS (built once in window.ready) ═══════════ */
+function buildHero() {
+  A.env = Env.studio({ colors: ['#07080d', '#fff1dc', PAL.a, PAL.b] }); A.floor({ y: -1.7, color: '#06070c', reflect: .55, fade: .02 }); A.fog = { color: '#05060f', density: .018 }; A.cam.fov = vertical ? 46 : 30;
+  A.word = A.mesh(Geo.text(COPY.brand, { height: 2.7, depth: .26 }), Mat.chrome({ coat: 0 }));
+  A.ring = A.mesh(Geo.torus(2.9, .05, 160, 12), Mat.emissive(PAL.a, 1.4), { pos: [0, .1, 0], rot: [Math.PI / 2, 0, 0] });
+  A.orbs = [0, 1, 2, 3, 4].map(i => A.mesh(Geo.sphere(.16 + i * .03, 28), i % 2 ? Mat.gold() : Mat.glass({ color: PAL.a, density: .8 }), { pos: [0, 0, 0] }));
+}
+function buildCity() {
+  B.env = Env.night({ colors: ['#05060e', PAL.b, PAL.a, '#7b4bff'] }); B.fog = { color: '#160f2c', density: .02, hDensity: .08, hRef: 1.5 }; B.cam.fov = vertical ? 60 : 42; B.cam.far = 400;
+  const list = []; for (let gx = -22; gx <= 22; gx++) for (let gz = -60; gz <= 8; gz++) { if (Math.abs(gx % 4) < 1) continue; const h = .5 + Math.pow(R(), 3) * 9 * (1 - Math.abs(gx) / 30), w = .7 + R() * .8;
+    list.push({ pos: [gx * 1.6, h / 2, gz * 1.6], scale: [w, h, w], color: [.12 + R() * .15, .1 + R() * .12, .2 + R() * .2] }); }
+  B.instances(Geo.box(1, 1, 1), Mat.pbr({ base: '#ffffff', metal: .2, rough: .35, coat: .4, windows: { on: .38, size: [.3, .45], color: PAL.warm } }), list);
+  B.mesh(Geo.plane(400, 400), Mat.pbr({ base: '#15121c', rough: .5 }), { pos: [0, 0, -40], rot: [-Math.PI / 2, 0, 0] });
+}
+function cardTex(big, small, hue, w = 800, h = 500) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, `hsl(${hue},70%,22%)`); gr.addColorStop(1, `hsl(${hue + 40},75%,8%)`);
+  g.fillStyle = gr; K.rr(g, 0, 0, w, h, 38); g.fill(); g.strokeStyle = `hsla(${hue + 20},90%,75%,.55)`; g.lineWidth = 4; K.rr(g, 3, 3, w - 6, h - 6, 36); g.stroke();
+  K.text(g, big, w / 2, h * .42, { size: 190, weight: 800, fill: '#fff', glow: { color: `hsl(${hue + 20},95%,65%)`, blur: 30 } }); K.text(g, small, w / 2, h * .74, { size: 52, weight: 500, fill: 'rgba(255,255,255,.75)' });
+  g.strokeStyle = `hsla(${hue + 20},95%,70%,.9)`; g.lineWidth = 6; g.lineCap = 'round'; g.beginPath(); for (let i = 0; i <= 40; i++) { const x = w * .14 + i * (w * .72 / 40), y = h * .9 - 22 - Math.pow(i / 40, 1.4) * 40 - Math.sin(i * .9 + hue) * 8; i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke();
+  return gfx.up(c);
+}
+function buildUI() {
+  C.env = Env.gradient({ colors: ['#06070f', '#2a2fff', PAL.b, PAL.warm], amount: .55 }); C.floor({ y: -1.9, color: '#06070d', reflect: .5, fade: .018 }); C.fog = { color: '#06070f', density: .02 }; C.cam.fov = vertical ? 50 : 34;
+  const plane = Geo.plane(3.7, 2.31, 1, 1);
+  cards = [0, 1, 2, 3, 4, 5, 6].map(i => { const [big, small] = COPY.cards[i % 3]; return C.mesh(plane, Mat.pbr({ base: '#ffffff', rough: .35, coat: .25, map: cardTex(big, small, [200, 320, 40, 260, 160, 350, 220][i]), emissive: '#000000' })); });
+}
+function buildParticles() {
+  const N = 50000, ring = Parts.shape('ring', { n: 20000, r: minDim * .22, thickness: 10 }), word = Parts.text(COPY.brand, { height: minDim * .16, n: 30000 });
+  MOR1 = new Parts.Morph(gfx, { count: N }); MOR1.shapes([Parts.cloud(N, { w: W * 1.1, h: H * .9 }), word]);
+  MOR2 = new Parts.Morph(gfx, { count: N }); MOR2.shapes([Parts.cloud(N, { w: W * 1.4, h: H * 1.2, d: 900 }), [...ring, ...word.map(p => [p[0], p[1] - minDim * .02, 0])]]);
+  EMI = new Parts.Emitter(gfx, { count: 24000 });
+  EMI.burst({ t0: T.burst, pos: [0, 0, 0], n: 9000, speed: [260 * u, 1500 * u], drag: 2.3, gravity: [0, -380 * u, 0], life: [1, 2.2], size: [1.6, 5], colors: ['#fff2c4', PAL.warm, PAL.b], glow: .3, flow: 40 });
+  EMI.burst({ t0: T.burst + .18, pos: [0, 0, 0], n: 6000, speed: [120 * u, 900 * u], drag: 1.8, gravity: [0, 160 * u, 0], life: [1.2, 2.6], size: [1.2, 3.4], colors: ['#c9f6ff', PAL.a, '#2a49ff'], angle: .9, dir: [0, 1, 0], glow: .3, sprite: 3 });
+  EMI.stream({ t0: 0, t1: DUR, n: 8000, spawn: { box: [W * 1.2, H * 1.2, 900] }, speed: [8, 30], life: [5, 9], dir: [0, 1, 0], flow: 30, size: [.9, 2.4], colors: ['#8fa8ff', '#ffffff', '#ffffff'], loop: true, glow: .22, drag: .5 });
+}
+const markDraw = (g, x, y, r, p, col = '#fff') => { g.save(); g.lineWidth = r * .1; g.lineCap = 'round'; g.strokeStyle = col; g.beginPath(); g.arc(x, y, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * clamp(p)); g.stroke(); g.fillStyle = col; g.globalAlpha *= clamp(p * 2 - 1); g.beginPath(); g.arc(x, y, r * .26, 0, 6.283); g.fill(); g.restore(); };
+
+/* ═══════════ 3. SCENES ═══════════ */
+S.timeline([
+  /* 1 · open — smoke becomes the name */
+  { id: 'open', at: T.open, look: { bloom: .8, threshold: .62, streak: .2, grain: .04 },
+    gl: ({ rt }, lt, t) => { fx.bg('nebula', { c: ['#010108', '#0e0a30', '#2a1a78', '#5a4ad0'], speed: 1.3, amt: .2, scale: .9 }, { to: rt });
+      MOR1.draw({ progress: E.inOutCubic(seg(lt, .4, 2.5)), t, colors: [PAL.a, '#b79bff'], flow: 340 * u, size: 1.8 * u, glow: .17, spread: .55, cam: { yaw: .25 * Math.sin(lt * .5), pitch: .06, dist: 1500 } }, { to: rt });
+      EMI.draw({ t, cam: { yaw: .15 * Math.sin(lt * .5) } }, { to: rt }); } },
+  /* 2 · hero — chrome name on a glossy floor */
+  { id: 'hero', at: T.hero, enter: ['zoomBlurCut', .5], look: { bloom: .55, threshold: .72, streak: .12, grain: .03 },
+    gl: ({ rt }, lt, t) => {
+      fx.bg('aurora', { c: ['#03040c', '#1fd0a0', PAL.a, PAL.b], speed: .4, amt: .25 }, { to: rt });
+      const pop = E.outBack(seg(lt, -.1, .8)) * vs; A.word.scale = [pop, pop, pop]; A.word.rot = [Math.sin(lt * .8) * .08, Math.sin(lt * .7) * .5 + (1 - pop) * 1.4, 0]; A.ring.scale = [vs * (1 + .05 * Math.sin(lt * 3)), 1, vs * (1 + .05 * Math.sin(lt * 3))]; A.ring.rot = [Math.PI / 2 + .25 * Math.sin(lt), lt * .8, 0];
+      A.orbs.forEach((o, i) => { const a = lt * (.9 + i * .13) + i * 1.3, r = 2.4 + i * .28; o.pos = [Math.cos(a) * r, Math.sin(a * 1.3 + i) * .7 + .2, Math.sin(a) * r * .55]; });
+      A.cam.pos = [Math.sin(lt * .5) * 1.8, .45, vertical ? 14 : 10.5]; A.cam.target = [0, .05, 0];
+      gfx.blit(A.render({ clear: [0, 0, 0, 0], dof: { focus: A.cam.pos[2], range: 3.5, blur: 12 } }), { to: rt, blend: 'alpha' }); } },
+  /* 3 · poster — hard cuts on the beat */
+  { id: 'poster', at: T.poster, enter: ['whip', .4, { dir: [1, 0] }], bg: null, look: { bloom: .12, threshold: .85, grain: .05, ca: .0035, vignette: .25 },
+    draw: (g, lt, t) => {
+      const beat = Math.floor(clamp(lt, 0, 2.99)), p = lt - beat, bgs = [PAL.ink, PAL.c, PAL.b], fg = [PAL.paper, PAL.ink, PAL.paper][beat]; g.fillStyle = bgs[beat]; g.fillRect(0, 0, W, H);
+      if (beat === 0) Type.poster(g, COPY.poster, W / 2, H / 2, W * (vertical ? .86 : .72), p, { each: .1, dur: .5, fills: [PAL.paper, PAL.c, PAL.paper], height: H * .78 });
+      if (beat === 1) { Type.stack(g, COPY.word, W / 2, H / 2, { n: 5, size: minDim * .15, fill: fg, outline: fg, gap: .8 }); for (const [y, s] of [[.08, -1], [.92, 1]]) Type.marquee(g, COPY.poster + '  ✦  ' + COPY.word + '  ✦', H * y, t, { size: 64 * u, speed: 260 * s, fill: fg, dir: 1 }); }
+      if (beat === 2) { const r = E.outExpo(clamp(p / .5)) * Math.hypot(W, H) * .5; g.fillStyle = PAL.ink; g.beginPath(); g.arc(W / 2, H / 2, r, 0, 6.283); g.fill(); Type.outline(g, COPY.word, W / 2, H / 2, clamp(p * 1.4), { size: minDim * .2, stroke: PAL.c, fill: PAL.c, glow: PAL.c }); } } },
+  /* 4 · city — fly between the towers */
+  { id: 'city', at: T.city, enter: ['glitch', .45], look: { bloom: .85, threshold: .7, streak: .16, grain: .035, vignette: .45 },
+    gl: ({ rt }, lt, t) => { const k = clamp((lt + .2) / 3.4); B.cam.pos = [Math.sin(k * 3) * .35, 2.4 + Math.sin(k * 5) * .45, 6 - k * 62]; B.cam.target = [Math.sin(k * 3 + .6) * 1.2, 2.6 + k * 1.4, 6 - k * 62 - 14];
+      gfx.blit(B.render({ dof: { focus: 18, range: 8, blur: 12 } }), { to: rt }); },
+    draw: (g, lt) => { const gr = g.createLinearGradient(0, 0, 0, H * .5); gr.addColorStop(0, 'rgba(5,6,15,.82)'); gr.addColorStop(1, 'rgba(5,6,15,0)'); g.fillStyle = gr; g.globalAlpha = seg(lt, 0, .5); g.fillRect(0, 0, W, H * .5); g.globalAlpha = 1;
+      Type.reveal(g, COPY.city1, W / 2, H * .15, lt - .1, { size: minDim * .062, fill: '#fff' }); Type.reveal(g, COPY.city2, W / 2, H * .15 + minDim * .09, lt - .7, { size: minDim * .04, fill: PAL.warm, weight: 500 }); } },
+  /* 5 · ui — cards in orbit */
+  { id: 'ui', at: T.ui, enter: ['iris', .7, { color: [.5, .7, 1] }], look: { bloom: .5, threshold: .78, grain: .03 },
+    gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: ['#0a0f3a', '#1f2bff', PAL.b, '#06070f'], speed: .4, amt: 1 }, { to: rt });
+      const n = cards.length; cards.forEach((c, i) => { const a = i * Math.PI * 2 / n + lt * .5, R_ = vertical ? 5.2 : 5.0; c.pos = [Math.sin(a) * R_, Math.sin(lt * .8 + i) * .12, Math.cos(a) * R_ - R_ * .6]; c.rot = [0, a, 0]; c.scale = [vs, vs, vs]; });
+      C.cam.pos = [Math.sin(lt * .3) * .8, .55, vertical ? 11.5 : 8.6]; C.cam.target = [0, .05, -3.2];
+      gfx.blit(C.render({ clear: [0, 0, 0, 0], dof: { focus: vertical ? 11.5 : 8.6, range: 3, blur: 10 } }), { to: rt, blend: 'alpha' }); },
+    draw: (g, lt) => Type.reveal(g, COPY.ui, W / 2, H * .92, lt - .2, { size: minDim * .045, fill: '#fff', weight: 600 }) },
+  /* 6 · burst — explode, then the cloud re-forms into the logo */
+  { id: 'burst', at: T.burst, enter: ['burn', .7, { color: [1, .55, .15] }], look: { bloom: .8, threshold: .62, knee: .5, streak: .22, grain: .04 },
+    gl: ({ rt }, lt, t) => { fx.bg('rays', { c: ['#03030a', PAL.b, PAL.warm, '#ffffff'], speed: .6, amt: .32 * Math.exp(-lt * 2.2) }, { to: rt });
+      MOR2.draw({ progress: E.inOutCubic(seg(lt, .25, 1.9)), t, colors: [PAL.warm, PAL.b], flow: 320 * u, size: 2.1 * u, glow: .27, spread: .45, cam: { yaw: .3 * Math.sin(lt), pitch: .08, dist: 1500 } }, { to: rt });
+      EMI.draw({ t, cam: { yaw: .3 * Math.sin(lt) } }, { to: rt }); } },
+  /* 7 · end — calm resolve */
+  { id: 'end', at: T.end, enter: ['blur', .9], look: { bloom: .6, threshold: .7, streak: .1, grain: .03 },
+    gl: ({ rt }, lt) => { fx.bg('gradient', { c: ['#0b0f2e', '#3a36d8', '#c2417f', '#070816'], speed: .18, amt: .6, scale: .55 }, { to: rt }); EMI.draw({ t: lt + T.end, cam: {} }, { to: rt }); },
+    draw: (g, lt, t) => { for (let k = 0; k < 3; k++) { const ph = (t * .6 + k / 3) % 1; g.strokeStyle = `rgba(210,225,255,${.3 * (1 - ph) * seg(lt, .3, 1)})`; g.lineWidth = 2.5 * u; g.beginPath(); g.arc(W / 2, H * .36, minDim * (.13 + ph * .32), 0, 6.283); g.stroke(); }   // sound-wave rings: secondary motion in the hold
+      const p = E.outCubic(seg(lt, .1, 1.1)); markDraw(g, W / 2, H * .36, minDim * .11, p, '#fff');
+      K.text(g, COPY.brand, W / 2, H * .36 + minDim * .21, { size: minDim * .11, weight: 800, fill: '#fff', alpha: seg(lt, .5, 1.3), glow: { color: PAL.a, blur: 24 * u } });
+      K.text(g, COPY.tag, W / 2, H * .36 + minDim * .33, { size: minDim * .04, weight: 500, fill: 'rgba(235,240,255,.9)', alpha: seg(lt, 1, 1.8), max: W * .84 }); } },
+]);
+// camera: one slow move per scene (push / drift / roll) + a punch and a shake on every hit + a breath of hand-held noise — the frame never sits still
+const camKeys = []; const move = (a, b, z0, z1, x0 = 0, x1 = 0, y0 = 0, y1 = 0, r0 = 0, r1 = 0) => camKeys.push({ t: a + .001, zoom: z0, x: x0, y: y0, rot: r0 }, { t: b - .001, zoom: z1, x: x1, y: y1, rot: r1 });
+move(T.open, T.hero, 1.0, 1.09, -.006, .006, .004, -.004); move(T.hero, T.poster, 1.0, 1.04, -.01, .01, 0, 0, .004, -.004); move(T.poster, T.city, 1.03, 1.0); move(T.city, T.ui, 1.0, 1.03, 0, 0, 0, 0, -.004, .004);
+move(T.ui, T.burst, 1.0, 1.05, .006, -.006); move(T.burst, T.end, 1.0, 1.035); move(T.end, DUR, 1.0, 1.06, 0, 0, .004, -.004);
+const baseCam = Cine.path(camKeys, { ease: 'inOutSine' });
+S.camera = t => Cine.mix(baseCam(t), Cine.punch(t, HITS, { amp: .016, decay: .22 }), Cine.shake(t, HITS, { amp: .008 }), Cine.handheld(t, { amp: .0035, roll: .003 }));
+S.look((t, base) => {
+  const fadeIn = 1 - seg(t, 0, .6), fadeOut = seg(t, DUR - .9, DUR - .03, E.inCubic), p = K.pulse(t, HITS, .1), shock = [];
+  for (const h of [T.hero, T.burst]) if (t >= h && t < h + .9) shock.push([.5, .5, (t - h) * 1.1, Math.exp(-(t - h) * 3.2) * .7]);
+  return { ca: (base.ca ?? .0018) + .005 * p, fade: Math.max(fadeIn, fadeOut), shock, flash: [.05 * p, .05 * p, .06 * p], center: [.5, .5] }; });
+
+function renderFrame(t) { S.render(t); }
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['800 Inter', '500 Inter', '600 Inter', '800 Vazirmatn', '500 Vazirmatn']).then(() => { buildHero(); buildCity(); buildUI(); buildParticles(); return S.ready(); }).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

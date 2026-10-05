@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><!-- EXAMPLE — Every GPU transition (Trans.list) at 50 % progress between two test scenes.
+     contact sheet:  node tools/render.mjs sheet --page examples/transitions.html --markers --cols 6 --tile 330
+     Read the source: it is the shortest working usage of the engine. -->
+<title>transitions gallery</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style></head>
+<body><canvas id="out"></canvas>
+<script src="../lib/kit.js"></script><script src="../lib/post.js"></script><script src="../lib/gfx.js"></script><script src="../lib/trans.js"></script>
+<script>
+'use strict';
+const Q = K.params(), W = Q.w || 960, H = Q.h || 540, FPS = 30, names = Trans.list, DUR = names.length;
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, markers: names.map((n, i) => ({ t: i + .5, label: n })) };
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post);
+function mkScene(c1, c2, label, txt) {
+  const cv = K.canvas(W, H), g = cv.getContext('2d');
+  const gr = g.createLinearGradient(0, 0, W, H); gr.addColorStop(0, c1); gr.addColorStop(1, c2); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.strokeStyle = 'rgba(255,255,255,.25)'; g.lineWidth = 2; for (let x = 0; x < W; x += 60) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); } for (let y = 0; y < H; y += 60) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  g.fillStyle = 'rgba(255,255,255,.9)'; g.beginPath(); g.arc(W * .72, H * .36, H * .2, 0, 6.283); g.fill();
+  K.text(g, label, W * .3, H * .55, { size: H * .55, weight: 800, fill: '#fff' }); K.text(g, txt, W * .5, H * .88, { size: H * .12, weight: 800, fill: '#fff' });
+  return cv;
+}
+let A, B;
+function renderFrame(t) {
+  const i = Math.min(names.length - 1, Math.floor(t)), p = t - i;
+  gfx.time(t); post.begin([0, 0, 0, 1]);
+  A = A || gfx.up(mkScene('#ff5e3a', '#7a1fa2', 'A', 'سلام'));
+  B = B || gfx.up(mkScene('#00c2ff', '#0b2a6f', 'B', 'hello'));
+  const r = Trans.run(gfx, names[i], A, B, p);
+  post.end({ frame: Math.round(t * FPS), bloom: 0, grain: 0, vignette: 0, ca: .0005 + (r.look.ca || 0) * Math.sin(Math.PI * r.p), glitch: (r.look.glitch || 0) * Math.sin(Math.PI * r.p), zoomBlur: (r.look.zoomBlur || 0) * Math.sin(Math.PI * r.p) });
+}
+window.renderFrame = renderFrame; window.ready = K.loadFonts(['800 Vazirmatn', '800 Inter']).then(() => true);
+</script></body></html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- Timeline shared by picture and sound. "sfx" is a list of [sound, cue-or-seconds, options] that audio.mjs plays; edit a time in "t" and both the UI event and its click sound move. -->
+<script id="cues" type="application/json">
+{ "bpm": 110, "duration": {{DUR}},
+  "t": { "problem": 0, "demo": 4.0, "typing": 5.0, "click": 8.2, "toast": 8.6, "dash": 10.6, "cta": 14.2 },
+  "hits": [4.0, 10.6, 14.2],
+  "sfx": [ ["whoosh", "demo-0.3"], ["type", "typing", { "until": 7.6, "every": 0.11 }], ["click", "click"], ["success", "toast"], ["whoosh", "dash-0.3"], ["pop", "dash+0.5"], ["pop", "dash+0.7"], ["pop", "dash+0.9"], ["whoosh", "cta-0.3"], ["chime", "cta+0.3"] ] }
+</script>
+
+<script src="lib/kit.js"></script>
+<script src="lib/post.js"></script>
+<script src="lib/ui.js"></script>
+<script>
+'use strict';
+/* Product explainer: problem → demo (typing, cursor click, toast) → dashboard (charts) → call to action.
+   Built from lib/ui.js components on one canvas, then post.js grade. Everything here is a function of t. */
+const CUES = JSON.parse(document.getElementById('cues').textContent);
+const Q = K.params();
+const W = Q.w || {{W}}, H = Q.h || {{H}}, FPS = Q.fps || {{FPS}}, DUR = CUES.duration, LANG = Q.q.get('lang') || '{{LANG}}', fa = LANG === 'fa';
+const COPY = fa
+  ? { problem: 'زمان زیادی صرف کارهای تکراری می‌شود', chat: [['them', 'گزارش هفتگی آماده شد؟'], ['me', 'هنوز نه، داده‌ها پراکنده‌اند…'], ['them', 'بدون اتوماسیون این هر هفته تکرار می‌شود']], head: 'یک دستور، یک گزارش', url: 'app.example.com', prompt: 'گزارش فروش هفتهٔ گذشته را بساز', btn: 'ساخت گزارش', toast: ['گزارش آماده است', 'در ۳ ثانیه ساخته شد'], dash: 'همه‌چیز در یک نگاه', cta: 'همین امروز شروع کن', ctaBtn: 'شروع رایگان', code: '$ npx report --week last\n✔ گزارش ساخته شد' }
+  : { problem: 'Hours go to repetitive work', chat: [['them', 'Is the weekly report ready?'], ['me', 'Not yet — the data is everywhere…'], ['them', 'Without automation this repeats every week']], head: 'One command, one report', url: 'app.example.com', prompt: 'Build last week’s sales report', btn: 'Generate report', toast: ['Report ready', 'Built in 3 seconds'], dash: 'Everything at a glance', cta: 'Start today', ctaBtn: 'Get started free', code: '$ npx report --week last\n✔ report generated' };
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav', markers: Object.entries(CUES.t).map(([label, t]) => ({ t, label })) };
+
+const { E, clamp, lerp, prog, seg } = K, T = CUES.t, HITS = CUES.hits, L = K.layout(W, H), u = L.u, vertical = L.vertical;
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const scene = K.canvas(W, H), g = scene.getContext('2d'), post = new Post(out);
+const pal = K.palette(255, { mode: 'analogous' }); UI.theme.accent = pal.a; UI.theme.accent2 = pal.c;
+const scenes = K.scenes([['problem', T.problem], ['demo', T.demo], ['dash', T.dash], ['cta', T.cta]], DUR);
+const font = { weight: 800, family: fa ? K.FONTS.fa : K.FONTS.sans };
+const dust = K.field({ n: 90, seed: 8, life: [4, 8], t0: -4, spawn: (i, r) => ({ x: r() * W, y: r() * H, vx: (r() - .5) * 14, vy: -6 - r() * 14, size: .6 + r() * 1.4, color: '#fff' }) });
+
+function background(t) {
+  g.fillStyle = K.gradient(g, 0, 0, W, H, [[0, K.oklch(.16, .05, 255)], [1, K.oklch(.11, .04, 285)]]); g.fillRect(0, 0, W, H);
+  K.glow(g, W * .15, H * .2, 800 * u, pal.a, .18); K.glow(g, W * .9, H * .85, 900 * u, pal.c, .12); dust.draw(g, t, { glow: true, alpha: .5 });
+}
+const heading = (txt, lt, y, size = 76) => K.words(g, txt, W / 2, y, lt, { ...font, size: size * u, fill: '#fff', max: W * .86, dur: .55, each: .07 });
+
+/* ── 1. problem ── */
+function sProblem(lt) {
+  heading(COPY.problem, lt - .2, H * (vertical ? .16 : .17), 74);
+  const cw = W * (vertical ? .9 : .56), cx = (W - cw) / 2, items = COPY.chat.map(([who, text], i) => ({ who, text, at: .9 + i * .9 }));
+  UI.fit(g, cx, H * (vertical ? .3 : .3), cw, 720, 520, () => UI.chat(g, 0, 0, 720, items, lt, { size: 30, gap: 20 }));   // designed at 720 units wide, scaled to the frame
+}
+/* ── 2. demo: typing → cursor → click → toast.  The browser is designed at 1000×620 "screen" units and scaled up to fill the frame ── */
+function sDemo(lt, t) {
+  const bw = W * (vertical ? .92 : .66), k = bw / 1000, bx = (W - bw) / 2, by = H * (vertical ? .3 : .24), p = E.outExpo(prog(lt, 0, .7));
+  heading(COPY.head, lt - .1, H * (vertical ? .17 : .12), 66);
+  const typed = K.typed(COPY.prompt, prog(t, T.typing, T.typing + 2.6)), typing = t > T.typing && t < T.click, done = t > T.click + .3;
+  const IN = { x: 80, y: 220, w: 840, h: 66 }, BTN = { x: 320, y: 340, w: 360, h: 72 };
+  g.save(); g.translate(0, (1 - p) * 70 * u); g.globalAlpha *= clamp(p * 2);
+  UI.fit(g, bx, by, bw, 1000, 620, () => {
+    const page = UI.browser(g, 0, 0, 1000, 620, { url: COPY.url, tabs: [fa ? 'داشبورد' : 'Dashboard'] });
+    UI.input(g, IN.x, IN.y, IN.w, IN.h, typed, { placeholder: fa ? 'دستور را بنویسید…' : 'Type a command…', focus: t > T.typing - .3 ? 1 : 0, caret: typing, t, size: 26 });
+    UI.button(g, BTN.x, BTN.y, BTN.w, BTN.h, done ? (fa ? '✔ انجام شد' : '✔ Done') : COPY.btn, { primary: !done, color: done ? '#2bb673' : undefined, press: t > T.click - .1 && t < T.click + .2 ? 1 : 0, hover: t > T.click - .5 ? 1 : 0, size: 26 });
+    UI.toast(g, 560, 118, 400, t - T.toast, { title: COPY.toast[0], body: COPY.toast[1], icon: 'check', color: '#37d67a', life: 3.2 });
+  });
+  g.restore();
+  const P = (x, y) => [bx + x * k, by + y * k];                                   // design units → frame pixels (for the cursor)
+  UI.cursor(g, t, [[T.demo, ...P(1100, 700)], [T.typing, ...P(500, 200), E.inOutCubic, .15], [T.click - .7, ...P(BTN.x + BTN.w * .5, BTN.y + BTN.h * .55), E.inOutCubic, -.2], [T.click, ...P(BTN.x + BTN.w * .5, BTN.y + BTN.h * .55)], [T.click + 1.2, ...P(1050, 600), E.inOutCubic, .1]], [T.click], { scale: 1.5 * k * 1.3 });
+}
+/* ── 3. dashboard: charts draw themselves ── */
+function sDash(lt) {
+  heading(COPY.dash, lt - .1, H * (vertical ? .12 : .12), 66);
+  const ww = W * (vertical ? .92 : .76), dw = 1000, dh = vertical ? 900 : 560, k = ww / dw, wx = (W - ww) / 2, wy = H * (vertical ? .2 : .2), p = E.outExpo(prog(lt, 0, .7));
+  g.save(); g.translate(0, (1 - p) * 60 * u); g.globalAlpha *= clamp(p * 2);
+  UI.fit(g, wx, wy, ww, dw, dh, () => {
+    const c = UI.window(g, 0, 0, dw, dh, { title: 'Analytics' }), pad = 46, lw = vertical ? c.w - 2 * pad - 40 : 540;
+    UI.lineChart(g, c.x + pad + 44, c.y + pad, lw, vertical ? 240 : c.h - 2 * pad - 40, [12, 18, 15, 26, 34, 31, 48, 62], seg(lt, .5, 2.6, E.inOutCubic), { labels: fa ? ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'] : ['M', 'T', 'W', 'T', 'F', 'S', 'S'], size: 15, fa });
+    const rx = vertical ? c.x + pad : c.x + pad + 44 + lw + 60, rw = vertical ? c.w - 2 * pad : c.w - (rx - c.x) - pad, ry = vertical ? c.y + 380 : c.y + pad + 20;
+    UI.barChart(g, rx, ry, rw, vertical ? 190 : 170, [30, 55, 42, 78], lt - 1.0, { size: 15, labels: ['A', 'B', 'C', 'D'], fa });
+    const dcx = rx + rw / 2, dcy = vertical ? c.y + 720 : c.y + c.h - 120, pr = seg(lt, 1.2, 2.6, E.outCubic);
+    UI.donut(g, dcx, dcy, vertical ? 84 : 70, [{ v: 62, color: pal.a }, { v: 25, color: pal.c }, { v: 13, color: '#ffb020' }], pr);
+    K.text(g, K.fmtNum(Math.round(62 * pr), { fa }) + (fa ? '٪' : '%'), dcx, dcy, { ...font, size: 26, fill: '#fff' });
+  });
+  g.restore();
+}
+/* ── 4. call to action ── */
+function sCta(lt, t) {
+  K.slam(g, lt - .1, W / 2, H * (vertical ? .32 : .34), () => K.text(g, COPY.cta, 0, 0, { ...font, size: 110 * u, fill: '#fff', max: W * .86, glow: { color: pal.a, blur: 34 * u } }), { from: 2.2 });
+  const bw = 520 * u, bh = 104 * u, p = E.outBack(prog(lt, .6, 1.1)), pulse = .5 + .5 * Math.sin(lt * 5);
+  g.save(); g.translate(W / 2, H * (vertical ? .5 : .56)); g.scale(p, p); UI.button(g, -bw / 2, -bh / 2, bw, bh, COPY.ctaBtn, { hover: pulse * .8, size: 40 * u }); g.restore();
+  const cw = W * (vertical ? .86 : .5), ch = 170 * u; g.save(); g.globalAlpha = seg(lt, 1.2, 1.7); UI.code(g, (W - cw) / 2, H * (vertical ? .62 : .68), cw, ch, COPY.code, { t: lt - 1.4, size: 26 * u, line: false }); g.restore();
+}
+
+function renderFrame(t) {
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.shadowBlur = 0;
+  background(t);
+  const sc = scenes.at(t), fadeIn = seg(sc.lt, 0, .35, E.outCubic), fadeOut = seg(sc.left, 0, .25, E.outCubic);   // 1 in the middle of a scene, easing to 0 at its end
+  g.save(); K.camera(g, W, H, { zoom: (1 + .02 * t / DUR) * K.punch(t, HITS, { amp: .012 }) });
+  g.globalAlpha = sc.i === 0 ? fadeOut : fadeIn * fadeOut;
+  ({ problem: sProblem, demo: sDemo, dash: sDash, cta: sCta })[sc.id](sc.lt, t);
+  g.restore();
+  post.render(scene, { frame: K.frameIndex(t, FPS), bloom: .35, threshold: .7, ca: .0015, grain: .035, vignette: .35, fade: seg(t, DUR - .4, DUR - .02, E.inCubic) });
+}
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['800 Inter', '500 Inter', '700 Inter', '800 Vazirmatn', '500 Vazirmatn', '700 Vazirmatn', '500 JetBrains Mono']).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

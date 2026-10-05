@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "id": "showreel-15s__codex-skill-v1-1",
+  "kind": "measured",
+  "task": "showreel-15s",
+  "condition": "skill-v1",
+  "label": "Codex + skill v1.1",
+  "agent": "codex",
+  "model": "gpt-6.1-sol",
+  "skill": "1.1",
+  "date": "2026-10-05",
+  "wallSeconds": null,
+  "note": "The maintainer's own run on 2026-09-30 with the first public version of the skill (prompt 1 of the feedback round).",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 8.85,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 3.5,
+      "truePeak": -1.3,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0204,
+      "mean": 0.0315,
+      "quietPct": 11,
+      "cuts": 3,
+      "longestStatic": 1.5,
+      "curve": "█▂▂▁███▅████▅█▃▂▃▁█▃▄▂▅█▁▁▁▁"
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": null,
+  "project": null,
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  }
+}

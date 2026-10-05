@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><!-- EXAMPLE — the 12 bundled fonts with Latin + Persian samples (what each one is for).
+     contact sheet:  node tools/render.mjs sheet --page examples/fonts.html --markers --cols 4 --tile 480
+     Use:  family: K.FONTS.display  ·  await K.loadFonts(['400 Anton', '400 Lalezar'])  — load every font you draw with, or the first frame uses a fallback. -->
+<title>fonts specimen</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style></head>
+<body><canvas id="out"></canvas>
+<script src="../lib/kit.js"></script>
+<script>
+'use strict';
+const Q = K.params(), W = Q.w || 960, H = Q.h || 540, FPS = 30;
+// [label, CSS stack key, weight, Latin sample, Persian sample, note, background, ink]
+const F = [
+  ['Inter · sans', 'sans', 700, 'Clear and neutral', 'روشن و بی‌ادعا', 'UI, captions, calm', '#10131f', '#f2f5ff'],
+  ['Vazirmatn · fa', 'fa', 800, 'Persian workhorse', 'خوانا و مدرن', '100–900, Latin too', '#0d1b2a', '#ffffff'],
+  ['JetBrains Mono', 'mono', 700, 'const speed = 0.2s', 'کد و ترمینال', 'code, data, terminal', '#06100b', '#7dff9b'],
+  ['Anton · display', 'display', 400, 'MAKE IT LOUD', 'سریع و قوی', 'posters, sport, impact (Latin)', '#ffcf3a', '#111111'],
+  ['Playfair · serif', 'serif', 800, 'Quiet luxury', 'ظریف و اصیل', 'editorial, premium', '#f3ece0', '#2b1d12'],
+  ['Space Grotesk', 'grotesk', 700, 'Future, engineered', 'فناوری و دقت', 'tech, startup, product', '#0a0f1f', '#8fb0ff'],
+  ['Caveat · hand', 'hand', 700, 'Hand-written note', 'یادداشت دستی', 'friendly, personal', '#fff4d6', '#1d3a8a'],
+  ['Fredoka · rounded', 'rounded', 700, 'Soft and playful', 'نرم و بازیگوش', 'kids, fun, social', '#ffd6e8', '#7a1fa2'],
+  ['Lalezar · fa display', 'faDisplay', 400, 'Lalezar bold', 'لاله‌زار؛ تیتر پرقدرت', 'Persian headlines', '#1b1464', '#ffd23f'],
+  ['Amiri · fa classic', 'faClassic', 700, 'Amiri classic', 'نسخ کلاسیک و باوقار', 'literary, heritage', '#0a1030', '#f5e6c8'],
+  ['Reem Kufi · fa kufi', 'faKufi', 700, 'Reem Kufi', 'کوفی هندسی و مدرن', 'geometric, bold, brand', '#06121f', '#19c3b1'],
+  ['Aref Ruqaa', 'faRuqaa', 700, 'Aref Ruqaa', 'خط رقعه، گرم و دستی', 'calligraphic, warm', '#2a0f12', '#ffcf9a'],
+  ['Noto Nastaliq', 'faNastaliq', 700, 'Nastaliq', 'نستعلیق برای تیتر شعر', 'poetry, titles (tall lines!)', '#14102a', '#e8d8ff'],
+  ['Rakkas · fun', 'faFun', 400, 'Rakkas', 'شاد و ضخیم', 'playful Persian display', '#103c34', '#ffe27a'],
+];
+window.VIDEO = { width: W, height: H, fps: FPS, duration: F.length, markers: F.map((f, i) => ({ t: i + .5, label: f[0] })) };
+const out = document.getElementById('out'); out.width = W; out.height = H; const g = out.getContext('2d');
+function renderFrame(t) {
+  const i = Math.min(F.length - 1, Math.floor(t)), [name, key, w, en, fa, note, bg, ink] = F[i], fam = K.FONTS[key]; g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  K.text(g, name, W * .05, H * .09, { size: H * .045, weight: 600, family: K.FONTS.sans, fill: ink, alpha: .6, align: 'left' }); K.text(g, note, W * .95, H * .09, { size: H * .035, weight: 500, family: K.FONTS.sans, fill: ink, alpha: .45, align: 'right' });
+  K.text(g, en, W / 2, H * .38, { size: H * .17, weight: w, family: fam, fill: ink, max: W * .9, dir: 'ltr' }); K.text(g, fa, W / 2, H * .68, { size: H * (key === 'faNastaliq' ? .1 : .15), weight: w, family: fam, fill: ink, max: W * .9, dir: 'rtl' });
+}
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['700 Inter', '800 Vazirmatn', '700 JetBrains Mono', '400 Anton', '800 Playfair Display', '700 Space Grotesk', '700 Caveat', '700 Fredoka', '400 Lalezar', '700 Amiri', '700 Reem Kufi', '700 Aref Ruqaa', '700 Noto Nastaliq Urdu', '400 Rakkas']).then(() => true);
+</script></body></html>

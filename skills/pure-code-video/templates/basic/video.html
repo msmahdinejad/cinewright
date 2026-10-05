@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- ONE timeline for picture AND sound. audio.mjs reads this block; times are seconds. Change a time here and both move. -->
+<script id="cues" type="application/json">
+{
+  "bpm": 120,
+  "duration": {{DUR}},
+  "t": { "hook": 0, "hit": 0.5, "cards": 3.0, "chart": 6.0, "logo": 9.0, "outro": 11.2 },
+  "hits": [0.5, 3.0, 6.0, 9.0]
+}
+</script>
+
+<script src="lib/kit.js"></script>
+<script src="lib/post.js"></script>
+<script>
+'use strict';
+/* ═══════════════ 0. CONFIG — edit this block to re-skin the whole video ═══════════════ */
+const CUES = JSON.parse(document.getElementById('cues').textContent);
+const Q = K.params();
+const W = Q.w || {{W}}, H = Q.h || {{H}}, FPS = Q.fps || {{FPS}}, DUR = CUES.duration;
+const LANG = Q.q.get('lang') || '{{LANG}}';
+const HUE = 262;                                                     // one hue → whole palette (K.palette uses OKLCH)
+const COPY = {
+  en: { t1: 'Made', t2: 'from code', sub: 'Every frame is a pure function of time.', h2: 'Three ideas', cards: [['Deterministic', 100, '%'], ['Frames', 1800, ''], ['Samples', 0, '']],
+        h3: 'Signal in, motion out', big: 12, bigUnit: '×', logo: 'Pure Code', tag: 'video, written as software' },
+  fa: { t1: 'ساخته‌شده', t2: 'با کد', sub: 'هر فریم فقط تابعی از زمان است.', h2: 'سه ایده', cards: [['قطعی', 100, '٪'], ['فریم', 1800, ''], ['نمونهٔ آماده', 0, '']],
+        h3: 'سیگنال وارد، حرکت خارج', big: 12, bigUnit: '×', logo: 'کد خالص', tag: 'ویدیو، به‌شکل نرم‌افزار' },
+}[LANG] || {};
+COPY.cards ??= [];
+
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav',
+                 markers: [['hook', 0], ['title hit', CUES.t.hit], ['cards', CUES.t.cards], ['chart', CUES.t.chart], ['logo', CUES.t.logo], ['outro', CUES.t.outro]].map(([label, t]) => ({ t, label })) };
+
+/* ═══════════════ 1. SETUP ═══════════════ */
+const { E, clamp, lerp, prog, seg } = K;
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const scene = K.canvas(W, H), g = scene.getContext('2d');          // everything is drawn here, then Post adds bloom/grain/etc. onto `out`
+const post = new Post(out);
+const frost = new K.Frost(W, H);
+const L = K.layout(W, H), u = L.u, vertical = L.vertical;
+const pal = K.palette(HUE, { mode: 'analogous' });
+const scenes = K.scenes([['hook', CUES.t.hook], ['cards', CUES.t.cards], ['chart', CUES.t.chart], ['logo', CUES.t.logo]], DUR);
+const HITS = CUES.hits;
+const dust = K.field({ n: 180, seed: 4, life: [3, 7], t0: -3, spawn: (i, r) => ({ x: r() * W, y: r() * H, vx: (r() - .5) * 26, vy: -8 - r() * 26, size: .7 + r() * 1.8, color: r() < .3 ? pal.b : '#ffffff' }) });
+const fonts = { display: { weight: 800, family: LANG === 'fa' ? K.FONTS.fa : K.FONTS.sans }, body: { weight: 500, family: LANG === 'fa' ? K.FONTS.fa : K.FONTS.sans } };
+const grad = (x0, x1) => (c, o) => K.gradient(c, o?.x0 ?? x0, 0, o?.x1 ?? x1, 0, [[0, pal.a], [1, pal.c]]);   // text fill: brand gradient across the measured text
+
+/* ═══════════════ 2. BACKGROUND (shared by all scenes) ═══════════════ */
+function background(t) {
+  g.fillStyle = K.gradient(g, 0, 0, 0, H, [[0, pal.bg], [1, K.mix(pal.bg, pal.bg2, .9)]]); g.fillRect(0, 0, W, H);
+  const k = .8 + .2 * Math.sin(t * .8);
+  K.glow(g, W * .18 + 140 * u * Math.sin(t * .35), H * .28 + 90 * u * Math.cos(t * .27), 900 * u, pal.a, .30 * k);
+  K.glow(g, W * .86 + 90 * u * Math.cos(t * .3), H * .78 + 120 * u * Math.sin(t * .33), 950 * u, pal.b, .22 * k);
+  K.glow(g, W * .5, H * .5, 700 * u, pal.c, .06 + .05 * K.pulse(t, HITS, .25));
+  dust.draw(g, t, { glow: true, alpha: .75 });
+}
+
+/* ═══════════════ 3. SCENES — each gets lt = seconds since the scene began ═══════════════ */
+const S = {};
+
+// ── hook: a spark → ring burst → the title slams in, words arrive one after the other
+S.hook = lt => {
+  const cx = W / 2, cy = H * (vertical ? .42 : .45), hit = CUES.t.hit;
+  const spark = seg(lt, 0, hit, E.inCubic);                                       // the dot swells until the hit
+  if (lt < hit + .25) { K.glow(g, cx, cy, (26 + 220 * spark) * u, pal.glow, .35 + .65 * spark); g.fillStyle = '#fff'; K.circle(g, cx, cy, (3 + 5 * spark) * u); g.fill(); }
+  K.rings(g, lt - hit, cx, cy, { n: 3, r1: 620 * u, width: 12 * u, color: [pal.a, pal.c, '#fff'] });
+  K.sparks(g, lt - hit, cx, cy, { n: 130, speed: 1500 * u, width: 3 * u, color: [pal.glow, '#fff', pal.b], seed: 2 });
+  const size = (vertical ? 190 : 250) * u, y1 = cy - size * .45, y2 = cy + size * .62, out_ = seg(lt, 2.55, 3, E.inCubic);
+  g.save(); g.translate(cx, cy); g.scale(1 + .18 * out_, 1 + .18 * out_); g.translate(-cx, -cy); g.globalAlpha = 1 - out_;
+  K.slam(g, lt - hit, cx, y1, () => K.text(g, COPY.t1, 0, 0, { ...fonts.display, size, fill: '#fff', max: W * .86, ink: true }), { from: 2.6 });
+  K.slam(g, lt - hit - .14, cx, y2, () => K.text(g, COPY.t2, 0, 0, { ...fonts.display, size, fill: grad(-W * .3, W * .3), glow: { color: pal.a, blur: 34 * u }, max: W * .86, ink: true }), { from: 2.6 });
+  K.words(g, COPY.sub, cx, cy + size * 1.42, lt - 1.35, { ...fonts.body, size: 46 * u, fill: pal.muted, max: W * .82, dur: .6 });
+  g.restore();
+};
+
+// ── cards: three frosted-glass cards pop in on the beat, numbers count up
+S.cards = lt => {
+  const head = seg(lt, 0, .5, E.outExpo);
+  K.text(g, COPY.h2, W / 2, H * (vertical ? .12 : .15) + (1 - head) * 30 * u, { ...fonts.display, size: 84 * u, fill: '#fff', alpha: head, glow: { color: pal.a, blur: 26 * u } });
+  frost.snap(scene, 8);
+  const n = COPY.cards.length, cw = (vertical ? W * .84 : W * .28), ch = (vertical ? H * .2 : H * .46), gap = (vertical ? H * .028 : W * .025);
+  COPY.cards.forEach(([label, value, unit], i) => {
+    const x = vertical ? (W - cw) / 2 : (W - (n * cw + (n - 1) * gap)) / 2 + i * (cw + gap), y = vertical ? H * .23 + i * (ch + gap) : H * .29;
+    const p = lt - i * CUES.bpm / 60 * .5 * .5 - .1;                                 // staggered on 8th notes
+    K.pop(g, p, x + cw / 2, y + ch / 2, () => {
+      frost.glass(g, -cw / 2, -ch / 2, cw, ch, 34 * u, { tint: K.rgba(i % 2 ? pal.b : pal.a, .10), glow: K.rgba(i % 2 ? pal.b : pal.a, .45) });
+      K.shine(g, -cw / 2, -ch / 2, cw, ch, 34 * u, prog(lt - 1.1 - i * .25, 0, .7));
+      // icon: play / wave / spark drawn from primitives
+      g.save(); g.translate(vertical ? -cw / 2 + ch * .5 : 0, vertical ? -ch * .05 : -ch * .25); g.fillStyle = i % 2 ? pal.b : pal.a; g.strokeStyle = g.fillStyle; g.lineWidth = 7 * u; g.lineCap = 'round';
+      const r = 58 * u; if (i === 0) { K.poly(g, [[-r * .6, -r], [r, 0], [-r * .6, r]]); g.fill(); } else if (i === 1) { for (let k = -2; k <= 2; k++) { g.beginPath(); const hh = r * (.4 + .5 * Math.abs(Math.sin(lt * 4 + k))); g.moveTo(k * r * .5, -hh); g.lineTo(k * r * .5, hh); g.stroke(); } } else { K.star(g, 0, 0, r, r * .32, 4, 0); g.fill(); }
+      g.restore();
+      const v = Math.round(value * K.seg(p, .2, 1.4, E.outCubic)), num = K.fmtNum(v, { fa: LANG === 'fa' }) + unit;
+      K.text(g, num, vertical ? cw * .12 : 0, vertical ? -ch * .12 : ch * .12, { ...fonts.display, size: (vertical ? 92 : 124) * u, fill: '#fff' });
+      K.text(g, label, vertical ? cw * .12 : 0, vertical ? ch * .27 : ch * .34, { ...fonts.body, size: 46 * u, fill: pal.muted });
+    }, { dur: .5 });
+  });
+};
+
+// ── chart: a neon line draws itself, equaliser bars breathe, a counter climbs
+S.chart = lt => {
+  const head = seg(lt, 0, .5, E.outExpo);
+  K.text(g, COPY.h3, W / 2, H * (vertical ? .12 : .15) + (1 - head) * 30 * u, { ...fonts.display, size: 76 * u, fill: '#fff', alpha: head, glow: { color: pal.b, blur: 26 * u } });
+  const bx = W * (vertical ? .1 : .08), bw = W * (vertical ? .8 : .55), by = H * (vertical ? .24 : .27), bh = H * (vertical ? .27 : .55);
+  g.save(); g.strokeStyle = K.rgba('#ffffff', .1); g.lineWidth = 2 * u; for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(bx, by + bh * i / 4); g.lineTo(bx + bw, by + bh * i / 4); g.stroke(); } g.restore();
+  const pts = Array.from({ length: 60 }, (_, i) => { const x = i / 59; return [bx + bw * x, by + bh * (1 - (.12 + .78 * E.inOutCubic(x) + .06 * Math.sin(x * 20)))]; });
+  const drawn = seg(lt, .3, 2.2, E.inOutCubic), m = Math.max(2, Math.floor(drawn * pts.length)), last = pts[m - 1];
+  g.save(); g.beginPath(); pts.slice(0, m).forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
+  g.lineTo(last[0], by + bh); g.lineTo(bx, by + bh); g.closePath(); g.fillStyle = K.gradient(g, 0, by, 0, by + bh, [[0, K.rgba(pal.a, .35)], [1, K.rgba(pal.a, 0)]]); g.fill(); g.restore();
+  g.beginPath(); pts.slice(0, m).forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); K.neon(g, pal.glow, 7 * u, 1);
+  if (drawn > .02) K.glow(g, last[0], last[1], 70 * u, '#fff', .9 * (drawn < 1 ? 1 : .6 + .4 * Math.sin(lt * 6)));
+  // right column (landscape) / below the plot (vertical): counter + equaliser
+  const rx = vertical ? W * .1 : W * .68, rw = vertical ? W * .8 : W * .25;
+  const cnt = Math.round(COPY.big * seg(lt, .6, 2.4, E.outExpo)), cy = vertical ? H * .66 : H * .42;
+  K.text(g, K.fmtNum(cnt, { fa: LANG === 'fa' }) + COPY.bigUnit, rx + rw / 2, cy, { ...fonts.display, size: (vertical ? 230 : 210) * u, fill: grad(rx, rx + rw), glow: { color: pal.a, blur: 44 * u }, alpha: seg(lt, .5, 1, E.outCubic), ink: true });
+  const ey = vertical ? H * .85 : H * .70, eh = vertical ? H * .1 : H * .16;
+  K.bars(g, rx, ey, rw, eh, 22, (x, i) => .18 + .82 * Math.abs(Math.sin(lt * 4.2 + i * .55) * Math.cos(lt * 2.1 + i * .23)) * E.outCubic(prog(lt, .4 + i * .02, 1.2)), { color: K.gradient(g, rx, 0, rx + rw, 0, [[0, pal.a], [1, pal.c]]), gap: .4 });
+};
+
+// ── logo: iris opens on the hit; a mark assembles from arcs; the wordmark staggers in; the tagline rises
+S.logo = lt => {
+  const cx = W / 2, cy = H * (vertical ? .42 : .43), R = 150 * u, p = seg(lt, 0, 1.1, E.outExpo);
+  g.save(); K.iris(g, W, H, seg(lt, 0, .7, E.outExpo), cx, cy);
+  background2(lt);
+  // mark: three arcs spin into place, then a core dot pulses with the beat
+  g.save(); g.translate(cx, cy); g.rotate((1 - p) * -2.4 + lt * .25); g.lineCap = 'round';
+  for (let i = 0; i < 3; i++) { const r = R * (.55 + i * .32), a0 = i * 2.1 + (1 - p) * 3, len = 3.9 - i * .5; g.beginPath(); g.arc(0, 0, r, a0, a0 + len * p); g.strokeStyle = [pal.a, pal.c, pal.b][i]; g.lineWidth = (14 - i * 2) * u; g.stroke(); K.neon(g, [pal.a, pal.c, pal.b][i], (10 - i * 2) * u, .6); }
+  g.restore();
+  const beat = K.pulse(lt + CUES.t.logo, HITS, .2), core = (26 + 12 * beat) * u * E.outBack(prog(lt, .2, .8)); K.glow(g, cx, cy, core * 5, pal.glow, .8); g.fillStyle = '#fff'; K.circle(g, cx, cy, core * .55); g.fill();
+  // wordmark
+  const wy = cy + R * 1.95;
+  if (LANG === 'fa') K.words(g, COPY.logo, cx, wy, lt - .5, { ...fonts.display, size: 120 * u, fill: '#fff', glow: { color: pal.a, blur: 30 * u } });
+  else K.chars(g, COPY.logo, cx, wy, lt - .5, { ...fonts.display, size: 120 * u, fill: '#fff', spacing: 6 * u, glow: { color: pal.a, blur: 30 * u } });
+  K.words(g, COPY.tag, cx, wy + 100 * u, lt - 1.2, { ...fonts.body, size: 44 * u, fill: pal.muted, max: W * .8 });
+  K.rings(g, lt - .05, cx, cy, { n: 2, r1: 900 * u, width: 16 * u, color: [pal.c, '#fff'] });
+  g.restore();
+};
+function background2(lt) { g.fillStyle = K.gradient(g, 0, 0, 0, H, [[0, pal.bg], [1, K.mix(pal.bg, pal.bg2, .9)]]); g.fillRect(0, 0, W, H); K.glow(g, W / 2, H * .43, 1100 * u, pal.a, .3); dust.draw(g, lt + CUES.t.logo, { glow: true, alpha: .8 }); }
+
+/* ═══════════════ 4. FRAME — a pure function of t ═══════════════ */
+function renderFrame(t) {
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.shadowBlur = 0; g.filter = 'none';
+  const sc = scenes.at(t);
+  background(t);
+  g.save();
+  const zoom = (1 + .025 * t / DUR) * K.punch(t, HITS, { amp: .022, decay: .14 }), sh = K.shake(t, 9 * u * K.pulse(t, HITS, .07), 32);
+  K.camera(g, W, H, { zoom, shake: sh });
+  S[sc.id](sc.lt);
+  g.restore();
+  // scene-to-scene transition flash + outro fade
+  const cutFlash = HITS.reduce((m, h) => Math.max(m, t >= h ? Math.exp(-(t - h) / .09) : 0), 0);
+  const fade = seg(t, CUES.t.outro, DUR - .05, E.inCubic);
+  post.render(scene, { frame: K.frameIndex(t, FPS), bloom: .62, threshold: .58, streak: .18, ca: .0022 + .012 * K.pulse(t, HITS, .07), grain: .045, vignette: .42,
+                       flash: [.05 * cutFlash, .06 * cutFlash, .1 * cutFlash], fade, zoomBlur: .3 * cutFlash });
+}
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['800 Inter', '500 Inter', '800 Vazirmatn', '500 Vazirmatn']).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });          // preview:  node tools/render.mjs serve   → open the printed URL
+</script>
+</body>
+</html>

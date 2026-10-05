@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "footer": "---\nBenchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.",
+  "sets": {
+    "quick": [
+      "showreel-15s",
+      "logo-sting-6s",
+      "kinetic-poem-fa"
+    ],
+    "core": [
+      "showreel-15s",
+      "logo-sting-6s",
+      "kinetic-poem-fa",
+      "product-avorythm",
+      "explainer-app-20s",
+      "trailer-scifi-20s"
+    ],
+    "full": [
+      "showreel-15s",
+      "logo-sting-6s",
+      "kinetic-poem-fa",
+      "product-avorythm",
+      "explainer-app-20s",
+      "trailer-scifi-20s",
+      "data-story-vertical-15s",
+      "heritage-observatory-fa",
+      "music-visualizer-20s",
+      "abstract-loop-8s"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "showreel-15s",
+      "domain": "motion-design",
+      "aspect": "16:9",
+      "duration": 15,
+      "lang": "en",
+      "title": "Motion-designer showreel",
+      "prompt": "make a dynamic 15-second motion graphics video that shows what an incredible motion designer you are, like it's your showreel for a résumé. go all out."
+    },
+    {
+      "id": "logo-sting-6s",
+      "domain": "brand",
+      "aspect": "16:9",
+      "duration": 6,
+      "lang": "en",
+      "title": "Logo sting",
+      "prompt": "Create a 6-second logo sting for \"Northwind Labs\", a fictional climate-data startup. Invent a simple mark and a wordmark, reveal them with real impact, and give it sound design (a hit, a whoosh, a short musical resolve). Go all out."
+    },
+    {
+      "id": "kinetic-poem-fa",
+      "domain": "typography",
+      "aspect": "16:9",
+      "duration": 15,
+      "lang": "fa",
+      "title": "Persian kinetic typography",
+      "prompt": "یک ویدیوی ۱۵ ثانیه‌ای تایپوگرافی متحرک (kinetic typography) از این بیت حافظ بساز: «الا یا ایها الساقی ادر کاسا و ناولها / که عشق آسان نمود اول ولی افتاد مشکل‌ها». متن فارسی باید درست شکل‌گرفته و راست‌به‌چپ باشد. موسیقی را خودت بساز. فقط با کد کار کن. Go all out."
+    },
+    {
+      "id": "product-avorythm",
+      "domain": "product",
+      "aspect": "free",
+      "duration": 30,
+      "lang": "fa",
+      "title": "Product film with a creative-director brief",
+      "promptFile": "prompts/product-avorythm.md"
+    },
+    {
+      "id": "explainer-app-20s",
+      "domain": "explainer",
+      "aspect": "16:9",
+      "duration": 20,
+      "lang": "en",
+      "title": "App explainer",
+      "prompt": "Make a 20-second explainer video for \"Pocketwise\", a fictional app that turns shared household expenses into a simple monthly summary. Show the problem, the app UI (invent the screens), one satisfying data moment (numbers/chart), and end with the name and a one-line tagline. Original music and UI sound design. Go all out."
+    },
+    {
+      "id": "trailer-scifi-20s",
+      "domain": "cinematic",
+      "aspect": "16:9",
+      "duration": 20,
+      "lang": "en",
+      "title": "Sci-fi teaser trailer",
+      "prompt": "Make a 20-second cinematic teaser trailer for a fictional science-fiction film called \"LAST SIGNAL\" (a lone station keeps receiving a transmission from its own future). Think title cards, camera moves, atmosphere, a build to one huge moment, and a score. No actors, no footage: everything generated. Go all out."
+    },
+    {
+      "id": "data-story-vertical-15s",
+      "domain": "data",
+      "aspect": "9:16",
+      "duration": 15,
+      "lang": "en",
+      "title": "Vertical data story",
+      "prompt": "Make a 15-second VERTICAL (9:16) social video that tells one statistic in a way people feel: in the fictional city of Lumen, daily bike-share rides grew from 12,000 in 2021 to 87,000 in 2025. Hook in the first second, one hero visual, big readable numbers, music with a drop. Safe areas for phone UI. Go all out."
+    },
+    {
+      "id": "heritage-observatory-fa",
+      "domain": "cultural",
+      "aspect": "16:9",
+      "duration": 20,
+      "lang": "fa",
+      "title": "Persian heritage teaser",
+      "prompt": "یک تیزر ۲۰ ثانیه‌ای سینمایی با هویت ایرانی (نقش‌های گیره‌چینی/گره‌سازی، نستعلیق، نور و غبار) برای یک رصدخانهٔ ستاره‌شناسی بساز. متن‌ها فارسی؛ موسیقی با سنتور و نی و ریتم ۶/۸ را خودت بساز. فقط با کد کار کن. Go all out."
+    },
+    {
+      "id": "music-visualizer-20s",
+      "domain": "music",
+      "aspect": "16:9",
+      "duration": 20,
+      "lang": "en",
+      "title": "Audio-reactive visualizer",
+      "prompt": "First compose a 20-second original electronic track (synthesise it yourself), then make an audio-reactive music visualizer for it: the picture must respond to the kick, the bass and the melody, with a build and a drop. No text except a small title at the end. Go all out."
+    },
+    {
+      "id": "abstract-loop-8s",
+      "domain": "generative",
+      "aspect": "16:9",
+      "duration": 8,
+      "lang": "en",
+      "title": "Seamless abstract loop",
+      "prompt": "Create an 8-second SEAMLESS looping abstract animation for a website hero background: dark, elegant, one accent colour, slow organic motion, no text. The last frame must flow into the first without a visible jump. A quiet ambient audio bed is welcome. Go all out."
+    }
+  ]
+}

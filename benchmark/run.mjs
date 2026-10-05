@@ -1,0 +1,131 @@
+#!/usr/bin/env node
+// run.mjs — the benchmark runner: the SAME prompt, given to a coding agent in a fresh folder, with and without the skill (or with two versions of it),
+// then measured with the same objective metrics. Default agent: the Codex CLI (`codex exec`).
+//
+//   node benchmark/run.mjs --suite quick                                 3 tasks × (baseline, skill)         ≈ 1–3 h of agent time
+//   node benchmark/run.mjs --suite core --reps 2                         6 tasks, two repetitions each (variance matters: one run proves nothing)
+//   node benchmark/run.mjs --tasks logo-sting-6s --conditions baseline,skill
+//   node benchmark/run.mjs --tasks showreel-15s --conditions baseline,v1=../old/pure-code-video,v2=skills/pure-code-video
+//   node benchmark/run.mjs --suite quick --dry-run                       print the plan, change nothing
+//   node benchmark/run.mjs --suite quick --agent-cmd "claude -p --dangerously-skip-permissions"   any agent that reads the prompt on stdin and works in the current folder
+//
+// Conditions:  baseline = no skill (any installed copy of pure-code-video is disabled for this run) · skill = skills/pure-code-video from this checkout ·
+//              name=path = another copy of the skill (e.g. an older version) · all conditions get the identical task prompt and the identical delivery footer.
+// Options:     --model <m> · --effort low|medium|high · --timeout-min 45 · --reps N · --out <dir> · --keep-going (default) · --fake-video <mp4> (pipeline test, no agent)
+//
+// SAFETY: the agent runs with full access (`--dangerously-bypass-approvals-and-sandbox`) inside a throw-away folder under benchmark/runs/. Run benchmarks on a machine or container you are happy to let an agent use.
+import { spawn, spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { measureVideo, preview, projectStats, sessionStats, sheet } from './lib/metrics.mjs';
+
+const HERE = path.dirname(fileURLToPath(import.meta.url)), ROOT = path.resolve(HERE, '..');
+const argv = process.argv.slice(2), opt = {};
+for (let i = 0; i < argv.length; i++) { const a = argv[i]; if (!a.startsWith('--')) continue; const k = a.slice(2); if (['dry-run', 'no-export', 'keep-work'].includes(k)) opt[k] = true; else opt[k] = argv[++i]; }
+
+const SUITE = JSON.parse(fs.readFileSync(path.join(HERE, 'suite', 'suite.json'), 'utf8'));
+const taskPrompt = t => t.prompt || fs.readFileSync(path.join(HERE, 'suite', t.promptFile), 'utf8').trim();
+const FOOTER = SUITE.footer;
+
+// ── plan ───────────────────────────────────────────────────────────────────────────────────
+const ids = opt.tasks ? opt.tasks.split(',') : (SUITE.sets[opt.suite || 'quick'] || (opt.suite ? opt.suite.split(',') : SUITE.sets.quick));
+const tasks = ids.map(id => SUITE.tasks.find(t => t.id === id) || (console.error(`unknown task "${id}". tasks: ${SUITE.tasks.map(t => t.id).join(', ')}`), process.exit(1)));
+const defaultSkill = path.join(ROOT, 'skills', 'pure-code-video');
+const conditions = (opt.conditions || 'baseline,skill').split(',').map(c => {
+  if (c === 'baseline') return { name: 'baseline', skill: null };
+  if (c === 'skill') return { name: 'skill', skill: defaultSkill };
+  const [n, p] = c.split('='); if (!p) { console.error(`condition "${c}": use baseline | skill | name=path`); process.exit(1); }
+  if (!fs.existsSync(path.join(path.resolve(p), 'SKILL.md'))) { console.error(`condition ${n}: no SKILL.md in ${path.resolve(p)}`); process.exit(1); }
+  return { name: n, skill: path.resolve(p) };
+});
+const reps = +(opt.reps || 1), timeoutMs = +(opt['timeout-min'] || 45) * 60000;
+const runId = opt.resume || new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 13);
+const outRoot = path.resolve(opt.out || path.join(HERE, 'runs'), runId);
+const jobs = []; for (const t of tasks) for (const c of conditions) for (let r = 1; r <= reps; r++) jobs.push({ task: t, cond: c, rep: r, id: `${t.id}__${c.name}__r${r}` });
+
+const agentName = opt['agent-cmd'] ? 'custom' : 'codex';
+const codexVersion = agentName === 'codex' ? (spawnSync('codex', ['--version'], { encoding: 'utf8', shell: process.platform === 'win32' }).stdout || '').trim() : '';
+console.log(`benchmark ${runId}: ${jobs.length} job(s) — ${tasks.length} task(s) × ${conditions.map(c => c.name).join(' / ')} × ${reps} rep(s) · agent: ${agentName}${codexVersion ? ' (' + codexVersion + ')' : ''} · timeout ${timeoutMs / 60000} min/job`);
+for (const j of jobs) console.log(`  · ${j.id}`);
+if (opt['dry-run']) { console.log('\n--dry-run: nothing executed.'); process.exit(0); }
+if (spawnSync('ffmpeg', ['-version']).status !== 0) { console.error('ffmpeg is required for the measurements'); process.exit(1); }
+fs.mkdirSync(outRoot, { recursive: true });
+
+// ── helpers ────────────────────────────────────────────────────────────────────────────────
+const copyDir = (a, b) => fs.cpSync(a, b, { recursive: true, filter: s => !/[\\/](node_modules|\.git|\.render)([\\/]|$)/.test(s) });
+/** Installed copies of the skill that would leak into a baseline run (Codex reads ~/.agents/skills, ~/.codex/skills, $CODEX_HOME/skills). */
+function installedCopies() {
+  const home = os.homedir(), roots = [path.join(home, '.agents', 'skills'), path.join(home, '.codex', 'skills'), process.env.CODEX_HOME && path.join(process.env.CODEX_HOME, 'skills'), path.join(home, '.claude', 'skills')].filter(Boolean);
+  return [...new Set(roots.map(r => path.join(r, 'pure-code-video', 'SKILL.md')).filter(p => fs.existsSync(p)))];
+}
+const killTree = pid => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(pid), '/T', '/F']); else process.kill(-pid, 'SIGTERM'); } catch { /* already gone */ } };
+
+function findVideo(work) {
+  const direct = path.join(work, 'final.mp4'); if (fs.existsSync(direct)) return direct;
+  const all = []; (function walk(d, depth) { if (depth > 5) return; for (const e of fs.readdirSync(d, { withFileTypes: true })) { if (['node_modules', '.git', '.agents', '.render', 'lib', 'fonts'].includes(e.name)) continue; const p = path.join(d, e.name); if (e.isDirectory()) walk(p, depth + 1); else if (/\.(mp4|mov|webm)$/i.test(e.name) && !/(partial|segment|silent|preview|draft)/i.test(e.name)) all.push([p, fs.statSync(p).mtimeMs, fs.statSync(p).size]); } })(work, 0);
+  all.sort((a, b) => b[1] - a[1]); return all.find(x => x[2] > 50000)?.[0] || null;
+}
+
+function runAgent(job, work, prompt, evFile, logFile) {
+  return new Promise(resolve => {
+    const t0 = Date.now(); let timedOut = false, child;
+    const ev = fs.createWriteStream(evFile), log = fs.createWriteStream(logFile);
+    if (opt['fake-video']) {                                                                // pipeline test without an agent
+      fs.copyFileSync(path.resolve(opt['fake-video']), path.join(work, 'final.mp4')); if (job.cond.skill) { fs.writeFileSync(path.join(work, 'brief.md'), '# fake brief\n'); }
+      ev.write(JSON.stringify({ type: 'turn.completed', usage: { input_tokens: 1000, output_tokens: 100 } }) + '\n'); ev.end(); log.end(); return resolve({ code: 0, timedOut: false, seconds: (Date.now() - t0) / 1000 });
+    }
+    let bin, args, shell = false;
+    const env = { ...process.env, PCV_BENCH_CWD: work, PCV_BENCH_CONDITION: job.cond.name, PCV_BENCH_SKILL: job.cond.skill || '' };
+    if (opt['agent-cmd']) { bin = opt['agent-cmd']; args = []; shell = true; }
+    else {
+      const disabled = installedCopies().map(p => `{path='${p}',enabled=false}`);                // the skill under test comes ONLY from the project folder
+      args = ['exec', '--json', '--ephemeral', '--skip-git-repo-check', '--dangerously-bypass-approvals-and-sandbox', '-C', work, '-o', path.join(work, '..', 'last-message.txt'), '-c', `skills.config=[${disabled.join(',')}]`];
+      if (opt.model) args.push('-m', opt.model); if (opt.effort) args.push('-c', `model_reasoning_effort="${opt.effort}"`); args.push('-');
+      bin = 'codex'; shell = false;
+      if (process.platform === 'win32') { bin = path.join(process.env.APPDATA || '', 'npm', 'codex.cmd'); if (!fs.existsSync(bin)) bin = 'codex.cmd'; }
+    }
+    // codex.cmd needs a shell on Windows; quote arguments for cmd.exe
+    const useShell = shell || (process.platform === 'win32' && /\.cmd$/i.test(bin));
+    const cmdline = useShell && !shell ? [bin, ...args].map(a => /[\s"{}'\[\],=]/.test(a) ? '"' + a.replace(/"/g, '\\"') + '"' : a).join(' ') : bin;
+    child = useShell ? spawn(cmdline, { cwd: work, env, shell: true, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true, detached: process.platform !== 'win32' }) : spawn(bin, args, { cwd: work, env, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true, detached: process.platform !== 'win32' });
+    child.stdout.on('data', d => ev.write(d)); child.stderr.on('data', d => log.write(d));
+    child.stdin.on('error', () => { /* agent exited early */ }); child.stdin.end(prompt);
+    const timer = setTimeout(() => { timedOut = true; log.write('\n[benchmark] timeout — stopping the agent\n'); killTree(child.pid); }, timeoutMs);
+    child.on('close', code => { clearTimeout(timer); ev.end(); log.end(); resolve({ code, timedOut, seconds: (Date.now() - t0) / 1000 }); });
+    child.on('error', e => { clearTimeout(timer); log.write(String(e)); ev.end(); log.end(); resolve({ code: -1, timedOut, seconds: (Date.now() - t0) / 1000, error: String(e) }); });
+  });
+}
+
+// ── run ────────────────────────────────────────────────────────────────────────────────────
+const index = [];
+for (const [n, job] of jobs.entries()) {
+  const dir = path.join(outRoot, job.id), work = path.join(dir, 'work');
+  if (fs.existsSync(path.join(dir, 'summary.json'))) { console.log(`[${n + 1}/${jobs.length}] ${job.id}: already done (resume)`); index.push(JSON.parse(fs.readFileSync(path.join(dir, 'summary.json'), 'utf8'))); continue; }
+  fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(work, { recursive: true });
+  spawnSync('git', ['init', '-q', '.'], { cwd: work });                                       // a git root makes project-scoped skill discovery unambiguous
+  if (job.cond.skill) { fs.mkdirSync(path.join(work, '.agents', 'skills'), { recursive: true }); copyDir(job.cond.skill, path.join(work, '.agents', 'skills', 'pure-code-video')); }
+  const prompt = (job.cond.skill ? 'Use $pure-code-video. ' : '') + taskPrompt(job.task) + '\n\n' + FOOTER; fs.writeFileSync(path.join(dir, 'prompt.txt'), prompt);
+  console.log(`\n[${n + 1}/${jobs.length}] ${job.id} — running the agent (up to ${timeoutMs / 60000} min) …`);
+  const res = await runAgent(job, work, prompt, path.join(dir, 'events.jsonl'), path.join(dir, 'agent.log'));
+  const video = findVideo(work), session = sessionStats(path.join(dir, 'events.jsonl'));
+  const summary = {
+    schema: 1, id: `${runId}/${job.id}`, kind: 'run', task: job.task.id, domain: job.task.domain, condition: job.cond.name, rep: job.rep, label: job.cond.name === 'baseline' ? `${agentName === 'codex' ? 'Codex' : 'Agent'}, no skill` : `${agentName === 'codex' ? 'Codex' : 'Agent'} + skill (${job.cond.name})`,
+    agent: agentName === 'codex' ? codexVersion : 'custom', model: opt.model || null, effort: opt.effort || null, skill: job.cond.skill ? (() => { try { return JSON.parse(fs.readFileSync(path.join(path.dirname(job.cond.skill), '..', 'package.json'), 'utf8')).version; } catch { return 'custom'; } })() : 'none',
+    date: new Date().toISOString().slice(0, 10), wallSeconds: Math.round(res.seconds), exitCode: res.code, timedOut: res.timedOut, note: '',
+    video: video ? measureVideo(video) : { ok: false, error: 'no video was produced' }, session, project: projectStats(work), files: {},
+    integrity: { skillVisible: !!job.cond.skill, touchedSkill: session?.touchedSkill ?? null, contaminated: !job.cond.skill && !!session?.touchedSkill },
+  };
+  if (video && summary.video.ok) { fs.copyFileSync(video, path.join(dir, 'final.mp4')); if (sheet(video, path.join(dir, 'sheet.jpg'))) summary.files.sheet = 'sheet.jpg'; if (preview(video, path.join(dir, 'preview.webp'))) summary.files.preview = 'preview.webp'; }
+  fs.writeFileSync(path.join(dir, 'summary.json'), JSON.stringify(summary, null, 2) + '\n'); index.push(summary);
+  if (!opt['no-export']) {                                                                         // small artefacts (never the video) go where they can be committed
+    const ex = path.join(HERE, 'results', runId, job.id); fs.mkdirSync(ex, { recursive: true }); fs.copyFileSync(path.join(dir, 'summary.json'), path.join(ex, 'summary.json'));
+    for (const f of Object.values(summary.files)) fs.copyFileSync(path.join(dir, f), path.join(ex, f)); fs.copyFileSync(path.join(dir, 'prompt.txt'), path.join(ex, 'prompt.txt'));
+  }
+  if (!opt['keep-work']) for (const d of ['node_modules', '.render']) fs.rmSync(path.join(work, d), { recursive: true, force: true });
+  const v = summary.video;
+  console.log(v.ok ? `   ✔ ${v.duration.toFixed(1)} s · quiet ${v.energy?.quietPct ?? '?'}% · ${v.audio ? v.audio.lufs + ' LUFS' : 'no audio'} · ${Math.round(res.seconds / 60)} min${res.timedOut ? ' (TIMED OUT)' : ''}${summary.integrity.contaminated ? ' · ⚠ baseline touched the skill' : ''}` : `   ✘ ${v.error}${res.timedOut ? ' (timed out)' : ''}`);
+}
+fs.writeFileSync(path.join(outRoot, 'index.json'), JSON.stringify(index.map(s => ({ id: s.id, task: s.task, condition: s.condition, ok: s.video.ok, quietPct: s.video.energy?.quietPct, wallSeconds: s.wallSeconds })), null, 2));
+console.log(`\nraw runs: ${path.relative(process.cwd(), outRoot)}   committed-friendly summaries: benchmark/results/${runId}/\nnext:  node benchmark/report.mjs   ·   node benchmark/rate.mjs ${runId}   (blind human rating)`);

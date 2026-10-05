@@ -1,0 +1,16 @@
+name: Benchmark result / blind ratings
+description: Share a benchmark run or human ratings (especially results that contradict our claims)
+labels: [benchmark]
+body:
+  - type: input
+    id: agent
+    attributes: { label: Agent, description: "Agent, model, reasoning effort and version", placeholder: "codex-cli 0.148, gpt-…, high" }
+    validations: { required: true }
+  - type: input
+    id: suite
+    attributes: { label: Command you ran, placeholder: "node benchmark/run.mjs --suite quick --reps 3" }
+    validations: { required: true }
+  - type: textarea
+    id: result
+    attributes: { label: What you found, description: "Attach `benchmark/results/<run-id>/` (JSON + sheet.jpg — no videos) or `votes.json`, or open a PR." }
+    validations: { required: true }

@@ -1,0 +1,17 @@
+{
+  "name": "pure-code-video",
+  "owner": { "name": "Mohammad Saleh Mahdinejad" },
+  "metadata": { "description": "pure-code-video — the agent skill for videos made entirely from code", "version": "2.0.0" },
+  "plugins": [
+    {
+      "name": "pure-code-video",
+      "source": "./",
+      "description": "Make cinema-grade videos entirely from code: GPU film engine, 239-technique atlas, synthesised music, Persian/RTL.",
+      "version": "2.0.0",
+      "category": "creative",
+      "tags": ["video", "motion-graphics", "webgl", "persian"],
+      "strict": false,
+      "skills": ["./skills/pure-code-video"]
+    }
+  ]
+}

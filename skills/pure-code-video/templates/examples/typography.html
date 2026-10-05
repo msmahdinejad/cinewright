@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="fa"><head><meta charset="utf-8"><!-- EXAMPLE — Type.* recipes: poster, stack, outline, reveal, slice, glitch, extrude, marquee, weight, wave (Latin + Persian).
+     contact sheet:  node tools/render.mjs sheet --page examples/typography.html --markers --cols 4 --tile 480
+     Read the source: it is the shortest working usage of the engine. -->
+<title>type gallery</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style></head>
+<body><canvas id="out"></canvas>
+<script src="../lib/kit.js"></script><script src="../lib/post.js"></script><script src="../lib/type.js"></script><script src="../lib/cine.js"></script>
+<script>
+'use strict';
+const Q = K.params(), W = Q.w || 960, H = Q.h || 540, FPS = 30, u = H / 1080;
+const items = ['poster EN', 'poster FA', 'stack', 'outline', 'reveal', 'slice', 'glitch', 'extrude', 'marquee', 'weight', 'wave EN', 'wave FA'];
+window.VIDEO = { width: W, height: H, fps: FPS, duration: items.length, markers: items.map((n, i) => ({ t: i + .85, label: n })) };
+const out = document.getElementById('out'); out.width = W; out.height = H; const post = new Post(out), cv = K.canvas(W, H), g = cv.getContext('2d');
+const BG = ['#141414', '#f2ede4', '#d9ff1f', '#0b1030', '#ff5a36', '#101820'];
+function renderFrame(t) {
+  const i = Math.min(items.length - 1, Math.floor(t)), lt = t - i, cx = W / 2, cy = H / 2, dark = i % 2 === 0; g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over';
+  g.fillStyle = BG[i % BG.length]; g.fillRect(0, 0, W, H); const fg = ['#f2ede4', '#141414', '#141414', '#7cf5ff', '#141414', '#ffd9a8'][i % 6];
+  switch (items[i]) {
+    case 'poster EN': Type.poster(g, 'MAKE IT MOVE NOW', cx, cy, W * .8, lt, { each: .14, fills: [fg, '#d9ff1f', fg] }); break;
+    case 'poster FA': Type.poster(g, 'صدا هست معنا دور است', cx, cy, W * .7, lt, { each: .14, fills: [fg, '#ff5a36'] }); break;
+    case 'stack': Type.stack(g, 'RHYTHM', cx, cy, { n: 5, size: 150 * u, fill: fg, dy: 1, gap: .78 }); break;
+    case 'outline': Type.outline(g, 'DRAW ME', cx, cy, lt, { size: 190 * u, stroke: fg, glow: '#27f0ff' }); break;
+    case 'reveal': Type.reveal(g, 'Rising Up', cx, cy, lt * 1.3, { size: 190 * u, fill: fg }); Type.reveal(g, 'سلام دنیا', cx, cy + 170 * u, lt * 1.1 - .1, { size: 120 * u, fill: fg, dir: 'down' }); break;
+    case 'slice': Type.slice(g, 'SLICED', cx, cy, lt * 1.2, { size: 210 * u, fill: fg }); break;
+    case 'glitch': Type.glitch(g, 'GLITCH', cx, cy, .5 + .5 * Math.sin(t * 9), Math.round(t * 30), { size: 210 * u, fill: fg }); break;
+    case 'extrude': Type.extrude(g, 'BLOCKS', cx, cy, { size: 210 * u, depth: 36 * u, colors: ['#ffffff', '#ff5a36'], angle: Math.PI * .8 }); break;
+    case 'marquee': for (let r = 0; r < 5; r++) Type.marquee(g, 'MOTION DESIGN ✦ شروع حرکت ✦', cy - 200 * u + r * 100 * u, t, { size: 84 * u, speed: (r % 2 ? 1 : -1) * (180 + r * 40), outline: r % 2 ? fg : undefined, fill: fg, dir: 1 }); break;
+    case 'weight': Type.weight(g, 'Weight', cx, cy - 90 * u, Math.sin(lt * 3.1) * .5 + .5, { size: 210 * u, fill: fg }); Type.weight(g, 'وزن حروف', cx, cy + 120 * u, Math.sin(lt * 3.1) * .5 + .5, { size: 150 * u, fill: fg, from: 300, to: 900 }); break;
+    case 'wave EN': Type.wave(g, 'WAVE MOTION', cx, cy, lt, { size: 140 * u, fill: fg, amp: 30 * u }); break;
+    case 'wave FA': Type.wave(g, 'موج حرکت کلمه به کلمه', cx, cy, lt, { size: 110 * u, fill: fg, amp: 26 * u }); break;
+  }
+  post.render(cv, { frame: Math.round(t * FPS), bloom: .15, grain: .03, vignette: .25 });
+}
+window.renderFrame = renderFrame; window.ready = K.loadFonts(['900 Inter', '800 Vazirmatn', '800 Inter', '300 Vazirmatn', '200 Inter']).then(() => true);
+</script></body></html>

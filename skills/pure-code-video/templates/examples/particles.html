@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fa"><head><meta charset="utf-8"><!-- EXAMPLE — Parts.Morph (cloud → word → Persian word → 3D knot) + Parts.Emitter (bursts, ambient dust).
+     contact sheet:  node tools/render.mjs sheet --page examples/particles.html --markers --cols 4 --tile 480
+     Read the source: it is the shortest working usage of the engine. -->
+<title>particles test</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style></head>
+<body><canvas id="out"></canvas>
+<script src="../lib/kit.js"></script><script src="../lib/post.js"></script><script src="../lib/gfx.js"></script><script src="../lib/fx.js"></script><script src="../lib/scene3d.js"></script><script src="../lib/parts.js"></script>
+<script>
+'use strict';
+const Q = K.params(), W = Q.w || 1280, H = Q.h || 720, FPS = 30, DUR = 12, u = H / 1080, N = 60000;
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, markers: [{ t: .3, label: 'cloud' }, { t: 1.6, label: 'hello' }, { t: 2.4, label: 'morph' }, { t: 3.6, label: 'salam' }, { t: 5.2, label: 'knot' }, { t: 6.6, label: 'burst .3' }, { t: 7.0, label: 'burst .8' }, { t: 8.5, label: 'dust' }] };
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx);
+let M, E;
+function init() {
+  M = new Parts.Morph(gfx, { count: N });
+  M.shapes([Parts.cloud(N, { w: W * 1.1, h: H * .9 }), Parts.text('hello', { height: 260 * u }), Parts.text('سلام', { height: 260 * u }), Parts.mesh(Geo.torusKnot({ radius: 1, tube: .3, seg: 120, radial: 16 }), { scale: 200 * u, n: 50000 })]);
+  E = new Parts.Emitter(gfx, { count: 30000 });
+  E.burst({ t0: 6.5, pos: [0, 0, 0], n: 8000, speed: [200 * u, 1300 * u], drag: 2.2, gravity: [0, -420 * u, 0], life: [1, 2.2], size: [1.6, 5], colors: ['#fff2c4', '#ff9a3c', '#d8281c'], glow: .55, flow: 40 });
+  E.burst({ t0: 7.4, pos: [-300 * u, 120 * u, 0], n: 5000, speed: [100 * u, 700 * u], drag: 1.8, gravity: [0, 180 * u, 0], life: [1.2, 2.4], size: [1.2, 3.4], colors: ['#c9f6ff', '#3dd7ff', '#2a49ff'], dir: [0, 1, 0], angle: .6, glow: .6, sprite: 3 });
+  E.stream({ t0: 0, t1: 12, n: 9000, spawn: { box: [W * 1.2, H * 1.2, 900] }, speed: [10, 40], life: [5, 9], dir: [0, 1, 0], flow: 30, size: [.9, 2.6], colors: ['#8fa8ff', '#ffffff', '#ffffff'], loop: true, glow: .25, drag: .5 });
+}
+function renderFrame(t) {
+  if (!M) init();
+  gfx.time(t); post.begin([0, 0, 0, 1]);
+  fx.bg('gradient', { c: ['#05040f', '#120a2a', '#0a1a3a', '#150820'], speed: .15, amt: 0 });
+  const p = t < 1 ? 0 : t < 2 ? K.seg(t, 1, 2, K.E.inOutCubic) : t < 3 ? 1 : t < 4.4 ? 1 + K.seg(t, 3, 4.4, K.E.inOutCubic) : t < 5 ? 2 : 2 + K.seg(t, 5, 6.4, K.E.inOutCubic);
+  const knot = t > 5.4;
+  M.draw({ progress: Math.min(3, p), t, colors: knot ? ['#ff9a3c', '#ff3d6e'] : ['#6a4cff', '#23e7f2'], flow: 260 * u, size: 1.7 * u, glow: .14, cam: Q.q.get('flat') ? { yaw: 0, pitch: 0, dist: 1500 } : { yaw: .35 * Math.sin(t * .35) + (knot ? t * .6 : 0), pitch: .1 * Math.sin(t * .27 + 1), dist: 1500 } });
+  E.draw({ t, cam: { yaw: .2 * Math.sin(t * .3), pitch: 0 } });
+  post.end({ frame: Math.round(t * FPS), bloom: .9, threshold: .5, knee: .5, streak: .2, ca: .002, grain: .035, vignette: .45 });
+}
+window.renderFrame = renderFrame; window.ready = K.loadFonts(['800 Inter', '800 Vazirmatn']).then(() => true);
+</script></body></html>

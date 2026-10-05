@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push: { branches: [main] }
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint & generated docs (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ matrix.node }}" }
+      - run: npm test
+      - run: node benchmark/report.mjs --check
+
+  installers:
+    name: Installers (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: install.sh
+        if: runner.os != 'Windows'
+        run: |
+          DEST="$RUNNER_TEMP/skills" bash install.sh
+          test -f "$RUNNER_TEMP/skills/pure-code-video/SKILL.md"
+          DEST="$RUNNER_TEMP/skills" bash install.sh   # second run must replace cleanly
+      - name: install.ps1
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          ./install.ps1 -Dest "$env:RUNNER_TEMP\skills" -SkipCheck
+          if (-not (Test-Path "$env:RUNNER_TEMP\skills\pure-code-video\SKILL.md")) { throw "SKILL.md missing" }
+          ./install.ps1 -Dest "$env:RUNNER_TEMP\skills" -SkipCheck
+
+  render:
+    name: Atlas + render smoke test (Docker, software GL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t pure-code-video .
+      - run: docker run --rm pure-code-video doctor
+      - name: Execute every atlas recipe
+        run: docker run --rm --entrypoint node pure-code-video /opt/pure-code-video/scripts/atlas.mjs test all

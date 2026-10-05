@@ -1,0 +1,11 @@
+{
+  "name": "pure-code-video",
+  "version": "2.0.0",
+  "description": "Make cinema-grade videos entirely from code (deterministic WebGL/canvas frames, synthesised music, 239-technique atlas, Persian/RTL support). The agent writes the video; headless Chrome and ffmpeg render it.",
+  "author": { "name": "Mohammad Saleh Mahdinejad" },
+  "homepage": "https://msmahdinejad.github.io/pure-code-video/",
+  "repository": "https://github.com/msmahdinejad/pure-code-video",
+  "license": "MIT",
+  "keywords": ["video", "motion-graphics", "webgl", "persian", "rtl", "skill"],
+  "skills": "./skills"
+}

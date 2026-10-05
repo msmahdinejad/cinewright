@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- ONE timeline for picture AND sound (audio.mjs reads it). Seconds. 128 BPM → one beat = 0.46875 s, one bar = 1.875 s; every scene starts on a bar line. -->
+<script id="cues" type="application/json">
+{ "bpm": 128, "duration": {{DUR}},
+  "t": { "slam": 0, "type3d": 1.875, "morph": 3.75, "pattern": 5.625, "ui": 7.5, "fluid": 9.375, "speed": 11.25, "burst": 13.125, "end": 14.53125 },
+  "hits": [0, 0.46875, 0.9375, 1.40625, 1.875, 3.75, 5.625, 7.5, 9.375, 11.25, 13.125, 14.53125] }
+</script>
+
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/gfx.js"></script><script src="lib/fx.js"></script><script src="lib/trans.js"></script>
+<script src="lib/stage.js"></script><script src="lib/scene3d.js"></script><script src="lib/parts.js"></script><script src="lib/type.js"></script><script src="lib/cine.js"></script><script src="lib/ui.js"></script><script src="lib/geometry.js"></script>
+<script>
+'use strict';
+/* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   SHOWREEL — a 17.5 s bright, graphic, fast-cut reel (the opposite of the dark "cinema" template): flat poster colours, huge condensed type, hard beat cuts,
+   one shot per discipline. Nine scenes, nine different engines — a showreel must PROVE range inside ONE visual system (palette · type · easing · a recurring ring/circle):
+   1 slam     four words, one per beat, flat colour per beat                      (2D · K.slam)
+   2 type3d   chunky plastic 3D word orbiting in a blue/yellow world             (Scene3D · Geo.text + Mat.plastic)
+   3 morph    GPU particles: smoke → the word, in poster colours                   (Parts.Morph)
+   4 pattern  an exact Islamic star pattern grows from the centre, poster fills    (G.pattern · G.draw)
+   5 ui       light dashboard: counters, chart, a real cursor click, a toast       (UI · Type.counter)
+   6 fluid    raymarched liquid-metal blobs in the palette                        (custom GLSL shader)
+   7 speed    a tunnel of rings at speed, echo type, zoom blur                    (Scene3D instancing)
+   8 burst    sparks + confetti + the slammed finale line                          (Parts.Emitter · K.confetti)
+   9 end      name · role · contact, long calm hold                               (2D)
+   Replace COPY (name, role, words) and the palette, keep the rhythm: cut on bars, one hero mover per shot, the biggest moment at 13 s.
+   ═════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════ 0. CONFIG ═══════════ */
+const CUES = JSON.parse(document.getElementById('cues').textContent), T = CUES.t, HITS = CUES.hits, BEAT = 60 / CUES.bpm;
+const Q = K.params(), W = Q.w || {{W}}, H = Q.h || {{H}}, FPS = Q.fps || {{FPS}}, DUR = CUES.duration, LANG = Q.q.get('lang') || '{{LANG}}', FA = LANG === 'fa';
+const u = H / 1080, vertical = H > W * 1.1, minDim = Math.min(W, H * 1.35), vs = vertical ? .7 : 1;
+const PAL = { paper: '#f4efe6', ink: '#101014', red: '#ff4b2b', blue: '#2b4bff', yellow: '#ffd23f' };
+const FAM = FA ? K.FONTS.faDisplay : K.FONTS.display, FAM2 = FA ? K.FONTS.fa : K.FONTS.grotesk;          // display face (Anton / Lalezar — weight 400!) + support face
+const COPY = FA
+  ? { slam: ['من', 'چیزها را', 'به حرکت', 'درمی‌آورم'], w3d: 'حرکت', morph: 'طراحی', pattern: 'نقش', ui: 'رابط', fluid: 'روان', speed: 'سریع', bang: 'و صدا', name: 'نام شما', role: 'طراح موشن', contact: 'hello@yourname.com',
+      kpi: [[120, 'فریم بر ثانیه'], [24, 'پروژه'], [98, 'درصد رضایت']], toast: 'منتشر شد' }
+  : { slam: ['I', 'MAKE', 'THINGS', 'MOVE'], w3d: 'MOVE', morph: 'DESIGN', pattern: 'PATTERN', ui: 'INTERFACE', fluid: 'FLUID', speed: 'FAST', bang: 'AND SOUND', name: 'YOUR NAME', role: 'MOTION DESIGNER', contact: 'hello@yourname.com',
+      kpi: [[120, 'frames per second'], [24, 'projects'], [98, '% happy clients']], toast: 'Published' };
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav', markers: Object.entries(T).map(([label, t]) => ({ t, label })) };
+const { E, seg, clamp } = K;
+
+/* ═══════════ 1. ENGINE ═══════════ */
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx), S = new Stage(post, gfx, { fps: FPS });
+const A = new Scene3D(gfx, { W, H }), TUN = new Scene3D(gfx, { W, H });
+let MOR, EMI, GIRIH;
+Object.assign(UI.theme, { bg: PAL.paper, panel: '#ffffff', panel2: '#ece6d9', line: 'rgba(16,16,20,.12)', ink: PAL.ink, muted: '#6d6a72', accent: PAL.blue, accent2: PAL.red });   // a LIGHT theme for the UI shot
+
+/* custom GLSL #1 — flat blue world with a pulsing yellow sun and a paper ring (the backdrop of the 3D word) */
+const SUN = gfx.prog(`
+//#use math,sdf
+void main(){ vec2 p = aspectUv(vUv, uRes); vec3 col = vec3(.169, .294, 1.); vec2 c = vec2(.3 * sin(uT * .6), -.04); float d = sdCircle(p - c, .34 + .02 * sin(uT * 2.)), r = abs(sdCircle(p - c, .52 + .03 * sin(uT * 1.3)));
+  col = mix(col, vec3(1., .82, .25), smoothstep(.004, -.004, d)); col = mix(col, vec3(.96, .94, .9), smoothstep(.007, .0, r - .003) * .85); o = vec4(col, 1.); }`);
+/* custom GLSL #2 — raymarched liquid-metal blobs; the "studio" is made of the palette (white key, red + blue accents) */
+const BLOBS = gfx.prog(`
+//#use math,noise,color,sdf
+float map(vec3 p){ float t = uT * .9, d = 1e3; for (int i = 0; i < 5; i++) { float fi = float(i); vec3 c = vec3(sin(t * (.7 + fi * .21) + fi * 2.1) * 1.25, cos(t * (.5 + fi * .17) + fi * 1.3) * .75, sin(t * .4 + fi) * .6); d = opSmoothUnion(d, sdSphere(p - c, .55 + .1 * sin(t + fi)), .6); } return d; }
+vec3 nrm(vec3 p){ vec2 e = vec2(.002, 0.); return normalize(vec3(map(p + e.xyy) - map(p - e.xyy), map(p + e.yxy) - map(p - e.yxy), map(p + e.yyx) - map(p - e.yyx))); }
+vec3 env(vec3 d){ float k = max(dot(d, normalize(vec3(-.5, .8, .4))), 0.); vec3 c = mix(vec3(.30, .32, .42), vec3(.92, .92, .97), d.y * .5 + .5);
+  c += vec3(1., .96, .9) * pow(k, 5.) * 2.2; c += vec3(1., .29, .17) * pow(max(sin(d.x * 5. + 1.) * .5 + .5, 0.), 8.) * 1.1 * smoothstep(-.3, .5, d.y); c += vec3(.17, .29, 1.) * pow(max(dot(d, normalize(vec3(.8, .1, -.4))), 0.), 10.) * 2.; return c; }
+void main(){ vec2 p = aspectUv(vUv, uRes); vec3 ro = vec3(0., 0., 4.), rd = normalize(vec3(p, -1.8)); float t = 0.; bool hit = false;
+  for (int i = 0; i < 64; i++) { float d = map(ro + rd * t); if (d < .002) { hit = true; break; } t += d; if (t > 9.) break; }
+  vec3 col = mix(vec3(.96, .94, .9), vec3(.9, .86, .78), length(p)); if (hit) { vec3 pos = ro + rd * t, n = nrm(pos), r = reflect(rd, n); float fres = pow(1. - max(dot(n, -rd), 0.), 4.); col = aces(env(r) * (.6 + .5 * fres)); } o = vec4(col, 1.); }`);
+
+/* ═══════════ 2. WORLDS (built once, in window.ready) ═══════════ */
+function build() {
+  A.env = Env.softbox({ colors: ['#16194a', '#ffffff', '#ffd9b0', '#9ec7ff'] }); A.cam.fov = vertical ? 46 : 30;
+  A.word = A.mesh(Geo.text(COPY.w3d, { height: 2.5, depth: .17, blur: 6, curve: .8, fontOpts: { family: FAM, weight: 400 } }), Mat.plastic({ base: PAL.red, rough: .2, coat: .9 }));
+  A.bits = [0, 1, 2, 3, 4, 5].map(i => A.mesh([Geo.torus(.5, .17, 40, 18), Geo.sphere(.42, 28), Geo.box(.62, .62, .62)][i % 3], Mat.plastic({ base: [PAL.yellow, PAL.paper, PAL.ink][i % 3], rough: .3, coat: .6 })));
+  TUN.env = Env.night(); TUN.sky = { amt: 0 }; TUN.fog = { color: '#0a0a14', density: .032 }; TUN.cam.fov = 72;
+  const cols = [PAL.red, PAL.blue, PAL.yellow, PAL.paper], rings = []; for (let i = 0; i < 64; i++) rings.push({ pos: [0, 0, -i * 3], rot: [Math.PI / 2, 0, 0], scale: [1 + .12 * Math.sin(i * .7), 1, 1 + .12 * Math.cos(i * .9)], color: cols[i % 4] });
+  TUN.instances(Geo.torus(2.4, .06, 96, 10), Mat.emissive('#ffffff', 1.15), rings);
+  const N = 50000; MOR = new Parts.Morph(gfx, { count: N }); MOR.shapes([Parts.cloud(N, { w: W * 1.2, h: H * .95 }), Parts.text(COPY.morph, { height: minDim * .26, n: N, family: FAM, weight: 400 })]);
+  EMI = new Parts.Emitter(gfx, { count: 22000 });
+  EMI.burst({ t0: T.burst, n: 9000, speed: [260 * u, 1500 * u], drag: 2.3, gravity: [0, -380 * u, 0], life: [1, 2.1], size: [1.8, 5.5], colors: ['#fff2c4', PAL.yellow, PAL.red], glow: .35 });
+  EMI.burst({ t0: T.burst + .06, n: 5000, speed: [100 * u, 800 * u], drag: 1.7, life: [.8, 1.6], size: [2, 5], colors: ['#cfd8ff', PAL.blue, '#ffffff'], glow: .35, sprite: 3 });
+  GIRIH = G.pattern('hex', 54, { size: minDim * .088, cols: 10, rows: 9 });
+}
+const sunburst = (g, x, y, R, rot, n, a, col) => { g.save(); g.translate(x, y); g.rotate(rot); g.fillStyle = col; for (let i = 0; i < n; i += 2) { g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, R, i / n * K.TAU, (i + 1) / n * K.TAU); g.closePath(); g.globalAlpha = a; g.fill(); } g.restore(); };
+
+/* ═══════════ 3. SCENES ═══════════ */
+S.timeline([
+  /* 1 · slam — one word per beat; the flat colour changes on every beat */
+  { id: 'slam', at: T.slam, bg: null, look: { bloom: .1, threshold: .9, grain: .045, ca: .002, vignette: .12 },
+    draw: (g, lt) => { const i = clamp(Math.floor(lt / BEAT), 0, 3), p = lt - i * BEAT, bg = [PAL.paper, PAL.red, PAL.blue, PAL.yellow][i], fg = [PAL.ink, PAL.paper, PAL.paper, PAL.ink][i]; g.fillStyle = bg; g.fillRect(0, 0, W, H);
+      sunburst(g, W / 2, H / 2, Math.hypot(W, H), lt * .25, 28, .1, fg);
+      K.slam(g, p, W / 2, H / 2, () => K.text(g, COPY.slam[i], 0, 0, { size: minDim * (i === 1 ? .62 : .5), weight: 400, family: FAM, fill: fg, max: W * .9 }), { from: 1.5, d: .11 });
+      for (let k = 0; k < 4; k++) { g.fillStyle = fg; g.globalAlpha = k <= i ? 1 : .22; g.fillRect(W * (.06 + k * .03), H * .93, W * .02, 10 * u); } g.globalAlpha = 1; } },
+  /* 2 · type3d — chunky plastic word, orbiting in a flat blue world */
+  { id: 'type3d', at: T.type3d, enter: ['whip', .3, { dir: [1, 0] }], look: { bloom: .25, threshold: .8, grain: .04, ca: .003, vignette: .15 },
+    gl: ({ rt }, lt) => { gfx.pass(SUN, {}, { to: rt }); const pop = E.outBack(seg(lt, -.05, .55)) * vs;
+      A.word.scale = [pop, pop, pop]; A.word.rot = [Math.sin(lt * 1.4) * .12, Math.sin(lt * 1.2) * .5 + (1 - pop) * 2.2, Math.sin(lt * 1.7) * .05];
+      A.bits.forEach((b, i) => { const a = lt * (1.1 + i * .17) + i * 1.05, r = 2.7 + (i % 3) * .5; b.pos = [Math.cos(a) * r * 1.35, Math.sin(a * 1.3 + i) * 1.1, Math.sin(a) * r * .6]; b.rot = [a * 1.5, a, 0]; b.scale = [vs, vs, vs]; });
+      A.cam.pos = [Math.sin(lt * .6) * 1.6, .5, vertical ? 14 : 10.2]; A.cam.target = [0, 0, 0];
+      gfx.blit(A.render({ clear: [0, 0, 0, 0], dof: { focus: A.cam.pos[2], range: 3.2, blur: 9 } }), { to: rt, blend: 'alpha' }); } },
+  /* 3 · morph — smoke becomes the word (poster colours) */
+  { id: 'morph', at: T.morph, enter: ['zoomBlurCut', .45], look: { bloom: .9, threshold: .6, grain: .04, ca: .003 },
+    gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: ['#0b0b16', '#161a52', PAL.blue, '#0b0b16'], speed: .3, amt: .55 }, { to: rt });
+      MOR.draw({ progress: E.inOutCubic(seg(lt, .1, 1.2)), t, colors: [PAL.yellow, PAL.red], flow: 260 * u, size: 2 * u, glow: .17, spread: .5, cam: { yaw: .22 * Math.sin(lt * .8), pitch: .05, dist: 1500 } }, { to: rt }); } },
+  /* 4 · pattern — an exact star pattern grows from the centre */
+  { id: 'pattern', at: T.pattern, enter: ['dots', .5], bg: null, look: { bloom: .1, threshold: .9, grain: .045, vignette: .12 },
+    draw: (g, lt) => { g.fillStyle = PAL.paper; g.fillRect(0, 0, W, H); G.draw(g, GIRIH, { cx: W / 2, cy: H / 2, reveal: seg(lt, 0, 1.2, E.outCubic), width: 5 * u, color: PAL.ink, rotate: lt * .05, scale: 1.15, fill: (poly, i) => [PAL.blue, PAL.yellow, PAL.red, null][i % 4] });
+      const r = minDim * .21 * E.outBack(seg(lt, .45, 1.0)); g.fillStyle = PAL.ink; K.circle(g, W / 2, H / 2, r); g.fill();
+      K.text(g, COPY.pattern, W / 2, H / 2, { size: minDim * .115, weight: 400, family: FAM, fill: PAL.paper, alpha: seg(lt, .75, 1.1), max: r * 1.7 }); } },
+  /* 5 · ui — a light dashboard with a real cursor click */
+  { id: 'ui', at: T.ui, enter: ['slide', .4, { dir: [0, 1] }], bg: null, look: { bloom: .1, threshold: .9, grain: .04, vignette: .12 },
+    draw: (g, lt) => { g.fillStyle = PAL.paper; g.fillRect(0, 0, W, H); K.text(g, COPY.ui, W / 2, H * .5, { size: minDim * .3, weight: 400, family: FAM, fill: 'rgba(16,16,20,.07)', max: W * .96 });
+      const e = E.outBack(seg(lt, 0, .45)), cx = W * .09, cy = H * (.12 + (1 - e) * .5), cw = W * .82, ch = H * .76; UI.card(g, cx, cy, cw, ch, { radius: 28 * u });
+      COPY.kpi.forEach(([v, label], i) => { const x = cx + cw * (.2 + i * .3); Type.counter(g, v * E.outExpo(seg(lt, .2 + i * .1, 1.1)), x, cy + ch * .17, { size: minDim * .08, weight: 800, family: FAM2, fill: PAL.ink, fa: FA, pad: String(v).length }); K.text(g, label, x, cy + ch * .29, { size: minDim * .026, weight: 500, family: FAM2, fill: UI.theme.muted }); });
+      UI.lineChart(g, cx + cw * .07, cy + ch * .42, cw * .86, ch * .32, [3, 5, 4, 7, 6, 9, 8, 12, 11, 15], seg(lt, .3, 1.3), { color: PAL.blue, size: minDim * .022, fa: FA });
+      const press = Math.max(0, 1 - Math.abs(lt - 1.15) * 9); UI.button(g, cx + cw * .07, cy + ch * .82, cw * .22, ch * .1, FA ? 'ارسال' : 'Publish', { press, hover: seg(lt, .8, 1.1), size: minDim * .03, color: PAL.red });
+      if (lt > 1.2) K.pop(g, lt - 1.2, cx + cw * .76, cy + ch * .87, () => { UI.card(g, -cw * .17, -ch * .06, cw * .34, ch * .12, { radius: 18 }); K.text(g, COPY.toast, 0, 0, { size: minDim * .03, weight: 700, family: FAM2, fill: PAL.ink }); }, { dur: .45, over: 1.6 });
+      UI.cursor(g, lt, [[0, cx + cw * .9, cy + ch * .95], [.25, cx + cw * .62, cy + ch * .6], [1.1, cx + cw * .18, cy + ch * .87, E.inOutCubic, .12], [1.9, cx + cw * .5, cy + ch * .75]], [1.15], { scale: 1.6 * u }); } },
+  /* 6 · fluid — raymarched liquid metal in the palette */
+  { id: 'fluid', at: T.fluid, enter: ['liquid', .5], look: { bloom: .3, threshold: .8, grain: .04, ca: .002 },
+    gl: ({ rt }) => gfx.pass(BLOBS, {}, { to: rt }),
+    draw: (g, lt) => { const e = E.outExpo(seg(lt, .1, .7)); g.save(); g.translate(W / 2, H * (.5 + (1 - e) * .1)); g.globalAlpha = e; K.text(g, COPY.fluid, 0, 0, { size: minDim * .3, weight: 400, family: FAM, fill: PAL.red, shadow: { color: PAL.ink, blur: 0, x: 8 * u, y: 8 * u }, max: W * .9 }); g.restore(); } },
+  /* 7 · speed — a tunnel of rings, then echo type */
+  { id: 'speed', at: T.speed, enter: ['zoom', .45], look: { bloom: .65, threshold: .7, grain: .04, ca: .004, zoomBlur: .12 },
+    gl: ({ rt }, lt) => { TUN.cam.pos = [Math.sin(lt * 1.3) * .25, Math.cos(lt * 1.1) * .2, 3 - lt * 11]; TUN.cam.target = [Math.sin(lt * .9) * .6, Math.cos(lt * .7) * .4, -20 - lt * 11]; TUN.cam.up = [Math.sin(lt * .5) * .2, 1, 0];
+      gfx.blit(TUN.render({ clear: [.04, .04, .08, 1] }), { to: rt }); },
+    draw: (g, lt) => { const p = E.outCubic(seg(lt, 0, .5)); Type.stack(g, COPY.speed, W / 2, H / 2, { n: 5, size: minDim * .26 * p, family: FAM, weight: 400, fill: PAL.paper, outline: PAL.paper, gap: .78 }); } },
+  /* 8 · burst — sparks + confetti + the finale line, slammed */
+  { id: 'burst', at: T.burst, enter: ['flash', .2], look: { bloom: .8, threshold: .62, grain: .04, ca: .004 },
+    gl: ({ rt }, lt, t) => { fx.bg('rays', { c: ['#08080f', PAL.red, PAL.yellow, '#ffffff'], speed: .6, amt: .4 * Math.exp(-lt * 2.4) }, { to: rt }); EMI.draw({ t, cam: {} }, { to: rt }); },
+    draw: (g, lt) => { const cols = [PAL.red, PAL.yellow, PAL.blue, PAL.paper]; K.confetti(g, lt - .05, W * .1, H * 1.02, { n: 90, life: 2.2, speed: 1500 * u, gravity: 1700 * u, colors: cols, size: 22 * u, angle: -1.2, spread: .9, seed: 1 }); K.confetti(g, lt - .05, W * .9, H * 1.02, { n: 90, life: 2.2, speed: 1500 * u, gravity: 1700 * u, colors: cols, size: 22 * u, angle: -1.95, spread: .9, seed: 2 });
+      K.slam(g, lt - .1, W / 2, H / 2, () => K.text(g, COPY.bang, 0, 0, { size: minDim * .2, weight: 400, family: FAM, fill: PAL.paper, shadow: { color: PAL.red, blur: 0, x: 8 * u, y: 8 * u }, max: W * .9 }), { from: 1.6, d: .12 }); } },
+  /* 9 · end — name, role, contact, long calm hold */
+  { id: 'end', at: T.end, enter: ['blur', .8], bg: null, look: { bloom: .15, threshold: .85, grain: .04, vignette: .15 },
+    draw: (g, lt) => { g.fillStyle = PAL.paper; g.fillRect(0, 0, W, H); sunburst(g, W / 2, H * .45, Math.hypot(W, H), lt * .08, 36, .07, PAL.ink); const p = E.outCubic(seg(lt, .1, .9));
+      g.save(); g.translate(W / 2, H * .42); g.scale(.9 + .1 * p, .9 + .1 * p); K.text(g, COPY.name, 0, 0, { size: minDim * .21, weight: 400, family: FAM, fill: PAL.ink, alpha: p, max: W * .92 }); g.restore();
+      Type.reveal(g, COPY.role, W / 2, H * .42 + minDim * .17, lt - .5, { size: minDim * .05, weight: 700, family: FAM2, fill: PAL.red }); K.text(g, COPY.contact, W / 2, H * .42 + minDim * .26, { size: minDim * .033, weight: 500, family: K.FONTS.mono, fill: UI.theme.muted, alpha: seg(lt, 1.1, 1.7), dir: 'ltr' });
+      [[PAL.red, 0], [PAL.blue, 1], [PAL.yellow, 2]].forEach(([c, i]) => { const a = lt * .5 + i * 2.1, x = W / 2 + Math.cos(a) * W * .43, y = H * .47 + Math.sin(a) * H * .4; g.fillStyle = c; g.globalAlpha = seg(lt, .3 + i * .1, 1); if (i === 0) K.circle(g, x, y, minDim * .03); else if (i === 1) { g.save(); g.translate(x, y); g.rotate(a); g.beginPath(); g.rect(-minDim * .025, -minDim * .025, minDim * .05, minDim * .05); g.restore(); } else K.regular(g, x, y, minDim * .035, 3, a); g.fill(); g.globalAlpha = 1; }); } },
+]);
+S.camera = t => Cine.mix(Cine.punch(t, HITS, { amp: .02, decay: .2 }), Cine.shake(t, HITS, { amp: .006 }), Cine.handheld(t, { amp: .002 }));
+S.look((t, base) => { const fadeIn = 1 - seg(t, 0, .12), fadeOut = seg(t, DUR - .6, DUR - .03, E.inCubic), p = K.pulse(t, HITS, .08); return { ca: (base.ca ?? .002) + .004 * p, fade: Math.max(fadeIn, fadeOut), fadeColor: [.957, .937, .902], flash: [.04 * p, .04 * p, .04 * p] }; });
+
+function renderFrame(t) { S.render(t); }
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['400 Anton', '400 Lalezar', '700 Space Grotesk', '800 Inter', '500 Inter', '800 Vazirmatn', '500 Vazirmatn', '700 Vazirmatn', '500 JetBrains Mono']).then(() => { build(); return S.ready(); }).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

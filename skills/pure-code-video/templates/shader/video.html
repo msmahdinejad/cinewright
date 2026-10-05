@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<script id="cues" type="application/json">
+{ "bpm": 100, "duration": {{DUR}},
+  "t": { "approach": 0, "unfold": 4.2, "reveal": 8.4, "outro": 11.0 },
+  "hits": [4.2, 8.4] }
+</script>
+
+<script src="lib/kit.js"></script>
+<script src="lib/post.js"></script>
+<script>
+'use strict';
+/* Raymarched signed-distance-field scene — real 3D with no 3D library: one fragment shader, everything a function of uT.
+   Tricks worth reading: smooth-min blending, cosine (iq) palettes, glow accumulated along the ray (neon look without extra passes),
+   tetrahedron normals, fresnel rim light, soft AO. Then post.js adds bloom, chromatic aberration, grain. Captions are a 2D overlay. */
+const CUES = JSON.parse(document.getElementById('cues').textContent);
+const Q = K.params();
+const W = Q.w || {{W}}, H = Q.h || {{H}}, FPS = Q.fps || {{FPS}}, DUR = CUES.duration, LANG = Q.q.get('lang') || '{{LANG}}';
+const COPY = LANG === 'fa' ? { title: 'ساخته‌شده از ریاضی', sub: 'هر پیکسل یک تابع است' } : { title: 'Made of math', sub: 'every pixel is a function' };
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav', markers: Object.entries(CUES.t).map(([label, t]) => ({ t, label })) };
+
+const { E, seg } = K, L = K.layout(W, H), u = L.u, T = CUES.t, HITS = CUES.hits;
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gl = post.gl;
+const cap = K.canvas(W, H), cg = cap.getContext('2d');
+
+const VS = `#version 300 es
+void main(){ gl_Position = vec4(gl_VertexID == 1 ? 3. : -1., gl_VertexID == 2 ? 3. : -1., 0., 1.); }`;
+const FS = `#version 300 es
+precision highp float;
+uniform vec2 uRes; uniform float uT, uUnfold, uReveal, uPulse; uniform vec3 uColA, uColB, uColC;
+out vec4 o;
+mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+float smin(float a, float b, float k){ float h = max(k - abs(a - b), 0.) / k; return min(a, b) - h * h * k * .25; }
+float sdTorus(vec3 p, vec2 t){ vec2 q = vec2(length(p.xz) - t.x, p.y); return length(q) - t.y; }
+vec3 pal(float x){ x = fract(x); return mix(mix(uColA, uColB, smoothstep(0., .5, x)), uColC, smoothstep(.5, 1., x)); }   // 3-colour brand ramp (swap uColA/B/C to re-theme)
+float map(vec3 p, out float id){
+  vec3 q = p; q.xz *= rot(uT * .28); q.xy *= rot(uT * .17);
+  float d = 1e9; id = 0.;
+  for (int i = 0; i < 5; i++) {
+    float fi = float(i); vec3 r = q;
+    r.yz *= rot(fi * .63 + uT * (.12 + .05 * fi) * (1. + uUnfold * 1.5)); r.xz *= rot(fi * 1.1 + uUnfold * fi * .5);
+    float R = 1.1 + .1 * fi * uUnfold + .06 * sin(uT * .8 + fi), th = .07 + .03 * uUnfold + .02 * uPulse;
+    float t = sdTorus(r, vec2(R, th)); if (t < d) id = fi; d = smin(d, t, .28);
+  }
+  float orb = length(p) - (.34 + .06 * sin(uT * 3.) + .1 * uPulse); if (orb < d) id = 9.; d = smin(d, orb, .34);
+  return d;
+}
+float map(vec3 p){ float id; return map(p, id); }
+vec3 normal(vec3 p){ vec2 e = vec2(1., -1.) * .0015; return normalize(e.xyy * map(p + e.xyy) + e.yyx * map(p + e.yyx) + e.yxy * map(p + e.yxy) + e.xxx * map(p + e.xxx)); }
+float ao(vec3 p, vec3 n){ float s = 0., w = 1.; for (int i = 1; i <= 4; i++) { float h = .06 * float(i); s += (h - map(p + n * h)) * w; w *= .6; } return clamp(1. - 2.2 * s, 0., 1.); }
+void main(){
+  vec2 uv = (gl_FragCoord.xy - .5 * uRes) / uRes.y; uv.y -= .13 * uReveal;                // lift the object when the caption arrives
+  float dist = mix(8.2, 5.8, smoothstep(0., 4.2, uT)) + 2.6 * uReveal;               // dolly in, then pull back for the reveal
+  float a = uT * .22 + .8, el = .35 + .25 * sin(uT * .25);
+  vec3 ro = dist * vec3(cos(a) * cos(el), sin(el), sin(a) * cos(el)), fw = normalize(-ro), rt = normalize(cross(fw, vec3(0., 1., 0.))), up = cross(rt, fw);
+  vec3 rd = normalize(fw * 1.6 + rt * uv.x + up * uv.y);
+  float t = 0., glow = 0., id = 0.; vec3 gcol = vec3(0.);
+  for (int i = 0; i < 96; i++) {                                                     // sphere tracing + glow accumulation
+    vec3 p = ro + rd * t; float d = map(p, id);
+    float g = exp(-d * 5.5) * .018; glow += g; gcol += g * pal(id * .17 + t * .05);
+    if (d < .0012) break; t += d * .85; if (t > 14.) break;
+  }
+  vec3 col = vec3(.006, .007, .02) + vec3(.02, .012, .05) * (1. - length(uv) * .9);   // backdrop
+  if (t < 14.) {
+    vec3 p = ro + rd * t, n = normal(p); float dd = map(p, id);
+    vec3 base = pal(id * .17 + .05 * p.y + .1), l = normalize(vec3(.6, .8, -.3));
+    float dif = max(dot(n, l), 0.), fres = pow(1. - max(dot(n, -rd), 0.), 3.), spec = pow(max(dot(reflect(-l, n), -rd), 0.), 40.);
+    col = base * (.08 + .9 * dif) * ao(p, n) + vec3(1., .95, .9) * spec * .7 + pal(id * .17 + .5) * fres * 1.4;
+    col += pal(id * .17 + .3) * .25 * pow(max(dot(n, normalize(vec3(-.6, -.2, .8))), 0.), 2.);   // cool fill
+    col *= exp(-t * .045);
+  }
+  col += gcol * (1.2 + uPulse * 1.5);                                                // the neon glow
+  o = vec4(col, 1.);
+}`;
+
+function compile() {
+  const mk = (t, s) => { const x = gl.createShader(t); gl.shaderSource(x, s); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(x) || 'shader compile failed with an empty log — the WebGL context was lost (GPU process crashed?). Re-render with --gpu off'); return x; };
+  const p = gl.createProgram(); gl.attachShader(p, mk(gl.VERTEX_SHADER, VS)); gl.attachShader(p, mk(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p) || 'shader link failed with an empty log — the WebGL context was lost (GPU process crashed?). Re-render with --gpu off');
+  const uni = {}; for (let i = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS); i--;) { const n = gl.getActiveUniform(p, i).name; uni[n] = gl.getUniformLocation(p, n); } return { p, u: uni };
+}
+const S = compile(), vao = gl.createVertexArray();
+
+function renderFrame(t) {
+  const pulse = K.pulse(t, HITS, .22), unfold = seg(t, T.unfold - .6, T.unfold + 2.4, E.inOutCubic), reveal = seg(t, T.reveal - .4, T.reveal + 2.2, E.inOutCubic), fade = seg(t, T.outro, DUR - .05, E.inCubic);
+  post.begin();
+  gl.disable(gl.BLEND); gl.useProgram(S.p); gl.bindVertexArray(vao);
+  gl.uniform2f(S.u.uRes, W, H); gl.uniform1f(S.u.uT, t); gl.uniform1f(S.u.uUnfold, unfold); gl.uniform1f(S.u.uReveal, reveal); gl.uniform1f(S.u.uPulse, pulse); gl.uniform3f(S.u.uColA, .30, .18, 1.0); gl.uniform3f(S.u.uColB, .08, .85, .95); gl.uniform3f(S.u.uColC, 1.0, .22, .58);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  cg.clearRect(0, 0, W, H);
+  const a = seg(t, T.reveal + .6, T.reveal + 1.6, E.outCubic), b = seg(t, T.reveal + 1.2, T.reveal + 2.2, E.outCubic);
+  if (a > 0) { cg.fillStyle = K.gradient(cg, 0, H * .68, 0, H, [[0, 'rgba(2,2,12,0)'], [1, `rgba(2,2,12,${.72 * a})`]]); cg.fillRect(0, H * .68, W, H * .32); }
+  if (a > 0) K.text(cg, COPY.title, W / 2, H * (L.vertical ? .82 : .86) + (1 - a) * 24 * u, { size: (L.vertical ? 96 : 92) * u, weight: 800, fill: '#fff', alpha: a, max: W * .86, glow: { color: 'rgba(160,140,255,.9)', blur: 30 * u } });
+  if (b > 0) K.text(cg, COPY.sub, W / 2, H * (L.vertical ? .88 : .93) + (1 - b) * 16 * u, { size: 36 * u, weight: 500, fill: 'rgba(220,220,255,.85)', alpha: b, max: W * .8 });
+  post.overlay(cap, 1);
+  post.end({ frame: K.frameIndex(t, FPS), bloom: .75, threshold: .55, knee: .5, streak: .25, ca: .002 + .006 * pulse, grain: .04, vignette: .4, fade, exposure: 1 + .08 * pulse, shoulder: .6 });
+}
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['800 Inter', '500 Inter', '800 Vazirmatn', '500 Vazirmatn']).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

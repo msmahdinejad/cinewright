@@ -1,0 +1,25 @@
+{
+  "name": "pure-code-video",
+  "version": "2.0.0",
+  "private": true,
+  "description": "An agent skill (Codex, Claude Code, …) for making cinema-grade videos entirely from code: deterministic WebGL/canvas frames, synthesised music, a 239-technique atlas, Persian/RTL support.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Mohammad Saleh Mahdinejad",
+  "repository": { "type": "git", "url": "git+https://github.com/msmahdinejad/pure-code-video.git" },
+  "homepage": "https://msmahdinejad.github.io/pure-code-video/",
+  "bugs": "https://github.com/msmahdinejad/pure-code-video/issues",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "doctor": "node skills/pure-code-video/scripts/doctor.mjs",
+    "lint": "node tools/lint.mjs",
+    "docs": "node tools/gen-docs.mjs",
+    "docs:check": "node tools/gen-docs.mjs --check",
+    "test": "node tools/lint.mjs && node tools/gen-docs.mjs --check",
+    "test:atlas": "node skills/pure-code-video/scripts/atlas.mjs test all",
+    "assets": "node tools/make-assets.mjs reels",
+    "benchmark": "node benchmark/run.mjs",
+    "benchmark:report": "node benchmark/report.mjs"
+  },
+  "keywords": ["agent-skill", "codex", "claude-code", "motion-graphics", "webgl", "video", "procedural", "persian", "rtl"]
+}

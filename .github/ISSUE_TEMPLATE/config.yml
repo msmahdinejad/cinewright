@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or idea
+    url: https://github.com/msmahdinejad/pure-code-video/discussions
+    about: Ask how to get a certain look, share a film you made, or float an idea before filing an issue.
+  - name: Documentation
+    url: https://msmahdinejad.github.io/pure-code-video/
+    about: Getting started, the technique atlas, prompt cookbook and the benchmark.
+  - name: Security problem
+    url: https://github.com/msmahdinejad/pure-code-video/security/advisories/new
+    about: Please report vulnerabilities privately, not as a public issue.

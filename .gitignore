@@ -1,0 +1,22 @@
+# dependencies / tooling
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# render output of projects scaffolded inside the repo while developing
+**/.render/
+**/out/
+**/qc/.tmp/
+/atlas-clips/
+
+# benchmark: raw agent runs are big and private to the machine; only summaries are committed
+/benchmark/runs/
+/benchmark/.work/
+!/benchmark/results/
+
+# local scratch
+/tmp/
+*.tmp
