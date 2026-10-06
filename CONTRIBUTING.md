@@ -13,9 +13,9 @@ Please read the [Code of Conduct](CODE_OF_CONDUCT.md). Persian and English are b
 ## Setup
 
 ```bash
-git clone https://github.com/msmahdinejad/pure-code-video && cd pure-code-video
+git clone https://github.com/msmahdinejad/cinewright && cd cinewright
 npm test                                   # lint + generated-docs check, no browser needed (Node ≥ 18)
-node skills/pure-code-video/scripts/doctor.mjs   # checks Chrome, ffmpeg, WebGL on your machine
+node skills/cinewright/scripts/doctor.mjs   # checks Chrome, ffmpeg, WebGL on your machine
 ```
 
 There are **no dependencies to install**. The skill is plain Node scripts and browser JavaScript.
@@ -24,8 +24,8 @@ There are **no dependencies to install**. The skill is plain Node scripts and br
 
 | path | what lives there |
 |---|---|
-| `skills/pure-code-video/` | **the skill** — what agents install. `SKILL.md` is the entry point, `references/` the knowledge, `scripts/` the tools, `templates/` the engine and starter films |
-| `skills/pure-code-video/references/atlas/*.md` | the technique atlas (one file per family) — the main thing to extend |
+| `skills/cinewright/` | **the skill** — what agents install. `SKILL.md` is the entry point, `references/` the knowledge, `scripts/` the tools, `templates/` the engine and starter films |
+| `skills/cinewright/references/atlas/*.md` | the technique atlas (one file per family) — the main thing to extend |
 | `docs/` | the website (GitHub Pages) and generated pages; `atlas.md` and `benchmark.md` are **generated** |
 | `benchmark/` | the harness that compares agents with/without the skill |
 | `tools/` | repository tooling (lint, doc generation, asset generation) — not shipped to users |
@@ -49,16 +49,16 @@ avoid: the mistake people make with it
 
 Rules that keep the atlas good:
 
-- **It must run.** `js scene`, `js gl`, `glsl` and `js audio` blocks are executed by `node skills/pure-code-video/scripts/atlas.mjs test <id>`. Run it; CI runs all of them.
-- **Look at it.** `node skills/pure-code-video/scripts/atlas.mjs sheet <id>` renders a contact sheet; `clip <id> --gif` renders motion. Fix white-outs, clipped text and static frames before you open the PR. A recipe that "works" but looks flat teaches the agent to make flat video.
+- **It must run.** `js scene`, `js gl`, `glsl` and `js audio` blocks are executed by `node skills/cinewright/scripts/atlas.mjs test <id>`. Run it; CI runs all of them.
+- **Look at it.** `node skills/cinewright/scripts/atlas.mjs sheet <id>` renders a contact sheet; `clip <id> --gif` renders motion. Fix white-outs, clipped text and static frames before you open the PR. A recipe that "works" but looks flat teaches the agent to make flat video.
 - **Pure functions of time.** No `Math.random()`, `Date.now()`, timers or state carried between frames — use `K.hash`, `K.rng`, `K.noise`. (`render.mjs verify` proves this for films.)
 - **Say when *not* to use it** (`avoid:`). Judgement is what the atlas teaches.
 - Persian/RTL text: animate per **word**, never per letter, no letter-spacing.
-- Regenerate the gallery for your family: `node skills/pure-code-video/scripts/atlas.mjs gallery --only <family>`, then `node tools/gen-docs.mjs`.
+- Regenerate the gallery for your family: `node skills/cinewright/scripts/atlas.mjs gallery --only <family>`, then `node tools/gen-docs.mjs`.
 
 ## Changing the engine (`templates/lib`)
 
-- Keep it dependency-free and deterministic. Run `node skills/pure-code-video/scripts/atlas.mjs test all` (≈1 min) and `node tools/render.mjs verify` inside a scaffolded `cinema` and `showreel` project before you push.
+- Keep it dependency-free and deterministic. Run `node skills/cinewright/scripts/atlas.mjs test all` (≈1 min) and `node tools/render.mjs verify` inside a scaffolded `cinema` and `showreel` project before you push.
 - Never add GPU-forcing Chrome flags; the renderer must work on integrated GPUs and in containers.
 - Update `references/engine.md` (the one-page API) in the same PR.
 

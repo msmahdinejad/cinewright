@@ -1,13 +1,13 @@
 ---
-name: pure-code-video
-description: Make videos entirely from code — cinematic motion graphics, showreels and reels, product/UI explainers, teasers and trailers, logo reveals, kinetic typography, 3D (chrome, glass, cities), GPU particles, shader art, music videos — as an MP4 with original synthesized music and sound design. Every frame is a deterministic WebGL/canvas page rendered by headless Chrome and encoded with ffmpeg (no stock footage, samples or video models). Ships a GPU film engine (scene sequencer with 32 transitions, 3D renderer, particles, 25 shader backgrounds, 26 filters, kinetic type, camera tools), 3 flagship templates, a searchable atlas of 230+ tested techniques with a visual gallery, a creative-direction generator, a sound engine with Persian instruments, QC tools and first-class Persian/RTL support. Use for ANY request for a video, animation, reel, teaser, intro/outro, explainer or visualizer — above all when the user wants it awesome / cinematic / "go all out", in Persian/Arabic, or with original music.
+name: cinewright
+description: Cinewright — make videos entirely from code — cinematic motion graphics, showreels and reels, product/UI explainers, teasers and trailers, logo reveals, kinetic typography, 3D (chrome, glass, cities), GPU particles, shader art, music videos — as an MP4 with original synthesized music and sound design. Every frame is a deterministic WebGL/canvas page rendered by headless Chrome and encoded with ffmpeg (no stock footage, samples or video models). Ships a GPU film engine (scene sequencer with 32 transitions, 3D renderer, particles, 25 shader backgrounds, 26 filters, kinetic type, camera tools), 3 flagship templates, a searchable atlas of 230+ tested techniques with a visual gallery, a creative-direction generator, a sound engine with Persian instruments, QC tools and first-class Persian/RTL support. Use for ANY request for a video, animation, reel, teaser, intro/outro, explainer or visualizer — above all when the user wants it awesome / cinematic / "go all out", in Persian/Arabic, or with original music.
 ---
 
-# Pure-code video — studio mode
+# Cinewright — studio mode
 
 **Idea:** a video is `renderFrame(t)` — a *pure function of time* — plus a soundtrack synthesized from the *same cue timeline*. `tools/render.mjs` renders every frame in parallel headless Chrome tabs and pipes pixels to ffmpeg. Nothing depends on the previous frame, so any frame can be rendered, inspected and fixed independently — that is how you verify your own work without eyes or ears, and how you iterate fast.
 
-`<skill>` = the folder containing this SKILL.md (e.g. `~/.agents/skills/pure-code-video`). Dependencies: Node ≥ 18, Chrome/Edge/Chromium, ffmpeg — nothing else.
+`<skill>` = the folder containing this SKILL.md (e.g. `~/.agents/skills/cinewright`). Dependencies: Node ≥ 18, Chrome/Edge/Chromium, ffmpeg — nothing else.
 
 ## What "great" means here (read this first)
 Previous outputs from this skill were *correct but flat*: one idea per film, a handful of effects, a slideshow rhythm. The engine now makes **cinema-grade** looks cheap (GPU transitions, 3D with real reflections and depth of field, 50 000-particle morphs, shader backgrounds, kinetic type, camera moves), so the quality bar is set by **your decisions**:

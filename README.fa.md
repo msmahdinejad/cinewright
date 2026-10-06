@@ -2,16 +2,16 @@
 
 <img src="docs/assets/anim/showreel-fa.webp" alt="شوریل موشن‌گرافیک که کاملاً با کد ساخته شده" width="720">
 
-# pure-code-video
+# cinewright
 
 **یک «اسکیل» برای ایجنت‌های کدنویس (Codex، Claude Code و …) که یادشان می‌دهد ویدیوهای سینمایی و حرفه‌ای بسازند — فقط با کد.**
 
 هر فریم یک صفحهٔ WebGL/Canvas قطعی است؛ هر صدا با کد ساخته می‌شود. بدون ویدیوی استوک، بدون مدل ویدیوساز، بدون ابر. فارسی و راست‌به‌چپ درجه‌یک است.
 
-[![CI](https://github.com/msmahdinejad/pure-code-video/actions/workflows/ci.yml/badge.svg)](https://github.com/msmahdinejad/pure-code-video/actions/workflows/ci.yml)
+[![CI](https://github.com/msmahdinejad/cinewright/actions/workflows/ci.yml/badge.svg)](https://github.com/msmahdinejad/cinewright/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-5b3df5.svg)](LICENSE)
 
-[**وب‌سایت**](https://msmahdinejad.github.io/pure-code-video/) · [شروع سریع](docs/getting-started.md) · [اطلس تکنیک‌ها](docs/atlas.md) · [نمونه‌پرامپت‌ها](docs/prompts.md) · [بنچمارک](docs/benchmark.md) · [English](README.md)
+[**وب‌سایت**](https://msmahdinejad.github.io/cinewright/) · [شروع سریع](docs/getting-started.md) · [اطلس تکنیک‌ها](docs/atlas.md) · [نمونه‌پرامپت‌ها](docs/prompts.md) · [بنچمارک](docs/benchmark.md) · [English](README.md)
 
 </div>
 
@@ -23,8 +23,8 @@
 
 <table dir="ltr">
 <tr>
-<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="فیلم محصول فارسی: یک منشور یک صدا را به چهار خروجی می‌شکند"><br><sub>فیلم محصول (۳۰ ثانیه، متن فارسی راست‌به‌چپ، موسیقی اصلی) — <a href="https://github.com/msmahdinejad/pure-code-video/releases/download/v2.0.0/avorythm-film.mp4">MP4</a> · <a href="skills/pure-code-video/references/case-studies/avorythm/README.md">روند ساخت</a></sub></td>
-<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="تریلر سینمایی تیره"><br><sub>قالب سینمایی (۲۰ ثانیه) — ذرات، عنوان سه‌بعدی کروم، پرواز بر فراز شهر شبانه. <a href="https://github.com/msmahdinejad/pure-code-video/releases/download/v2.0.0/cinema-template.mp4">MP4</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="فیلم محصول فارسی: یک منشور یک صدا را به چهار خروجی می‌شکند"><br><sub>فیلم محصول (۳۰ ثانیه، متن فارسی راست‌به‌چپ، موسیقی اصلی) — <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/avorythm-film.mp4">MP4</a> · <a href="skills/cinewright/references/case-studies/avorythm/README.md">روند ساخت</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="تریلر سینمایی تیره"><br><sub>قالب سینمایی (۲۰ ثانیه) — ذرات، عنوان سه‌بعدی کروم، پرواز بر فراز شهر شبانه. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/cinema-template.mp4">MP4</a></sub></td>
 </tr>
 </table>
 
@@ -49,11 +49,11 @@
 </div>
 
 ```powershell
-irm https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.ps1 | iex
 ```
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.sh | bash
 ```
 
 <div dir="rtl">
@@ -65,13 +65,13 @@ curl -fsSL https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/i
 </div>
 
 ```text
-/plugin marketplace add msmahdinejad/pure-code-video
-/plugin install pure-code-video@pure-code-video
+/plugin marketplace add msmahdinejad/cinewright
+/plugin install cinewright@cinewright
 ```
 
 <div dir="rtl">
 
-**هر ایجنت دیگر:** `npx skills add msmahdinejad/pure-code-video` · **داکر** (بدون نصب روی سیستم): [راهنما](docs/getting-started.md#docker)
+**هر ایجنت دیگر:** `npx skills add msmahdinejad/cinewright` · **داکر** (بدون نصب روی سیستم): [راهنما](docs/getting-started.md#docker)
 
 ## استفاده
 
@@ -80,12 +80,12 @@ curl -fsSL https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/i
 </div>
 
 ```text
-$pure-code-video make a dynamic 15-second motion graphics video that shows what an incredible
+$cinewright make a dynamic 15-second motion graphics video that shows what an incredible
 motion designer you are, like it's your showreel for a résumé. Go all out.
 ```
 
 ```text
-$pure-code-video یک تیزر ۲۰ ثانیه‌ای سینمایی با هویت ایرانی (نقش‌های گیره‌چینی/گره‌سازی، نستعلیق،
+$cinewright یک تیزر ۲۰ ثانیه‌ای سینمایی با هویت ایرانی (نقش‌های گیره‌چینی/گره‌سازی، نستعلیق،
 نور و غبار) برای یک رصدخانهٔ ستاره‌شناسی بساز. موسیقی با سنتور و نی و ریتم ۶/۸ را خودت بساز.
 افقی و عمودی بده. Go all out.
 ```

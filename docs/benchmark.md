@@ -44,7 +44,7 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 </details>
 
 - **Codex + skill v1.1:** The maintainer's own run on 2026-09-30 with the first public version of the skill (prompt 2 of the feedback round).
-- **Claude + skill v2:** Built by following the v2 protocol by hand in a Claude Code session (the case study in skills/pure-code-video/references/case-studies/avorythm). A different agent than the Codex rows: compare with care.
+- **Claude + skill v2:** Built by following the v2 protocol by hand in a Claude Code session (the case study in skills/cinewright/references/case-studies/avorythm). A different agent than the Codex rows: compare with care.
 
 ## Motion-designer showreel — `showreel-15s`
 

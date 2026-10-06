@@ -11,7 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'), SKILL = path.join(ROOT, 'skills', 'pure-code-video');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'), SKILL = path.join(ROOT, 'skills', 'cinewright');
 const errors = [], warns = [];
 const err = m => errors.push(m), warn = m => warns.push(m);
 const rd = f => fs.readFileSync(f, 'utf8');
@@ -25,7 +25,7 @@ const files = walk(ROOT);
   if (!m) err('SKILL.md: no YAML frontmatter');
   else {
     const name = /^name:\s*(.+)$/m.exec(m[1])?.[1]?.trim(), desc = /^description:\s*(.+)$/m.exec(m[1])?.[1]?.trim();
-    if (name !== 'pure-code-video') err(`SKILL.md: name is "${name}", expected "pure-code-video" (must equal the folder name)`);
+    if (name !== 'cinewright') err(`SKILL.md: name is "${name}", expected "cinewright" (must equal the folder name)`);
     if (!desc) err('SKILL.md: missing description'); else if (desc.length > 1024) err(`SKILL.md: description is ${desc.length} chars (limit 1024)`);
   }
   if (t.split('\n').length > 140) warn(`SKILL.md has ${t.split('\n').length} lines — keep the entry point lean, move detail to references/`);
@@ -66,7 +66,7 @@ for (const f of files.filter(f => f.endsWith('.md'))) {
 /* 5 ─ numbers and versions */
 {
   const nEntries = A.entries.length, nFam = A.families.length, readme = rd(path.join(ROOT, 'README.md'));
-  for (const [file, re] of [['README.md', /(\d+) (?:tested )?(?:techniques|entries|recipes) in (\d+) famil/i], ['skills/pure-code-video/SKILL.md', /(\d+) families, (\d+) entries/]]) {
+  for (const [file, re] of [['README.md', /(\d+) (?:tested )?(?:techniques|entries|recipes) in (\d+) famil/i], ['skills/cinewright/SKILL.md', /(\d+) families, (\d+) entries/]]) {
     const t = rd(path.join(ROOT, file)), m = re.exec(t); if (!m) { warn(`${file}: could not find the "N entries in M families" sentence`); continue; }
     const [a, b] = file.startsWith('README') ? [m[1], m[2]] : [m[2], m[1]];
     if (+a !== nEntries || +b !== nFam) err(`${file} says ${a} entries / ${b} families, the atlas has ${nEntries} / ${nFam}`);

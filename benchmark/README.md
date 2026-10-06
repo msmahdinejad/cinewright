@@ -15,7 +15,7 @@ node benchmark/run.mjs --suite quick
 node benchmark/run.mjs --suite core --reps 3
 
 # 4. compare two versions of the skill on one task
-node benchmark/run.mjs --tasks showreel-15s --conditions baseline,v1=../old/pure-code-video,v2=skills/pure-code-video
+node benchmark/run.mjs --tasks showreel-15s --conditions baseline,v1=../old/cinewright,v2=skills/cinewright
 
 # 5. human judgement, blind
 node benchmark/rate.mjs <run-id>              # → benchmark/runs/<run-id>/blind/index.html
@@ -29,8 +29,8 @@ node benchmark/report.mjs
 
 | condition | what the agent sees |
 |---|---|
-| `baseline` | the task prompt only. Any installed copy of `pure-code-video` is **disabled for the run** (Codex `skills.config`), so a stale install on your machine cannot leak in |
-| `skill` | the same prompt prefixed with `Use $pure-code-video.`, and the skill from *this checkout* installed in the run's own project folder (`.agents/skills/`) |
+| `baseline` | the task prompt only. Any installed copy of `cinewright` is **disabled for the run** (Codex `skills.config`), so a stale install on your machine cannot leak in |
+| `skill` | the same prompt prefixed with `Use $cinewright.`, and the skill from *this checkout* installed in the run's own project folder (`.agents/skills/`) |
 | `name=path` | any other copy of the skill — typically an older release, to measure what a change bought you |
 
 Every condition gets the identical task text and the identical delivery footer ([`suite/suite.json`](suite/suite.json)): *work in this folder, code only — no stock footage, no AI video generation — deliver `./final.mp4` with sound*. After each run the harness checks the agent's event log: a baseline run that nevertheless read the skill is flagged **contaminated** and should be discarded.

@@ -3,7 +3,7 @@ name: Docs site
 on:
   push:
     branches: [main]
-    paths: ["docs/**", "skills/pure-code-video/references/**", "tools/gen-docs.mjs", "benchmark/**"]
+    paths: ["docs/**", "skills/cinewright/references/**", "tools/gen-docs.mjs", "benchmark/**"]
   workflow_dispatch:
 
 permissions:

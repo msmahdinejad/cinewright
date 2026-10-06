@@ -1,12 +1,12 @@
 <#
 .SYNOPSIS
-  Install the pure-code-video skill for Codex, Claude Code and other agents that read SKILL.md.
+  Install the cinewright skill for Codex, Claude Code and other agents that read SKILL.md.
 
 .DESCRIPTION
   Works from a clone (.\install.ps1) and straight from the web:
-      irm https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/install.ps1 | iex
+      irm https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.ps1 | iex
   With options (a piped script cannot take parameters, so wrap it):
-      & ([scriptblock]::Create((irm https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/install.ps1))) -Target codex
+      & ([scriptblock]::Create((irm https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.ps1))) -Target codex
 
   Where it installs (each folder is replaced cleanly, so upgrades never leave stale files):
       -Target all     (default)  ~\.agents\skills  (+ ~\.codex\skills if it exists)  and  ~\.claude\skills
@@ -29,8 +29,8 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'   # the progress bar makes Invoke-WebRequest dramatically slower in Windows PowerShell 5.1
-$Repo = 'msmahdinejad/pure-code-video'
-$Name = 'pure-code-video'
+$Repo = 'msmahdinejad/cinewright'
+$Name = 'cinewright'
 $tmp = $null
 
 function Find-SkillDir([string]$root) {
@@ -84,6 +84,8 @@ foreach ($d in $dests) {
   if (Test-Path $to) { Remove-Item -Recurse -Force $to }
   Copy-Item -Recurse -Force $skill $to
   Write-Host "installed -> $to"
+  $legacy = Join-Path $d 'pure-code-video'   # the name before 2.1: remove our own old install so the agent does not see two copies
+  if ((Test-Path (Join-Path $legacy 'SKILL.md')) -and ((Get-Content (Join-Path $legacy 'SKILL.md') -TotalCount 3) -match '^name:\s*pure-code-video') -and (Test-Path (Join-Path $legacy 'references\atlas'))) { Remove-Item -Recurse -Force $legacy; Write-Host "removed the old install $legacy (this skill is now called $Name)" }
 }
 if ($tmp -and (Test-Path $tmp)) { Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue }
 
@@ -94,5 +96,5 @@ if (-not $SkipCheck) {
   else { Write-Host "`nNode.js is not installed. Install it first:  winget install OpenJS.NodeJS.LTS   (also needed: Chrome/Edge and ffmpeg:  winget install Gyan.FFmpeg)" }
 }
 Write-Host "`nDone. Restart your agent (Codex / Claude Code) so it rescans skills, then try:"
-Write-Host '  $pure-code-video make a 15-second motion-graphics showreel. Go all out.'
+Write-Host '  $cinewright make a 15-second motion-graphics showreel. Go all out.'
 Write-Host "Check the machine any time:  node `"$doctor`""

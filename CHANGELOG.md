@@ -4,6 +4,19 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+## [2.1.0] — 2026-10-06
+
+### Changed
+- **The project is now called Cinewright** (it was "pure-code-video"). The skill id is `cinewright`; invoke it with `$cinewright` in Codex. The repository moved to `github.com/msmahdinejad/cinewright` (old URLs redirect). The installers remove an old `pure-code-video` install of this skill automatically, so agents never see two copies. Internal `PCV_*` environment variables and `pcv-` file names are unchanged.
+- The website was rebuilt from scratch: live in-browser demo of the engine, a frame scrubber, an interactive atlas explorer, animated benchmark charts, Persian/English.
+
+### Added
+- `PCV_GPU=off|on|auto` environment override (used by the Docker image, where software GL is the only option).
+- Docker image, GitHub Actions CI (lint, installers on three OSes, execution of every atlas recipe in a container).
+
+### Fixed
+- `install.sh` exited with status 1 after a successful install when installing from a clone; `install.ps1` downloads no longer stall on the progress bar and retry once.
+
 ## [2.0.0] — 2026-10-05
 
 The "go all out" release. Version 1 produced *correct but flat* films (a Codex run of the first release was 61 % near-static — a slideshow). Version 2 attacks that at three levels: a film engine that makes spectacular looks cheap, a technique atlas that teaches agents what is possible, and a protocol plus gates that make them use it.
@@ -29,5 +42,6 @@ The "go all out" release. Version 1 produced *correct but flat* films (a Codex r
 ## [1.1.0] — 2026-09-30
 Initial public versions (1.0 – 1.1): deterministic HTML → MP4 renderer (parallel headless Chrome → ffmpeg), the `basic`, `explainer`, `music`, `particles` and `shader` templates, synthesised audio from a shared cue timeline, Persian/RTL text helpers, `qc.mjs` checks, `--detach`/`status` for long renders.
 
-[Unreleased]: https://github.com/msmahdinejad/pure-code-video/compare/v2.0.0...HEAD
-[2.0.0]: https://github.com/msmahdinejad/pure-code-video/releases/tag/v2.0.0
+[Unreleased]: https://github.com/msmahdinejad/cinewright/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/msmahdinejad/cinewright/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/msmahdinejad/cinewright/releases/tag/v2.0.0

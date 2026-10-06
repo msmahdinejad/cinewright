@@ -44,7 +44,7 @@ for (const d of ['assets', 'out', 'qc']) fs.mkdirSync(path.join(target, d), { re
 // the creative-engine CLIs live in the skill folder (they need references/atlas/*.md); thin forwarders let you run them from inside the project: node tools/atlas.mjs search …
 for (const f of ['atlas.mjs', 'inspire.mjs']) {
   const real = path.join(SKILL, 'scripts', f);
-  fs.writeFileSync(path.join(target, 'tools', f), `// forwards to the skill's own ${f} (${real.replace(/\\/g, '/')}) so it can be run from inside this project\nimport fs from 'node:fs'; import { pathToFileURL } from 'node:url';\nconst real = ${JSON.stringify(real)};\nif (!fs.existsSync(real)) { console.error('the pure-code-video skill was not found at ' + real + ' — run its scripts/${f} directly'); process.exit(1); }\nawait import(pathToFileURL(real).href);\n`);
+  fs.writeFileSync(path.join(target, 'tools', f), `// forwards to the skill's own ${f} (${real.replace(/\\/g, '/')}) so it can be run from inside this project\nimport fs from 'node:fs'; import { pathToFileURL } from 'node:url';\nconst real = ${JSON.stringify(real)};\nif (!fs.existsSync(real)) { console.error('the cinewright skill was not found at ' + real + ' — run its scripts/${f} directly'); process.exit(1); }\nawait import(pathToFileURL(real).href);\n`);
 }
 
 console.log(`✔ project created: ${target}   (template: ${template}, ${tokens.W}×${tokens.H} @ ${tokens.FPS} fps, ${tokens.DUR}s, ${tokens.LANG})

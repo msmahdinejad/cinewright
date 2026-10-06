@@ -10,7 +10,7 @@
   "skill": "2.0.0",
   "date": "2026-10-05",
   "wallSeconds": null,
-  "note": "Built by following the v2 protocol by hand in a Claude Code session (the case study in skills/pure-code-video/references/case-studies/avorythm). A different agent than the Codex rows: compare with care.",
+  "note": "Built by following the v2 protocol by hand in a Claude Code session (the case study in skills/cinewright/references/case-studies/avorythm). A different agent than the Codex rows: compare with care.",
   "video": {
     "ok": true,
     "duration": 30,

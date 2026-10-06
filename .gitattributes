@@ -13,5 +13,5 @@
 *.zip binary
 
 # keep the vendored fonts out of language statistics
-skills/pure-code-video/templates/fonts/* linguist-vendored
+skills/cinewright/templates/fonts/* linguist-vendored
 docs/assets/* linguist-documentation

@@ -2,18 +2,18 @@
 
 <img src="docs/assets/anim/showreel.webp" alt="A bright poster-style motion-graphics showreel rendered entirely from code" width="720">
 
-# pure-code-video
+# cinewright
 
 **An agent skill that teaches Codex, Claude Code and friends to make cinema-grade videos — entirely from code.**
 
 Every frame is a deterministic WebGL/canvas page. Every sound is synthesised. No stock footage, no video model, no cloud. Persian & RTL are first-class.
 
-[![CI](https://github.com/msmahdinejad/pure-code-video/actions/workflows/ci.yml/badge.svg)](https://github.com/msmahdinejad/pure-code-video/actions/workflows/ci.yml)
+[![CI](https://github.com/msmahdinejad/cinewright/actions/workflows/ci.yml/badge.svg)](https://github.com/msmahdinejad/cinewright/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-5b3df5.svg)](LICENSE)
-[![Agent skill](https://img.shields.io/badge/agent-skill-40f5f5.svg)](skills/pure-code-video/SKILL.md)
+[![Agent skill](https://img.shields.io/badge/agent-skill-40f5f5.svg)](skills/cinewright/SKILL.md)
 [![Zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 
-[**Website**](https://msmahdinejad.github.io/pure-code-video/) · [Getting started](docs/getting-started.md) · [Atlas](docs/atlas.md) · [Prompt cookbook](docs/prompts.md) · [Benchmark](docs/benchmark.md) · [**فارسی**](README.fa.md)
+[**Website**](https://msmahdinejad.github.io/cinewright/) · [Getting started](docs/getting-started.md) · [Atlas](docs/atlas.md) · [Prompt cookbook](docs/prompts.md) · [Benchmark](docs/benchmark.md) · [**فارسی**](README.fa.md)
 
 </div>
 
@@ -23,12 +23,12 @@ Every frame is a deterministic WebGL/canvas page. Every sound is synthesised. No
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="Persian product film: a prism splits one voice into four outputs"><br><sub><b>Product film</b> (30 s, Persian RTL, original score) — a prism splits one voice into four outputs. <a href="https://github.com/msmahdinejad/pure-code-video/releases/download/v2.0.0/avorythm-film.mp4">MP4</a> · <a href="skills/pure-code-video/references/case-studies/avorythm/README.md">how it was made</a></sub></td>
-<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="Dark cinematic trailer: particles, chrome 3D title, night-city flight"><br><sub><b>Cinema template</b> (20 s) — particles → chrome 3D name → kinetic poster → night-city flight → burst. <a href="https://github.com/msmahdinejad/pure-code-video/releases/download/v2.0.0/cinema-template.mp4">MP4</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="Persian product film: a prism splits one voice into four outputs"><br><sub><b>Product film</b> (30 s, Persian RTL, original score) — a prism splits one voice into four outputs. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/avorythm-film.mp4">MP4</a> · <a href="skills/cinewright/references/case-studies/avorythm/README.md">how it was made</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="Dark cinematic trailer: particles, chrome 3D title, night-city flight"><br><sub><b>Cinema template</b> (20 s) — particles → chrome 3D name → kinetic poster → night-city flight → burst. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/cinema-template.mp4">MP4</a></sub></td>
 </tr>
 <tr>
 <td><img src="docs/assets/anim/avorythm-burst.webp" alt="Scripts become particles that lock into a logo"><br><sub><b>Particles → logo</b> — 50 000 GPU points morph from scripts into the mark, with a shock ring and a camera punch on the hit.</sub></td>
-<td><img src="docs/assets/anim/showreel-fa.webp" alt="Persian-language showreel"><br><sub><b>Showreel template, Persian</b> (17.5 s) — slam type, 3D plastic, girih pattern, liquid metal, tunnel. <a href="https://github.com/msmahdinejad/pure-code-video/releases/download/v2.0.0/showreel-template-fa.mp4">MP4</a></sub></td>
+<td><img src="docs/assets/anim/showreel-fa.webp" alt="Persian-language showreel"><br><sub><b>Showreel template, Persian</b> (17.5 s) — slam type, 3D plastic, girih pattern, liquid metal, tunnel. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/showreel-template-fa.mp4">MP4</a></sub></td>
 </tr>
 </table>
 
@@ -55,12 +55,12 @@ You need **Node ≥ 18**, **Chrome/Edge/Chromium** and **ffmpeg** (the installer
 
 ```powershell
 # Windows PowerShell
-irm https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.ps1 | iex
 ```
 
 ```bash
 # macOS / Linux / Git-Bash
-curl -fsSL https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.sh | bash
 ```
 
 Restart the agent afterwards so it rescans skills. (`-Target codex|claude`, `-Project` for one repository, `-Ref v2.0.0` to pin a version — see the header of the script.)
@@ -70,8 +70,8 @@ Restart the agent afterwards so it rescans skills. (`-Target codex|claude`, `-Pr
 <summary><b>Claude Code</b> — plugin marketplace</summary>
 
 ```text
-/plugin marketplace add msmahdinejad/pure-code-video
-/plugin install pure-code-video@pure-code-video
+/plugin marketplace add msmahdinejad/cinewright
+/plugin install cinewright@cinewright
 ```
 </details>
 
@@ -79,7 +79,7 @@ Restart the agent afterwards so it rescans skills. (`-Target codex|claude`, `-Pr
 <summary><b>Any agent</b> — <code>npx skills</code></summary>
 
 ```bash
-npx skills add msmahdinejad/pure-code-video
+npx skills add msmahdinejad/cinewright
 ```
 </details>
 
@@ -87,9 +87,9 @@ npx skills add msmahdinejad/pure-code-video
 <summary><b>Docker</b> — nothing installed on your machine</summary>
 
 ```bash
-docker build -t pure-code-video https://github.com/msmahdinejad/pure-code-video.git
-docker run --rm -v "$PWD/film:/work" pure-code-video scaffold /work --template showreel
-docker run --rm -v "$PWD/film:/work" pure-code-video render
+docker build -t cinewright https://github.com/msmahdinejad/cinewright.git
+docker run --rm -v "$PWD/film:/work" cinewright scaffold /work --template showreel
+docker run --rm -v "$PWD/film:/work" cinewright render
 ```
 </details>
 
@@ -98,7 +98,7 @@ docker run --rm -v "$PWD/film:/work" pure-code-video render
 In an **empty folder**, start your agent and ask. In Codex the skill is invoked with `$`; say **"go all out"** to switch it into studio mode.
 
 ```text
-$pure-code-video make a dynamic 15-second motion graphics video that shows what an incredible
+$cinewright make a dynamic 15-second motion graphics video that shows what an incredible
 motion designer you are, like it's your showreel for a résumé. Go all out.
 ```
 
@@ -106,7 +106,7 @@ You get `out/*.mp4`, plus the artefacts that make the work reviewable: `brief.md
 
 ## The atlas, at a glance
 
-239 techniques in 17 families. Browse the [full catalogue](docs/atlas.md) or ask the atlas from your terminal: `node skills/pure-code-video/scripts/atlas.mjs search liquid chrome 3d text`.
+239 techniques in 17 families. Browse the [full catalogue](docs/atlas.md) or ask the atlas from your terminal: `node skills/cinewright/scripts/atlas.mjs search liquid chrome 3d text`.
 
 <table>
 <tr>
@@ -123,7 +123,7 @@ You get `out/*.mp4`, plus the artefacts that make the work reviewable: `brief.md
 </tr>
 </table>
 
-Every entry above is real code from the atlas — render any of them yourself: `node skills/pure-code-video/scripts/atlas.mjs clip logo-shatter-in --gif`.
+Every entry above is real code from the atlas — render any of them yourself: `node skills/cinewright/scripts/atlas.mjs clip logo-shatter-in --gif`.
 
 ## Benchmark: does it actually help?
 
@@ -159,7 +159,7 @@ Full tables, contact sheets and caveats: **[docs/benchmark.md](docs/benchmark.md
 | [Atlas](docs/atlas.md) | all 239 techniques with galleries |
 | [Benchmark](docs/benchmark.md) | method, metrics, results |
 | [FAQ](docs/faq.md) | limits, licensing, safety |
-| [`SKILL.md`](skills/pure-code-video/SKILL.md) · [`protocol.md`](skills/pure-code-video/references/protocol.md) · [`engine.md`](skills/pure-code-video/references/engine.md) | what the agent reads |
+| [`SKILL.md`](skills/cinewright/SKILL.md) · [`protocol.md`](skills/cinewright/references/protocol.md) · [`engine.md`](skills/cinewright/references/engine.md) | what the agent reads |
 
 ## Limits (honestly)
 

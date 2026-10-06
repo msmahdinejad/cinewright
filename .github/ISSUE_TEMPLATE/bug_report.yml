@@ -4,7 +4,7 @@ labels: [bug]
 body:
   - type: markdown
     attributes:
-      value: "Thanks! The more exact the reproduction, the faster the fix. **Run `node skills/pure-code-video/scripts/doctor.mjs` and paste its output below.**"
+      value: "Thanks! The more exact the reproduction, the faster the fix. **Run `node skills/cinewright/scripts/doctor.mjs` and paste its output below.**"
   - type: textarea
     id: what
     attributes: { label: What happened, description: "What did you expect, and what did you get? Screenshots / a contact sheet help (`render.mjs sheet`).", placeholder: "…" }

@@ -43,7 +43,7 @@
   "wallSeconds": null,
   "sheet": "assets/benchmark/product-avorythm-claude-skill-v2/sheet.jpg",
   "preview": "assets/benchmark/product-avorythm-claude-skill-v2/preview.webp",
-  "note": "Built by following the v2 protocol by hand in a Claude Code session (the case study in skills/pure-code-video/references/case-studies/avorythm). A different agent than the Codex rows: compare with care."
+  "note": "Built by following the v2 protocol by hand in a Claude Code session (the case study in skills/cinewright/references/case-studies/avorythm). A different agent than the Codex rows: compare with care."
  },
  {
   "id": "showreel-15s__codex-skill-v1-1",

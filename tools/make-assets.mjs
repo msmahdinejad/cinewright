@@ -5,7 +5,7 @@
 //   node tools/make-assets.mjs reels                    technique reels: a few atlas recipes per family as one animated WebP each (renders with the skill's own atlas harness)
 //   node tools/make-assets.mjs all <samples-dir>
 //
-// Requires Node >= 18, Chrome/Edge/Chromium and ffmpeg (run  node skills/pure-code-video/scripts/doctor.mjs  first).
+// Requires Node >= 18, Chrome/Edge/Chromium and ffmpeg (run  node skills/cinewright/scripts/doctor.mjs  first).
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -13,7 +13,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SKILL = path.join(ROOT, 'skills', 'pure-code-video'), OUT = path.join(ROOT, 'docs', 'assets');
+const SKILL = path.join(ROOT, 'skills', 'cinewright'), OUT = path.join(ROOT, 'docs', 'assets');
 const [cmd = 'help', arg] = process.argv.slice(2);
 fs.mkdirSync(path.join(OUT, 'anim'), { recursive: true }); fs.mkdirSync(path.join(OUT, 'img'), { recursive: true });
 

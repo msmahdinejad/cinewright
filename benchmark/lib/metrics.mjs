@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-export const SKILL_SCRIPTS = path.resolve(HERE, '..', '..', 'skills', 'pure-code-video', 'scripts');
+export const SKILL_SCRIPTS = path.resolve(HERE, '..', '..', 'skills', 'cinewright', 'scripts');
 const run = (bin, args, o = {}) => spawnSync(bin, args, { encoding: 'utf8', maxBuffer: 1 << 28, ...o });
 
 /** ffprobe facts. */
@@ -71,7 +71,7 @@ export function sessionStats(jsonlFile) {
     if (e.type === 'turn.completed') { turns++; inTok += e.usage?.input_tokens || 0; outTok += e.usage?.output_tokens || 0; cached += e.usage?.cached_input_tokens || 0; }
     const it = e.item; if (it) { types[it.type] = (types[it.type] || 0) + 1; if (it.type === 'agent_message' && it.text) lastText = it.text; }
     if (/view_image|local_image|input_image|image_view/.test(l)) images++;
-    if (/pure-code-video|SKILL\.md/.test(l)) skill = true; if (/atlas\.mjs/.test(l)) atlas = true; if (/inspire\.mjs/.test(l)) inspire = true;
+    if (/cinewright|pure-code-video|SKILL\.md/.test(l)) skill = true; if (/atlas\.mjs/.test(l)) atlas = true; if (/inspire\.mjs/.test(l)) inspire = true;
   }
   return { events: lines.length, itemTypes: types, turns, inputTokens: inTok, outputTokens: outTok, cachedInputTokens: cached, imageViews: images, touchedSkill: skill, usedAtlas: atlas, usedInspire: inspire, finalMessage: lastText.slice(0, 600) };
 }

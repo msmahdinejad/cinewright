@@ -1,6 +1,6 @@
 # Third-party notices
 
-pure-code-video has **no npm or pip dependencies**. The only third-party material in this repository is the set of fonts bundled so that videos render offline with correct Latin and Persian/Arabic shaping. All of them are licensed under the **SIL Open Font License 1.1** (full text: [`skills/pure-code-video/templates/fonts/LICENSE-fonts.txt`](skills/pure-code-video/templates/fonts/LICENSE-fonts.txt)). The OFL allows use, embedding and redistribution (also commercially) as long as the fonts are not sold on their own and the licence text travels with them. Videos you render with these fonts are yours; no attribution is required inside the video.
+cinewright has **no npm or pip dependencies**. The only third-party material in this repository is the set of fonts bundled so that videos render offline with correct Latin and Persian/Arabic shaping. All of them are licensed under the **SIL Open Font License 1.1** (full text: [`skills/cinewright/templates/fonts/LICENSE-fonts.txt`](skills/cinewright/templates/fonts/LICENSE-fonts.txt)). The OFL allows use, embedding and redistribution (also commercially) as long as the fonts are not sold on their own and the licence text travels with them. Videos you render with these fonts are yours; no attribution is required inside the video.
 
 | Font | Used for | Upstream |
 |---|---|---|

@@ -1,7 +1,7 @@
 #!/bin/sh
-# pcv — thin dispatcher so `docker run … pure-code-video <command>` mirrors the local workflow.
+# pcv — thin dispatcher so `docker run … cinewright <command>` mirrors the local workflow.
 set -e
-S=/opt/pure-code-video/scripts
+S=/opt/cinewright/scripts
 cmd="${1:-doctor}"; [ $# -gt 0 ] && shift
 case "$cmd" in
   doctor)   exec node "$S/doctor.mjs" "$@" ;;

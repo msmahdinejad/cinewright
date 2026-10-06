@@ -37,14 +37,14 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           PCV_SKIP_CHECK=1 DEST="$RUNNER_TEMP/skills" bash install.sh
-          test -f "$RUNNER_TEMP/skills/pure-code-video/SKILL.md"
+          test -f "$RUNNER_TEMP/skills/cinewright/SKILL.md"
           PCV_SKIP_CHECK=1 DEST="$RUNNER_TEMP/skills" bash install.sh   # second run must replace cleanly
       - name: install.ps1
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           ./install.ps1 -Dest "$env:RUNNER_TEMP\skills" -SkipCheck
-          if (-not (Test-Path "$env:RUNNER_TEMP\skills\pure-code-video\SKILL.md")) { throw "SKILL.md missing" }
+          if (-not (Test-Path "$env:RUNNER_TEMP\skills\cinewright\SKILL.md")) { throw "SKILL.md missing" }
           ./install.ps1 -Dest "$env:RUNNER_TEMP\skills" -SkipCheck
 
   render:
@@ -53,7 +53,7 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t pure-code-video .
-      - run: docker run --rm pure-code-video doctor
+      - run: docker build -t cinewright .
+      - run: docker run --rm cinewright doctor
       - name: Execute every atlas recipe
-        run: docker run --rm --entrypoint node pure-code-video /opt/pure-code-video/scripts/atlas.mjs test all
+        run: docker run --rm --entrypoint node cinewright /opt/cinewright/scripts/atlas.mjs test all

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# install.sh — install the pure-code-video skill for Codex, Claude Code and other agents that read SKILL.md.
+# install.sh — install the cinewright skill for Codex, Claude Code and other agents that read SKILL.md.
 #
-#   curl -fsSL https://raw.githubusercontent.com/msmahdinejad/pure-code-video/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.sh | bash
 #   curl -fsSL …/install.sh | bash -s -- codex            # only ~/.agents/skills (+ ~/.codex/skills if it exists)
 #   curl -fsSL …/install.sh | bash -s -- claude           # only ~/.claude/skills
 #   ./install.sh [all|codex|claude]                       # from a clone
 #
 # Environment: PCV_SKIP_CHECK=1 (skip the machine check) · PCV_REF=<branch|tag> (default main) · PCV_SOURCE=<repo dir | .zip file | URL> · DEST=<custom skills folder> · PROJECT=1 (install into ./.agents/skills and ./.claude/skills)
 set -euo pipefail
-REPO="msmahdinejad/pure-code-video"; NAME="pure-code-video"; target="${1:-all}"; ref="${PCV_REF:-main}"; src="${PCV_SOURCE:-}"
+REPO="msmahdinejad/cinewright"; NAME="cinewright"; target="${1:-all}"; ref="${PCV_REF:-main}"; src="${PCV_SOURCE:-}"
 tmp=""; cleanup() { if [ -n "$tmp" ]; then rm -rf "$tmp"; fi; }; trap cleanup EXIT
 
 find_skill() { # $1 = folder to search
@@ -40,9 +40,11 @@ else
 fi
 for d in "${dests[@]}"; do
   mkdir -p "$d"; rm -rf "$d/$NAME"; cp -R "$skill" "$d/$NAME"; echo "installed -> $d/$NAME"
+  legacy="$d/pure-code-video"   # the name before 2.1: remove our own old install so the agent does not see two copies
+  if [ -f "$legacy/SKILL.md" ] && grep -q '^name: pure-code-video' "$legacy/SKILL.md" && [ -d "$legacy/references/atlas" ]; then rm -rf "$legacy"; echo "removed the old install $legacy (this skill is now called $NAME)"; fi
 done
 
 doctor="${dests[0]}/$NAME/scripts/doctor.mjs"; [ -n "${PCV_SKIP_CHECK:-}" ] && { echo "Done (check skipped)."; exit 0; }
 if command -v node >/dev/null 2>&1; then echo; echo "checking this machine (node, Chrome, ffmpeg, WebGL) …"; node "$doctor" || echo "Something is missing — the lines above say what to install (macOS: brew install node ffmpeg; Debian/Ubuntu: apt install nodejs ffmpeg chromium)."
 else echo; echo "Node.js is not installed (needed: Node >= 18, Chrome/Chromium/Edge, ffmpeg)."; fi
-echo; echo "Done. Restart your agent so it rescans skills, then try:  \$pure-code-video make a 15-second motion-graphics showreel. Go all out."
+echo; echo "Done. Restart your agent so it rescans skills, then try:  \$cinewright make a 15-second motion-graphics showreel. Go all out."

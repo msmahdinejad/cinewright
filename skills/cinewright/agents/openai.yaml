@@ -1,0 +1,6 @@
+interface:
+  display_name: "Cinewright"
+  short_description: "Make cinema-grade videos from code: showreels, 3D, particles, kinetic type, Persian RTL, with synthesized music"
+  default_prompt: "Use $cinewright to make a film from my brief. Go all out: write brief.md (one concept, one style system, a shot list that names an atlas technique per shot), build deterministic frames with synthesized music, run three polish rounds against contact sheets and QC, and give me the MP4 path plus the re-render command."
+policy:
+  allow_implicit_invocation: true

@@ -14,7 +14,7 @@ const ok = m => console.log('✔ ' + m), warn = m => { warns++; console.log('! '
 const run = (bin, a, o = {}) => spawnSync(bin, a, { encoding: 'utf8', ...o });
 const availNow = () => os.freemem() / 2 ** 30;
 const plat = process.platform, cores = os.cpus().length, ramGB = os.totalmem() / 2 ** 30;
-console.log(`pure-code-video doctor — ${os.type()} ${os.release()} · ${cores} cores · ${ramGB.toFixed(0)} GB RAM\n`);
+console.log(`cinewright doctor — ${os.type()} ${os.release()} · ${cores} cores · ${ramGB.toFixed(0)} GB RAM\n`);
 
 // Node
 const nodeMajor = +process.versions.node.split('.')[0];

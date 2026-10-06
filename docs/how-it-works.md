@@ -23,7 +23,7 @@ flowchart LR
 ## The three layers
 
 ### 1 · The engine — makes spectacular looks cheap
-`skills/pure-code-video/templates/lib`, zero dependencies, all deterministic:
+`skills/cinewright/templates/lib`, zero dependencies, all deterministic:
 
 | module | what it gives an agent |
 |---|---|
@@ -41,7 +41,7 @@ The **[atlas](atlas.md)** is 239 short recipes — use / how / avoid / pairs-wit
 `inspire.mjs` turns any brief into three *different* creative directions: a concept device, a metaphor, a style system, a twist, ≥ 6 techniques from ≥ 4 families, a timeline skeleton and a sound plan.
 
 ### 3 · The process — makes it actually use them
-[`protocol.md`](../skills/pure-code-video/references/protocol.md) is the "studio mode" workflow: brief → look-dev (render and *look at* style frames) → skeleton → **three polish rounds** (motion & camera · craft & detail · sound & finish), each with a written fix list. The gates are objective:
+[`protocol.md`](../skills/cinewright/references/protocol.md) is the "studio mode" workflow: brief → look-dev (render and *look at* style frames) → skeleton → **three polish rounds** (motion & camera · craft & detail · sound & finish), each with a written fix list. The gates are objective:
 
 | gate | catches |
 |---|---|
@@ -64,7 +64,7 @@ my-film/
 
 ## Why code instead of a video model?
 
-| | video model | pure-code-video |
+| | video model | cinewright |
 |---|---|---|
 | **Text** | garbled, wrong script | pixel-exact; correct Persian shaping and RTL |
 | **Editing** | re-roll everything | change one number, re-render the second you changed |

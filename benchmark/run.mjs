@@ -5,11 +5,11 @@
 //   node benchmark/run.mjs --suite quick                                 3 tasks × (baseline, skill)         ≈ 1–3 h of agent time
 //   node benchmark/run.mjs --suite core --reps 2                         6 tasks, two repetitions each (variance matters: one run proves nothing)
 //   node benchmark/run.mjs --tasks logo-sting-6s --conditions baseline,skill
-//   node benchmark/run.mjs --tasks showreel-15s --conditions baseline,v1=../old/pure-code-video,v2=skills/pure-code-video
+//   node benchmark/run.mjs --tasks showreel-15s --conditions baseline,v1=../old/cinewright,v2=skills/cinewright
 //   node benchmark/run.mjs --suite quick --dry-run                       print the plan, change nothing
 //   node benchmark/run.mjs --suite quick --agent-cmd "claude -p --dangerously-skip-permissions"   any agent that reads the prompt on stdin and works in the current folder
 //
-// Conditions:  baseline = no skill (any installed copy of pure-code-video is disabled for this run) · skill = skills/pure-code-video from this checkout ·
+// Conditions:  baseline = no skill (any installed copy of cinewright is disabled for this run) · skill = skills/cinewright from this checkout ·
 //              name=path = another copy of the skill (e.g. an older version) · all conditions get the identical task prompt and the identical delivery footer.
 // Options:     --model <m> · --effort low|medium|high · --timeout-min 45 · --reps N · --out <dir> · --keep-going (default) · --fake-video <mp4> (pipeline test, no agent)
 //
@@ -32,7 +32,7 @@ const FOOTER = SUITE.footer;
 // ── plan ───────────────────────────────────────────────────────────────────────────────────
 const ids = opt.tasks ? opt.tasks.split(',') : (SUITE.sets[opt.suite || 'quick'] || (opt.suite ? opt.suite.split(',') : SUITE.sets.quick));
 const tasks = ids.map(id => SUITE.tasks.find(t => t.id === id) || (console.error(`unknown task "${id}". tasks: ${SUITE.tasks.map(t => t.id).join(', ')}`), process.exit(1)));
-const defaultSkill = path.join(ROOT, 'skills', 'pure-code-video');
+const defaultSkill = path.join(ROOT, 'skills', 'cinewright');
 const conditions = (opt.conditions || 'baseline,skill').split(',').map(c => {
   if (c === 'baseline') return { name: 'baseline', skill: null };
   if (c === 'skill') return { name: 'skill', skill: defaultSkill };
@@ -58,7 +58,7 @@ const copyDir = (a, b) => fs.cpSync(a, b, { recursive: true, filter: s => !/[\\/
 /** Installed copies of the skill that would leak into a baseline run (Codex reads ~/.agents/skills, ~/.codex/skills, $CODEX_HOME/skills). */
 function installedCopies() {
   const home = os.homedir(), roots = [path.join(home, '.agents', 'skills'), path.join(home, '.codex', 'skills'), process.env.CODEX_HOME && path.join(process.env.CODEX_HOME, 'skills'), path.join(home, '.claude', 'skills')].filter(Boolean);
-  return [...new Set(roots.map(r => path.join(r, 'pure-code-video', 'SKILL.md')).filter(p => fs.existsSync(p)))];
+  return [...new Set(roots.flatMap(r => ['cinewright', 'pure-code-video'].map(n => path.join(r, n, 'SKILL.md'))).filter(p => fs.existsSync(p)))];   // pure-code-video = the name before 2.1
 }
 const killTree = pid => { try { if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(pid), '/T', '/F']); else process.kill(-pid, 'SIGTERM'); } catch { /* already gone */ } };
 
@@ -105,8 +105,8 @@ for (const [n, job] of jobs.entries()) {
   if (fs.existsSync(path.join(dir, 'summary.json'))) { console.log(`[${n + 1}/${jobs.length}] ${job.id}: already done (resume)`); index.push(JSON.parse(fs.readFileSync(path.join(dir, 'summary.json'), 'utf8'))); continue; }
   fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(work, { recursive: true });
   spawnSync('git', ['init', '-q', '.'], { cwd: work });                                       // a git root makes project-scoped skill discovery unambiguous
-  if (job.cond.skill) { fs.mkdirSync(path.join(work, '.agents', 'skills'), { recursive: true }); copyDir(job.cond.skill, path.join(work, '.agents', 'skills', 'pure-code-video')); }
-  const prompt = (job.cond.skill ? 'Use $pure-code-video. ' : '') + taskPrompt(job.task) + '\n\n' + FOOTER; fs.writeFileSync(path.join(dir, 'prompt.txt'), prompt);
+  if (job.cond.skill) { fs.mkdirSync(path.join(work, '.agents', 'skills'), { recursive: true }); copyDir(job.cond.skill, path.join(work, '.agents', 'skills', 'cinewright')); }
+  const prompt = (job.cond.skill ? 'Use $cinewright. ' : '') + taskPrompt(job.task) + '\n\n' + FOOTER; fs.writeFileSync(path.join(dir, 'prompt.txt'), prompt);
   console.log(`\n[${n + 1}/${jobs.length}] ${job.id} — running the agent (up to ${timeoutMs / 60000} min) …`);
   const res = await runAgent(job, work, prompt, path.join(dir, 'events.jsonl'), path.join(dir, 'agent.log'));
   const video = findVideo(work), session = sessionStats(path.join(dir, 'events.jsonl'));
