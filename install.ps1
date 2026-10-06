@@ -28,6 +28,7 @@ param(
   [switch]$SkipCheck
 )
 $ErrorActionPreference = 'Stop'
+$ProgressPreference = 'SilentlyContinue'   # the progress bar makes Invoke-WebRequest dramatically slower in Windows PowerShell 5.1
 $Repo = 'msmahdinejad/pure-code-video'
 $Name = 'pure-code-video'
 $tmp = $null
@@ -59,7 +60,7 @@ else {
   $url = "https://github.com/$Repo/archive/refs/$kind/$Ref.zip"
   Write-Host "downloading $url"
   [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
-  Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $zip
+  try { Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $zip } catch { Write-Host 'download failed once, retrying ...'; Start-Sleep -Seconds 3; Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $zip }
   Expand-Archive -Path $zip -DestinationPath $tmp -Force; $skill = Find-SkillDir $tmp
 }
 if (-not $skill) { throw "could not find skills/$Name/SKILL.md in the source" }
