@@ -28,7 +28,7 @@ There are **no dependencies to install**. The skill is plain Node scripts and br
 | `skills/cinewright/references/atlas/*.md` | the technique atlas (one file per family) — the main thing to extend |
 | `docs/` | the website (GitHub Pages) and generated pages; `atlas.md` and `benchmark.md` are **generated** |
 | `benchmark/` | the harness that compares agents with/without the skill |
-| `tools/` | repository tooling (lint, doc generation, asset generation) — not shipped to users |
+| `tools/` | repository tooling (lint, doc/asset/demo generation, `shot.mjs` screenshots) — not shipped to users; the `PCV_*` environment variables and `pcv-` file names inside the skill are a historical prefix and are kept on purpose |
 
 ## Adding a technique to the atlas
 

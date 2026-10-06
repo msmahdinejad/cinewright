@@ -2,201 +2,218 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>cinewright — an agent skill for videos made from code</title>
-<meta name="description" content="An open-source skill that teaches Codex, Claude Code and other coding agents to make cinema-grade videos entirely from code: GPU film engine, 239-technique atlas, synthesised music, Persian/RTL.">
-<meta property="og:title" content="cinewright">
-<meta property="og:description" content="Teach your coding agent to make cinema-grade videos — entirely from code.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cinewright — your coding agent can now direct films</title>
+<meta name="description" content="Cinewright is an open-source agent skill that teaches Codex, Claude Code and other coding agents to make cinema-grade videos entirely from code: GPU film engine, 239-technique atlas, synthesised music, Persian/RTL.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#05040a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cinewright — your coding agent can now direct films">
+<meta property="og:description" content="An open-source skill: every frame is code, every sound is synthesised. Codex, Claude Code & friends become motion designers.">
 <meta property="og:image" content="https://msmahdinejad.github.io/cinewright/assets/img/cinema-city.jpg">
-<meta name="theme-color" content="#07060d">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2307060d'/%3E%3Cpath d='M9 22a9 9 0 0 1 0-12' stroke='%238a63ff' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3Cpath d='M23 10a9 9 0 0 1 0 12' stroke='%2340f5f5' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3Cpath d='M16 11l1.6 3.4L21 16l-3.4 1.6L16 21l-1.6-3.4L11 16l3.4-1.6z' fill='%23fff'/%3E%3C/svg%3E">
-<style>
-@font-face{font-family:"Inter";src:url(assets/fonts/inter-latin.woff2) format("woff2");font-weight:100 900;font-display:swap}
-@font-face{font-family:"Vazirmatn";src:url(assets/fonts/Vazirmatn-variable.woff2) format("woff2");font-weight:100 900;font-display:swap}
-:root{--bg:#07060d;--bg2:#0d0c18;--card:#12111f;--line:#25233a;--fg:#ecebf7;--mut:#9a98b5;--v:#8a63ff;--c:#40f5f5;--g:linear-gradient(100deg,#8a63ff,#40f5f5);--r:16px;--w:1120px}
-:root[data-theme=light]{--bg:#fbfaff;--bg2:#f1effb;--card:#fff;--line:#dedaf2;--fg:#15132a;--mut:#5f5c7d;--v:#5b3df5;--c:#00a7b5}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 Inter,"Vazirmatn",system-ui,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-html[lang=fa] body{font-family:"Vazirmatn",Inter,system-ui,sans-serif;line-height:1.85}
-[lang=fa]:not(html){display:none}html[lang=fa] [lang=en]:not(html){display:none}html[lang=fa] [lang=fa]:not(html){display:revert}
-a{color:inherit}.wrap{max-width:var(--w);margin:0 auto;padding:0 20px}
-nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;gap:20px;height:60px}.brand{font-weight:800;letter-spacing:-.02em;text-decoration:none;display:flex;gap:10px;align-items:center}
-.brand i{width:26px;height:26px;border-radius:7px;background:#07060d;display:grid;place-items:center}
-nav .links{display:flex;gap:18px;margin-inline-start:auto;font-size:15px;color:var(--mut)}nav .links a{text-decoration:none}nav .links a:hover{color:var(--fg)}
-.pill{border:1px solid var(--line);background:var(--card);color:var(--fg);padding:6px 12px;border-radius:999px;font:inherit;font-size:14px;cursor:pointer}
-@media(max-width:820px){nav .links a:not(.keep){display:none}}
-.hero{padding:64px 0 40px;background:radial-gradient(900px 400px at 15% 0,color-mix(in srgb,var(--v) 22%,transparent),transparent),radial-gradient(700px 360px at 90% 10%,color-mix(in srgb,var(--c) 16%,transparent),transparent)}
-.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center}@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}}
-h1{font-size:clamp(34px,5.4vw,60px);line-height:1.06;letter-spacing:-.035em;margin:0 0 18px;font-weight:800}
-html[lang=fa] h1{letter-spacing:0;line-height:1.3}
-h1 em{font-style:normal;background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{font-size:19px;color:var(--mut);max-width:34em;margin:0 0 26px}
-.btns{display:flex;flex-wrap:wrap;gap:12px}.btn{display:inline-flex;gap:8px;align-items:center;padding:12px 20px;border-radius:12px;font-weight:700;text-decoration:none;border:1px solid var(--line);background:var(--card)}
-.btn.main{background:var(--g);color:#07060d;border:0}.btn:hover{transform:translateY(-1px)}
-.frame{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px color-mix(in srgb,var(--v) 60%,transparent);background:#000;line-height:0}.frame img{width:100%;height:auto;display:block}
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:40px}
-.stats div{background:var(--card);padding:18px 14px;text-align:center}.stats b{display:block;font-size:30px;letter-spacing:-.02em;background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}.stats span{font-size:13px;color:var(--mut)}
-@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
-section{padding:70px 0}section.alt{background:var(--bg2);border-block:1px solid var(--line)}
-h2{font-size:clamp(26px,3.6vw,40px);letter-spacing:-.03em;margin:0 0 10px;line-height:1.15}html[lang=fa] h2{letter-spacing:0}
-.sub{color:var(--mut);max-width:44em;margin:0 0 30px}
-.grid{display:grid;gap:18px}.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
-@media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}.card .pad{padding:16px 18px}.card h3{margin:0 0 4px;font-size:18px}.card p{margin:0;color:var(--mut);font-size:15px}
-.card img{width:100%;height:auto;display:block;background:#000}
-.layer{padding:22px}.layer h3{font-size:20px;margin:0 0 8px}.layer b.n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--g);color:#07060d;margin-inline-end:10px}
-.layer ul{margin:10px 0 0;padding-inline-start:18px;color:var(--mut);font-size:15px}
-.pipe{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin-top:8px}.pipe div{flex:1 1 150px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;position:relative;font-size:14px;color:var(--mut)}.pipe b{display:block;color:var(--fg);font-size:15px;margin-bottom:3px}
-.pipe div:not(:last-child)::after{content:"→";position:absolute;inset-inline-end:-14px;top:50%;transform:translateY(-50%);color:var(--c);font-weight:800;z-index:2}html[dir=rtl] .pipe div:not(:last-child)::after{content:"←"}@media(max-width:700px){.pipe div:not(:last-child)::after{display:none}}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tabs button{border:1px solid var(--line);background:var(--card);color:var(--mut);padding:8px 14px;border-radius:10px;font:inherit;font-size:14px;cursor:pointer}.tabs button[aria-selected=true]{color:#07060d;background:var(--g);border:0;font-weight:700}
-.panel{display:none}.panel.on{display:block}
-pre{margin:0;background:#0a0914;color:#e9e7ff;border:1px solid var(--line);border-radius:12px;padding:16px 56px 16px 16px;overflow:auto;font:14px/1.55 "JetBrains Mono",ui-monospace,Consolas,monospace;position:relative;direction:ltr;text-align:left}
-.cp{position:absolute;inset-inline-end:10px;top:10px;font-size:12px;padding:4px 9px}.codebox{position:relative;margin:10px 0}.codebox .pill{position:absolute;right:10px;top:10px;z-index:2;background:#1a1830;color:#cfcdf5}
-table{border-collapse:collapse;width:100%;font-size:15px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:start}th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em}td.num,th.num{text-align:end;font-variant-numeric:tabular-nums}
-.scroll{overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
-.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}.tag.v{color:var(--c);border-color:color-mix(in srgb,var(--c) 50%,var(--line))}
-.fam{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.fam span{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font-size:14px}.fam b{color:var(--c);margin-inline-start:6px}
-.cmp{display:none}.cmp.on{display:block}.vs{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:700px){.vs{grid-template-columns:1fr}}
-footer{padding:40px 0;border-top:1px solid var(--line);color:var(--mut);font-size:14px}footer .wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:center}footer a{text-decoration:none;border-bottom:1px dotted var(--mut)}
-.note{font-size:14px;color:var(--mut);margin-top:12px}
-</style>
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2305040a'/%3E%3Cpath d='M9 22a9 9 0 0 1 0-12' stroke='%238a63ff' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3Cpath d='M23 10a9 9 0 0 1 0 12' stroke='%2340f5f5' stroke-width='3.5' fill='none' stroke-linecap='round'/%3E%3Cpath d='M16 10.5l1.7 3.8 3.8 1.7-3.8 1.7L16 21.5l-1.7-3.8-3.8-1.7 3.8-1.7z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/site.css">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-mark" viewBox="0 0 32 32"><path d="M9 22a9 9 0 0 1 0-12" stroke="#8a63ff" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M23 10a9 9 0 0 1 0 12" stroke="#40f5f5" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M16 10.5l1.7 3.8 3.8 1.7-3.8 1.7L16 21.5l-1.7-3.8-3.8-1.7 3.8-1.7z" fill="#fff"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24"><path d="M16.5 12a4.5 4.5 0 0 0-2.5-4v2.2l2.4 2.4c.1-.2.1-.4.1-.6zM19 12c0 .9-.2 1.8-.5 2.6l1.5 1.5A9 9 0 0 0 21 12a9 9 0 0 0-7-8.8v2.1A7 7 0 0 1 19 12zM4.3 3L3 4.3 7.7 9H4v6h4l5 4v-6.7l4.2 4.2c-.7.5-1.4.9-2.2 1.2v2.1a9 9 0 0 0 3.6-1.8l2.1 2.1L21 20.7 4.3 3zM13 5L10.9 7.1 13 9.2V5z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></symbol>
+</defs></svg>
 </head>
 <body>
-<nav><div class="wrap">
-  <a class="brand" href="#top"><i><svg width="18" height="18" viewBox="0 0 32 32"><path d="M9 22a9 9 0 0 1 0-12" stroke="#8a63ff" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M23 10a9 9 0 0 1 0 12" stroke="#40f5f5" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M16 11l1.6 3.4L21 16l-3.4 1.6L16 21l-1.6-3.4L11 16l3.4-1.6z" fill="#fff"/></svg></i>cinewright</a>
-  <div class="links">
-    <a href="#showcase"><span lang="en">Showcase</span><span lang="fa">نمونه‌ها</span></a>
-    <a href="#how"><span lang="en">How</span><span lang="fa">چگونه</span></a>
-    <a href="#atlas"><span lang="en">Atlas</span><span lang="fa">اطلس</span></a>
-    <a href="#benchmark"><span lang="en">Benchmark</span><span lang="fa">بنچمارک</span></a>
-    <a class="keep" href="#install"><span lang="en">Install</span><span lang="fa">نصب</span></a>
-    <a class="keep" href="https://github.com/msmahdinejad/cinewright">GitHub</a>
-  </div>
-  <button class="pill" id="lang" aria-label="Language">فارسی</button>
-  <button class="pill" id="theme" aria-label="Theme">☾</button>
+<div id="sp"></div><div id="glow"></div><div class="grain"></div>
+<div id="intro" aria-hidden="true"><svg viewBox="0 0 120 120" class="im"><path class="a1" d="M38 84a36 36 0 0 1 0-48"/><path class="a2" d="M82 36a36 36 0 0 1 0 48"/><path class="st" d="M60 40l6.5 14.5L81 60l-14.5 6.5L60 81l-6.5-14.5L39 60l14.5-6.5z"/></svg><div class="iw">Cinewright</div></div>
+
+<nav id="nav"><div class="nav-in">
+  <a class="brand" href="#top"><svg class="mark"><use href="#i-mark"/></svg>Cinewright</a>
+  <a class="l" href="#live"><span lang="en">Live</span><span lang="fa">زنده</span></a>
+  <a class="l" href="#layers"><span lang="en">How</span><span lang="fa">چگونه</span></a>
+  <a class="l" href="#atlas"><span lang="en">Atlas</span><span lang="fa">اطلس</span></a>
+  <a class="l" href="#showcase"><span lang="en">Showcase</span><span lang="fa">نمونه‌ها</span></a>
+  <a class="l" href="#benchmark"><span lang="en">Benchmark</span><span lang="fa">بنچمارک</span></a>
+  <a class="l" href="#install"><span lang="en">Install</span><span lang="fa">نصب</span></a>
+  <button class="pill" id="lang" aria-label="Switch language">فارسی</button>
+  <a class="gh" href="https://github.com/msmahdinejad/cinewright"><svg width="15" height="15" fill="currentColor"><use href="#i-star"/></svg><span>GitHub</span></a>
 </div></nav>
 
-<header class="hero" id="top"><div class="wrap">
-  <div>
-    <h1><span lang="en">Teach your coding agent to make videos that make people ask <em>“how was this made?”</em></span><span lang="fa">به ایجنت کدنویستان یاد بدهید ویدیویی بسازد که همه بپرسند <em>«این چطور ساخته شده؟»</em></span></h1>
-    <p class="lead"><span lang="en">An open-source skill for Codex, Claude Code and friends. Every frame is code, every sound is synthesised — no stock footage, no video model, no cloud. Persian &amp; RTL are first-class.</span><span lang="fa">یک اسکیل متن‌باز برای Codex، Claude Code و هم‌قطارانشان. هر فریم کد است و هر صدا ساخته‌شده با کد — بدون ویدیوی استوک، بدون مدل ویدیوساز، بدون ابر. فارسی و راست‌به‌چپ درجه‌یک.</span></p>
-    <div class="btns"><a class="btn main" href="#install"><span lang="en">Install in one line</span><span lang="fa">نصب با یک خط</span></a><a class="btn" href="https://github.com/msmahdinejad/cinewright">★ GitHub</a><a class="btn" href="#benchmark"><span lang="en">See the benchmark</span><span lang="fa">بنچمارک</span></a></div>
+<header class="hero" id="top">
+  <canvas id="hero-gl" aria-hidden="true"></canvas><div class="hero-shade"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <a class="badge" href="https://github.com/msmahdinejad/cinewright/releases"><b>v2.1</b><span lang="en">Open source · MIT · zero dependencies</span><span lang="fa">متن‌باز · MIT · بدون وابستگی</span></a>
+      <h1 class="split" id="h1"><span lang="en">Your coding agent can now <span class="grad">direct films.</span></span><span lang="fa">ایجنت کدنویستان حالا می‌تواند <span class="grad">فیلم بسازد.</span></span></h1>
+      <p class="lead"><span lang="en">Cinewright is an open-source skill for Codex, Claude Code and friends. Every frame is code, every sound is synthesised — no stock footage, no video model, no cloud. Persian &amp; RTL are first-class.</span><span lang="fa">سینه‌رایت یک اسکیل متن‌باز برای Codex، Claude Code و هم‌قطارانشان است. هر فریم کد است و هر صدا با کد ساخته می‌شود — بدون ویدیوی استوک، بدون مدل ویدیوساز، بدون ابر. فارسی و راست‌به‌چپ درجه‌یک.</span></p>
+      <div class="rot"><span lang="en">Make a</span><span lang="fa">بسازید:</span><span class="slot" id="rot" aria-live="off"></span><span lang="en">— entirely from code.</span><span lang="fa">— فقط با کد.</span></div>
+      <div class="cta">
+        <a class="btn main mag" href="#install"><span lang="en">Install in one line</span><span lang="fa">نصب با یک خط</span> →</a>
+        <a class="btn mag" href="#live"><span lang="en">Watch it run</span><span lang="fa">اجرای زنده</span> ▶</a>
+        <a class="btn mag" href="https://github.com/msmahdinejad/cinewright"><svg width="16" height="16" fill="currentColor"><use href="#i-star"/></svg> <span lang="en">Star on GitHub</span><span lang="fa">ستاره در گیت‌هاب</span></a>
+      </div>
+      <div class="term" style="position:relative"><div class="bar"><i></i><i></i><i></i><em id="osn">terminal</em></div><pre id="hero-term"><span class="pr">$</span> <span id="hero-cmd"></span><span class="caret"></span></pre><button class="pill cp" data-copy="#hero-cmd"><span lang="en">copy</span><span lang="fa">کپی</span></button></div>
+    </div>
+    <div class="hero-visual">
+      <div class="device tilt-d"><img src="assets/anim/showreel.webp" alt="A bright motion-graphics showreel rendered entirely from code" width="640" height="360" fetchpriority="high"></div>
+      <div class="fc a"><img src="assets/anim/cinema.webp" alt="Dark cinematic trailer" width="640" height="360" loading="lazy"></div>
+      <div class="fc b"><img src="assets/anim/avorythm-burst.webp" alt="Particles forming a logo" width="640" height="360" loading="lazy"></div>
+    </div>
   </div>
-  <div class="frame"><img src="assets/anim/showreel.webp" alt="Showreel rendered entirely from code" width="640" height="360"></div>
-</div>
-<div class="wrap"><div class="stats">
-  <div><b>239</b><span lang="en">tested techniques</span><span lang="fa">تکنیک آزموده</span></div>
-  <div><b>32</b><span lang="en">GPU transitions</span><span lang="fa">ترنزیشن GPU</span></div>
-  <div><b>50k</b><span lang="en">particle morphs</span><span lang="fa">ذرهٔ مورف‌شونده</span></div>
-  <div><b>14</b><span lang="en">offline fonts, 7 Persian</span><span lang="fa">فونت آفلاین، ۷ فارسی</span></div>
-  <div><b>0</b><span lang="en">dependencies</span><span lang="fa">وابستگی</span></div>
-</div></div></header>
+  <div class="wrap"><div class="stats">
+    <div><b data-count="239" id="st-n">239</b><span lang="en">tested techniques</span><span lang="fa">تکنیک آزموده</span></div>
+    <div><b data-count="32">32</b><span lang="en">GPU transitions</span><span lang="fa">ترنزیشن GPU</span></div>
+    <div><b data-count="50" data-suffix="k">50k</b><span lang="en">particle morphs</span><span lang="fa">ذرهٔ مورف‌شونده</span></div>
+    <div><b data-count="14">14</b><span lang="en">offline fonts · 7 Persian</span><span lang="fa">فونت آفلاین · ۷ فارسی</span></div>
+    <div><b data-count="0">0</b><span lang="en">dependencies</span><span lang="fa">وابستگی</span></div>
+  </div></div>
+  <div class="cue"><i></i></div>
+</header>
 
-<section id="why"><div class="wrap">
-  <h2><span lang="en">Agents make slideshows. This makes films.</span><span lang="fa">ایجنت‌ها اسلایدشو می‌سازند. این اسکیل فیلم می‌سازد.</span></h2>
-  <p class="sub"><span lang="en">Ask a coding agent for a video and you usually get a few fades over a gradient and flat sound. The skill changes the outcome at three levels.</span><span lang="fa">از یک ایجنت ویدیو بخواهید، معمولاً چند محوشدن روی گرادیان و صدای تخت می‌گیرید. اسکیل نتیجه را در سه سطح عوض می‌کند.</span></p>
-  <div class="grid g3">
-    <div class="card layer"><h3><b class="n">1</b><span lang="en">Engine</span><span lang="fa">موتور</span></h3><p style="color:var(--mut);font-size:15px;margin:0"><span lang="en">A GPU film toolkit that makes spectacular looks cheap.</span><span lang="fa">جعبه‌ابزار GPU که جلوه‌های چشمگیر را ارزان می‌کند.</span></p><ul><li><span lang="en">Scene sequencer with 32 transitions</span><span lang="fa">ویرایشگر صحنه با ۳۲ ترنزیشن</span></li><li><span lang="en">From-scratch 3D: chrome, glass, reflections, depth of field</span><span lang="fa">سه‌بعدی از صفر: کروم، شیشه، بازتاب، عمق میدان</span></li><li><span lang="en">25 shader backgrounds, 26 filters, kinetic type</span><span lang="fa">۲۵ پس‌زمینهٔ شیدری، ۲۶ فیلتر، تایپ جنبشی</span></li><li><span lang="en">Sound engine incl. santur, ney, tombak</span><span lang="fa">موتور صدا با سنتور، نی و تمبک</span></li></ul></div>
-    <div class="card layer"><h3><b class="n">2</b><span lang="en">Knowledge</span><span lang="fa">دانش</span></h3><p style="color:var(--mut);font-size:15px;margin:0"><span lang="en">Teaches what is possible — and when to use it.</span><span lang="fa">یاد می‌دهد چه چیزی ممکن است — و کی باید به کار رفت.</span></p><ul><li><span lang="en">Atlas: 239 recipes, runnable code, in 17 families</span><span lang="fa">اطلس: ۲۳۹ دستورکار با کد اجرایی در ۱۷ خانواده</span></li><li><span lang="en">Visual gallery so the agent can <i>see</i> before choosing</span><span lang="fa">گالری تصویری تا ایجنت قبل از انتخاب <i>ببیند</i></span></li><li><span lang="en">22 complete style systems</span><span lang="fa">۲۲ سیستم سبک کامل</span></li><li><span lang="en"><code>inspire.mjs</code>: three different directions per brief</span><span lang="fa"><code>inspire.mjs</code>: برای هر بریف سه جهت متفاوت</span></li></ul></div>
-    <div class="card layer"><h3><b class="n">3</b><span lang="en">Process</span><span lang="fa">فرایند</span></h3><p style="color:var(--mut);font-size:15px;margin:0"><span lang="en">Makes the agent actually use it — and proves it did.</span><span lang="fa">ایجنت را وادار به استفادهٔ واقعی می‌کند — و ثابت می‌کند کرده.</span></p><ul><li><span lang="en">Studio mode: brief → look-dev → three polish rounds</span><span lang="fa">حالت استودیو: بریف ← سبک‌یابی ← سه دور صیقل</span></li><li><span lang="en">Anti-slideshow motion metric</span><span lang="fa">معیار ضد-اسلایدشو</span></li><li><span lang="en">Craft gate: techniques, transitions, reviews</span><span lang="fa">دروازهٔ craft: تکنیک‌ها، ترنزیشن‌ها، بازبینی‌ها</span></li><li><span lang="en">Determinism proof: same time ⇒ same pixels</span><span lang="fa">اثبات قطعی‌بودن: زمان یکسان ⇒ پیکسل یکسان</span></li></ul></div>
+<div class="marquee" aria-hidden="true" id="marquee"></div>
+
+<section id="live"><div class="orb" style="width:420px;height:420px;background:#8a63ff;inset-inline-start:-120px;top:10%"></div>
+<div class="wrap">
+  <div class="eyebrow rv"><span lang="en">Not a recording</span><span lang="fa">این ضبط‌شده نیست</span></div>
+  <h2 class="rv"><span lang="en">This is the real engine, running in your browser. Right now.</span><span lang="fa">این خودِ موتور واقعی است، همین الان در مرورگر شما.</span></h2>
+  <p class="sub rv"><span lang="en">A film is a pure function of time. Drag the playhead — every frame you see is computed on the spot by the same code an agent writes. Rewind, scrub, jump to any second. It is how the agent checks its own work, too.</span><span lang="fa">فیلم تابعی خالص از زمان است. هد پخش را بکشید — هر فریم همان لحظه با همان کدی محاسبه می‌شود که ایجنت می‌نویسد. عقب بروید، رد شوید، به هر ثانیه‌ای بپرید. ایجنت هم کار خودش را همین‌طور وارسی می‌کند.</span></p>
+  <div class="live-grid">
+    <div class="rv">
+      <div class="tabs" id="film-tabs" role="tablist"><button role="tab" aria-selected="true" data-f="showreel">Showreel · 17.5 s</button><button role="tab" aria-selected="false" data-f="cinema">Cinema · 20 s</button></div>
+      <div class="glass codep"><span class="cm">// the entire contract of a film</span><br><span class="k">function</span> <span class="f">renderFrame</span>(<span class="n">t</span>) {<br>&nbsp;&nbsp;<span class="f">S</span>.<span class="f">render</span>(<span class="n">t</span>);&nbsp;&nbsp;<span class="cm">// t = <b class="t" id="ro-t2">0.00</b> s</span><br>}</div>
+      <div class="readout"><div><small>time</small><b id="ro-t">0.00 s</b></div><div><small>frame @30</small><b id="ro-f">0</b></div><div><small>scene</small><b id="ro-s">—</b></div></div>
+      <p class="mini kb"><span lang="en">Space = play/pause · ← → = ±1 s · the stage pulses on every beat of the film's own cue timeline.</span><span lang="fa">اسپیس = پخش/توقف · ← → = ±۱ ثانیه · صحنه با هر ضرب جدول زمانی خودِ فیلم می‌تپد.</span></p>
+    </div>
+    <div class="rv" style="--d:120">
+      <div class="stage" id="stage"><img class="poster" id="poster" src="assets/anim/showreel.webp" alt="Showreel preview" width="1280" height="720"><div class="live-badge"><i></i>LIVE · WEBGL2</div>
+        <button class="big" id="start" aria-label="Start the live demo"><span><svg><use href="#i-play" fill="#fff"/></svg><span lang="en">Run the engine</span><span lang="fa">اجرای موتور</span></span></button>
+        <div class="nolive-note"><span lang="en">This browser can't run the engine's WebGL2 float pipeline — showing the recorded loop instead.</span><span lang="fa">این مرورگر پایپ‌لاین WebGL2 موتور را اجرا نمی‌کند — نسخهٔ ضبط‌شده نمایش داده می‌شود.</span></div>
+      </div>
+      <div class="ctrl"><button class="ib" id="pp" aria-label="Play / pause"><svg><use href="#i-play"/></svg></button><button class="ib" id="snd" aria-label="Sound on / off" title="Sound"><svg><use href="#i-mute"/></svg></button>
+        <div class="track" id="track" role="slider" tabindex="0" aria-label="Time" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="fill"></div><div class="head"></div></div></div>
+    </div>
   </div>
 </div></section>
 
-<section class="alt" id="showcase"><div class="wrap">
-  <h2><span lang="en">What it makes</span><span lang="fa">چه می‌سازد</span></h2>
-  <p class="sub"><span lang="en">Real renders from this repository. Full-quality MP4s are attached to the GitHub release.</span><span lang="fa">رندرهای واقعی همین ریپو. MP4 کامل در Release گیت‌هاب است.</span></p>
-  <div class="grid g2">
-    <div class="card"><img loading="lazy" src="assets/anim/avorythm-turn.webp" alt="Prism splits one voice into four outputs" width="640" height="360"><div class="pad"><h3><span lang="en">Product film — the turn</span><span lang="fa">فیلم محصول — نقطهٔ عطف</span></h3><p><span lang="en">30 s, Persian RTL, original score. A prism splits one white voice into four outputs.</span><span lang="fa">۳۰ ثانیه، متن فارسی راست‌به‌چپ، موسیقی اصلی. یک منشور یک صدا را به چهار خروجی می‌شکند.</span></p> <p style="margin-top:8px"><a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/avorythm-film.mp4">MP4</a> · <a href="https://github.com/msmahdinejad/cinewright/tree/main/skills/cinewright/references/case-studies/avorythm"><span lang="en">how it was made</span><span lang="fa">روند ساخت</span></a></p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/avorythm-burst.webp" alt="Scripts become particles that lock into a logo" width="640" height="360"><div class="pad"><h3><span lang="en">Particles become the logo</span><span lang="fa">ذرات به لوگو تبدیل می‌شوند</span></h3><p><span lang="en">50 000 GPU points morph from world scripts into the real mark; shock ring, camera punch, riser, then 0.15 s of silence.</span><span lang="fa">۵۰هزار نقطهٔ GPU از خط‌های جهان به لوگوی واقعی مورف می‌شوند؛ حلقهٔ شوک، پانچ دوربین، رایزر و ۰٫۱۵ ثانیه سکوت.</span></p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/cinema.webp" alt="Cinematic trailer" width="640" height="360"><div class="pad"><h3><span lang="en">Cinema template</span><span lang="fa">قالب سینمایی</span></h3><p><span lang="en">20 s dark trailer: particles → chrome 3D name → kinetic poster → night-city flight → burst. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/cinema-template.mp4">MP4</a></span><span lang="fa">تریلر ۲۰ ثانیه‌ای تیره: ذرات ← نام کروم سه‌بعدی ← پوستر جنبشی ← پرواز بر شهر شبانه ← انفجار. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/cinema-template.mp4">MP4</a></span></p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/showreel-fa.webp" alt="Persian showreel" width="640" height="360"><div class="pad"><h3><span lang="en">Showreel template — Persian</span><span lang="fa">قالب شوریل — فارسی</span></h3><p><span lang="en">17.5 s bright poster system: slam type, 3D plastic, girih pattern, liquid metal, tunnel. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/showreel-template-fa.mp4">MP4</a></span><span lang="fa">۱۷٫۵ ثانیه سیستم پوستر روشن: تایپ اسلم، پلاستیک سه‌بعدی، گره‌چینی، فلز مایع، تونل. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/showreel-template-fa.mp4">MP4</a></span></p></div></div>
+<div class="band" aria-hidden="true"><div class="bt" data-sp="-.55">renderFrame(t) &nbsp;·&nbsp; t → pixels &nbsp;·&nbsp; t → sound &nbsp;·&nbsp; renderFrame(t) &nbsp;·&nbsp; t → pixels &nbsp;·&nbsp; t → sound &nbsp;·&nbsp; renderFrame(t)</div></div>
+<section id="layers"><div class="orb" style="width:520px;height:520px;background:#40f5f5;inset-inline-end:-200px;top:30%;opacity:.18"></div>
+<div class="wrap">
+  <div class="eyebrow rv"><span lang="en">Why the output changes</span><span lang="fa">چرا خروجی فرق می‌کند</span></div>
+  <h2 class="rv"><span lang="en">Agents make slideshows. Three layers turn that into film.</span><span lang="fa">ایجنت‌ها اسلایدشو می‌سازند. سه لایه آن را به فیلم تبدیل می‌کند.</span></h2>
+  <div class="layers-grid">
+    <div class="steps" id="steps">
+      <div class="step on" data-p="0"><div class="no">01 — ENGINE</div><h3><span lang="en">Spectacular looks become cheap</span><span lang="fa">جلوه‌های چشمگیر ارزان می‌شوند</span></h3><p><span lang="en">A GPU film toolkit written from scratch, deterministic down to the pixel.</span><span lang="fa">جعبه‌ابزار فیلم GPU که از صفر نوشته شده و تا سطح پیکسل قطعی است.</span></p><ul><li><span lang="en">Scene sequencer with 32 transitions</span><span lang="fa">ویرایشگر صحنه با ۳۲ ترنزیشن</span></li><li><span lang="en">3D: chrome, glass, reflections, depth of field</span><span lang="fa">سه‌بعدی: کروم، شیشه، بازتاب، عمق میدان</span></li><li><span lang="en">50 000-particle morphs · 25 shader backgrounds · 26 filters</span><span lang="fa">مورف ۵۰هزار ذره · ۲۵ پس‌زمینهٔ شیدری · ۲۶ فیلتر</span></li><li><span lang="en">Sound engine: drums, strings, santur, ney, tombak</span><span lang="fa">موتور صدا: درام، زهی، سنتور، نی، تمبک</span></li></ul></div>
+      <div class="step" data-p="1"><div class="no">02 — KNOWLEDGE</div><h3><span lang="en">It knows what is possible — and when</span><span lang="fa">می‌داند چه ممکن است — و کِی</span></h3><p><span lang="en">An atlas of 239 recipes with runnable code, a gallery so the agent can <i>see</i> before it chooses, and a generator that returns three different directions for every brief.</span><span lang="fa">اطلسی از ۲۳۹ دستورکار با کد اجرایی، گالری تا ایجنت قبل از انتخاب <i>ببیند</i>، و مولدی که برای هر بریف سه جهت متفاوت می‌دهد.</span></p><ul><li><span lang="en">Every recipe: use · how · avoid · pairs-with</span><span lang="fa">هر دستورکار: کاربرد · روش · پرهیز · ترکیب</span></li><li><span lang="en">22 complete style systems — commit to one</span><span lang="fa">۲۲ سیستم سبک کامل — یکی را انتخاب کن و پایش بمان</span></li></ul></div>
+      <div class="step" data-p="2"><div class="no">03 — PROCESS</div><h3><span lang="en">It must use it — and prove it did</span><span lang="fa">باید از آن استفاده کند — و ثابت کند</span></h3><p><span lang="en">Studio mode: brief → look-dev → skeleton → three polish rounds. Then gates that measure, not hope.</span><span lang="fa">حالت استودیو: بریف ← سبک‌یابی ← اسکلت ← سه دور صیقل. بعد دروازه‌هایی که اندازه می‌گیرند، نه امید.</span></p><ul><li><span lang="en">Anti-slideshow motion metric</span><span lang="fa">معیار ضد-اسلایدشو</span></li><li><span lang="en">Craft gate: ≥ 6 techniques, ≥ 4 transitions, 3 written reviews</span><span lang="fa">دروازهٔ craft: حداقل ۶ تکنیک، ۴ ترنزیشن، ۳ بازبینی نوشته‌شده</span></li><li><span lang="en">Determinism proof: same time ⇒ same pixels</span><span lang="fa">اثبات قطعی‌بودن: زمان یکسان ⇒ پیکسل یکسان</span></li></ul></div>
+    </div>
+    <div class="monitor rv" id="monitor">
+      <div class="pane on" data-p="0"><img src="assets/anim/reel-3d.webp" alt="3D engine reel" width="560" height="315" loading="lazy"><div class="mods"><span style="--i:0">Stage</span><span style="--i:1">Scene3D</span><span style="--i:2">Parts</span><span style="--i:3">FX</span><span style="--i:4">Type</span><span style="--i:5">Cine</span><span style="--i:6">synth</span><span style="--i:7">Trans ×32</span></div></div>
+      <div class="pane" data-p="1"><div class="term full"><div class="bar"><i></i><i></i><i></i><em>atlas.mjs</em></div><pre id="t-atlas"></pre></div></div>
+      <div class="pane" data-p="2"><div class="term full"><div class="bar"><i></i><i></i><i></i><em>qc.mjs check</em></div><pre id="t-qc"></pre></div></div>
+    </div>
   </div>
 </div></section>
 
-<section id="how"><div class="wrap">
-  <h2><span lang="en">A video is a function of time</span><span lang="fa">ویدیو تابعی از زمان است</span></h2>
-  <p class="sub"><span lang="en"><code>renderFrame(t)</code> draws any second of the film on demand, so an agent can render one frame, look at it, change a number and render again — checking its own work without eyes or ears.</span><span lang="fa"><code>renderFrame(t)</code> هر ثانیه از فیلم را هر زمان بخواهید می‌کشد؛ پس ایجنت می‌تواند یک فریم رندر کند، نگاه کند، یک عدد را عوض کند و دوباره رندر کند — وارسی کار بدون چشم و گوش.</span></p>
-  <div class="pipe">
-    <div><b><span lang="en">Brief</span><span lang="fa">بریف</span></b><span lang="en">concept · style bible · shot list</span><span lang="fa">مفهوم · سبک · لیست شات‌ها</span></div>
-    <div><b>inspire + atlas</b><span lang="en">3 directions · 239 techniques</span><span lang="fa">۳ جهت · ۲۳۹ تکنیک</span></div>
-    <div><b>video.html + audio.mjs</b><span lang="en">one shared cue timeline</span><span lang="fa">یک جدول زمانی مشترک</span></div>
-    <div><b>render.mjs</b><span lang="en">parallel headless Chrome → ffmpeg</span><span lang="fa">Chrome بی‌سر موازی ← ffmpeg</span></div>
-    <div><b>QC gates</b><span lang="en">energy · audio · craft · verify</span><span lang="fa">انرژی · صدا · craft · verify</span></div>
+<section id="pipeline"><div class="wrap">
+  <div class="eyebrow rv"><span lang="en">From a sentence to an MP4</span><span lang="fa">از یک جمله تا MP4</span></div>
+  <h2 class="rv"><span lang="en">One timeline drives picture and sound.</span><span lang="fa">یک جدول زمانی، تصویر و صدا را می‌راند.</span></h2>
+  <div class="pipe rv" id="pipe">
+    <div class="pn"><span class="dot"></span><b><span lang="en">Brief</span><span lang="fa">بریف</span></b><span><span lang="en">concept · style bible · shot list naming atlas techniques</span><span lang="fa">مفهوم · کتاب سبک · لیست شات با نام تکنیک‌ها</span></span><code>brief.md</code></div>
+    <div class="pn"><span class="dot"></span><b><span lang="en">Directions</span><span lang="fa">جهت‌ها</span></b><span><span lang="en">three different creative routes per brief</span><span lang="fa">سه مسیر خلاقانهٔ متفاوت برای هر بریف</span></span><code>inspire.mjs</code></div>
+    <div class="pn"><span class="dot"></span><b><span lang="en">Frames as code</span><span lang="fa">فریم به‌مثابه کد</span></b><span><span lang="en">scenes + score from one cue timeline</span><span lang="fa">صحنه‌ها و موسیقی از یک جدول زمانی</span></span><code>video.html · audio.mjs</code></div>
+    <div class="pn"><span class="dot"></span><b><span lang="en">Render</span><span lang="fa">رندر</span></b><span><span lang="en">parallel headless Chrome → ffmpeg, resumable</span><span lang="fa">Chrome بی‌سر موازی ← ffmpeg، قابل‌ازسرگیری</span></span><code>render.mjs</code></div>
+    <div class="pn"><span class="dot"></span><b><span lang="en">Gates</span><span lang="fa">دروازه‌ها</span></b><span><span lang="en">energy · audio · craft · determinism</span><span lang="fa">انرژی · صدا · craft · قطعی‌بودن</span></span><code>qc.mjs check</code></div>
   </div>
-  <p class="note"><span lang="en">Three polish rounds loop between QC and the scenes: motion &amp; camera → craft &amp; detail → sound &amp; finish. <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/how-it-works.md">Read the details</a>.</span><span lang="fa">سه دور صیقل میان QC و صحنه‌ها می‌چرخد: حرکت و دوربین ← جزئیات ← صدا و پایان‌بندی. <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/how-it-works.md">جزئیات</a>.</span></p>
+  <div class="loop rv"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg><span lang="en">Three polish rounds loop between gates and scenes: motion &amp; camera → craft &amp; detail → sound &amp; finish</span><span lang="fa">سه دور صیقل میان دروازه‌ها و صحنه‌ها می‌چرخد: حرکت و دوربین ← جزئیات ← صدا و پایان‌بندی</span></div>
 </div></section>
 
-<section class="alt" id="atlas"><div class="wrap">
-  <h2><span lang="en">The atlas: 239 techniques an agent can reach for</span><span lang="fa">اطلس: ۲۳۹ تکنیک در دسترس ایجنت</span></h2>
-  <p class="sub"><span lang="en">Each is a short recipe — use / how / avoid / pairs-with — with code that is executed in CI so it never rots. Below: real clips of atlas recipes.</span><span lang="fa">هر کدام یک دستورکار کوتاه است — کاربرد / روش / پرهیز / ترکیب — با کدی که در CI اجرا می‌شود. زیر: کلیپ‌های واقعی از دستورکارها.</span></p>
-  <div class="grid g4">
-    <div class="card"><img loading="lazy" src="assets/anim/reel-3d.webp" alt="3D" width="560" height="315"><div class="pad"><h3>3D</h3><p>chrome text · glass gems · night city · pedestal</p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/reel-particles.webp" alt="Particles" width="560" height="315"><div class="pad"><h3>Particles</h3><p>morph · burst · galaxy · dissolve</p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/reel-type.webp" alt="Type" width="560" height="315"><div class="pad"><h3>Type</h3><p>slam · write-on · karaoke · rings</p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/reel-logos.webp" alt="Logos" width="560" height="315"><div class="pad"><h3>Logos</h3><p>shockwave · shatter · glitch · bloom</p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/reel-shaders.webp" alt="Shaders" width="560" height="315"><div class="pad"><h3>Shaders</h3><p>metaballs · retro sun · warp · cracks</p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/reel-looks.webp" alt="Looks" width="560" height="315"><div class="pad"><h3>Looks</h3><p>VHS · ASCII · stained glass · kaleido</p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/reel-graphic.webp" alt="Graphic" width="560" height="315"><div class="pad"><h3>Graphic</h3><p>girih · dot globe · flow field · equalizer</p></div></div>
-    <div class="card"><img loading="lazy" src="assets/anim/reel-ui.webp" alt="UI and light" width="560" height="315"><div class="pad"><h3>UI &amp; light</h3><p>app flow · stat grid · graph · neon</p></div></div>
+<section id="atlas"><div class="wrap">
+  <div class="eyebrow rv"><span lang="en">The atlas</span><span lang="fa">اطلس</span></div>
+  <h2 class="rv"><span id="at-n">239</span> <span lang="en">techniques your agent can reach for.</span><span lang="fa">تکنیک در دسترس ایجنت شما.</span></h2>
+  <p class="sub rv"><span lang="en">Search it like your agent does. Each card is a real recipe from the repository — click one to copy the command that shows its full code.</span><span lang="fa">همان‌طور که ایجنت جستجو می‌کند جستجو کنید. هر کارت یک دستورکار واقعی از ریپوست — کلیک کنید تا دستور نمایش کد کامل کپی شود.</span></p>
+  <div class="reels rv" id="reels"></div>
+  <div class="atl-top rv"><div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="liquid chrome · particles · persian · logo · transition…" aria-label="Search the atlas"><kbd>/</kbd></div></div>
+  <div class="fams rv" id="fams"></div>
+  <div class="res-info"><span id="res-n"></span><span>node atlas.mjs show &lt;id&gt;</span></div>
+  <div class="cards" id="cards"></div>
+  <button class="btn more" id="more" hidden><span lang="en">Show more</span><span lang="fa">نمایش بیشتر</span></button>
+</div></section>
+
+<section id="showcase"><div class="orb" style="width:480px;height:480px;background:#ff5ea8;inset-inline-start:30%;top:0;opacity:.2"></div>
+<div class="wrap">
+  <div class="eyebrow rv"><span lang="en">Made with it</span><span lang="fa">ساخته‌شده با آن</span></div>
+  <h2 class="rv"><span lang="en">Real films. Real renders. Zero footage.</span><span lang="fa">فیلم‌های واقعی. رندر واقعی. صفر فوتیج.</span></h2>
+  <div class="car" id="car"></div>
+  <div class="car-nav"><button class="ib" id="prev" aria-label="Previous"><svg style="transform:scaleX(-1)"><use href="#i-play"/></svg></button><button class="ib" id="next" aria-label="Next"><svg><use href="#i-play"/></svg></button></div>
+</div></section>
+
+<div class="band r" aria-hidden="true"><div class="bt" data-sp=".5">code → film &nbsp;·&nbsp; فیلم از کد &nbsp;·&nbsp; code → film &nbsp;·&nbsp; فیلم از کد &nbsp;·&nbsp; code → film &nbsp;·&nbsp; فیلم از کد</div></div>
+<section id="persian"><div class="wrap">
+  <div class="fa-wrap">
+    <div class="rv">
+      <div class="eyebrow"><span lang="en">Persian-first</span><span lang="fa">فارسی‌محور</span></div>
+      <h2><span lang="en">Persian is not an afterthought.</span><span lang="fa">فارسی یک قابلیت جانبی نیست؛ پایه است.</span></h2>
+      <div class="feat">
+        <div><i>ض</i><p style="margin:0"><b><span lang="en">Shaped, right-to-left, word by word</span><span lang="fa">شکل‌دهی درست، راست‌به‌چپ، کلمه‌به‌کلمه</span></b><span><span lang="en">Joined letters, Persian digits, Latin names kept whole inside RTL lines. Words animate as words — never per letter.</span><span lang="fa">حروف چسبیده، ارقام فارسی، نام‌های لاتین سالم در خط راست‌به‌چپ. کلمه‌ها به‌صورت کلمه انیمیت می‌شوند — هرگز حرف‌به‌حرف.</span></span></p></div>
+        <div><i>ن</i><p style="margin:0"><b><span lang="en">Seven Persian-capable typefaces</span><span lang="fa">هفت فونت فارسی</span></b><span><span lang="en">Vazirmatn, Lalezar, Amiri, Reem Kufi, Aref Ruqaa, Rakkas — and Nastaliq for poetry.</span><span lang="fa">وزیرمتن، لاله‌زار، امیری، ریم‌کوفی، عارف رقعه، رکّاس — و نستعلیق برای شعر.</span></span></p></div>
+        <div><i>♪</i><p style="margin:0"><b><span lang="en">Heritage patterns and sound</span><span lang="fa">نقش و صدای میراث</span></b><span><span lang="en">Girih tilings, Nastaliq write-on, and synthesised santur, ney, tombak and daf in 6/8.</span><span lang="fa">نقش گره‌چینی، نوشتن نستعلیق، و سنتور، نی، تمبک و دف با ریتم ۶/۸ — همه با کد ساخته می‌شوند.</span></span></p></div>
+      </div>
+    </div>
+    <div class="fa-stage rv" id="fa-stage" style="--d:140">
+      <div><div class="nast"><span class="rev">الا یا ایها الساقی ادر کأسا و ناولها</span><i class="pen"></i></div><div style="color:var(--dim);font-size:14px;margin-top:6px">— حافظ</div></div>
+      <div class="kar" id="kar"><span>هر</span><span>صدا</span><span>را</span><span>به</span><span>زبان</span><span>خودت</span><span>بشنو</span><i class="pillb"></i></div>
+    </div>
   </div>
-  <p class="note"><a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/atlas.md"><span lang="en">Browse all 239 entries →</span><span lang="fa">همهٔ ۲۳۹ تکنیک ←</span></a></p>
 </div></section>
 
 <section id="benchmark"><div class="wrap">
-  <h2><span lang="en">Does it actually help? Measure it.</span><span lang="fa">واقعاً کمک می‌کند؟ بسنجید.</span></h2>
-  <p class="sub"><span lang="en">The repo ships a benchmark: the <b>same prompt</b> goes to a coding agent (Codex by default) with and without the skill, and each film is measured — motion, pacing, loudness, process. A blind A/B page covers taste. Numbers below come straight from the committed results.</span><span lang="fa">ریپو یک بنچمارک دارد: <b>همان پرامپت</b> به ایجنت (پیش‌فرض Codex) با و بدون اسکیل داده می‌شود و هر فیلم سنجیده می‌شود — حرکت، ریتم، بلندی صدا، فرایند. سلیقه با صفحهٔ رأی‌گیری کور سنجیده می‌شود. اعداد زیر مستقیم از نتایج ثبت‌شده می‌آید.</span></p>
-  <div class="cmp" id="cmp"><h3 style="margin:0 0 12px"><span lang="en">Same prompt — left: no skill · right: with skill</span><span lang="fa">پرامپت یکسان — چپ: بدون اسکیل · راست: با اسکیل</span></h3><div class="vs" id="vs"></div></div>
-  <div class="scroll"><table id="bt"><thead><tr><th><span lang="en">task</span><span lang="fa">تسک</span></th><th><span lang="en">how it was made</span><span lang="fa">چگونه ساخته شد</span></th><th class="num"><span lang="en">length</span><span lang="fa">طول</span></th><th class="num"><span lang="en">quiet % ↓</span><span lang="fa">ساکن % ↓</span></th><th class="num">LRA</th><th><span lang="en">source</span><span lang="fa">منبع</span></th></tr></thead><tbody><tr><td colspan="6">…</td></tr></tbody></table></div>
-  <p class="note"><span lang="en"><b>quiet %</b> = share of the film where almost nothing changes (the slideshow metric). These numbers detect motion/sound hygiene, not beauty; one run per cell is an anecdote. <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/benchmark.md">Full report &amp; method</a> · <a href="https://github.com/msmahdinejad/cinewright/tree/main/benchmark">run it yourself</a>.</span><span lang="fa"><b>ساکن %</b> = سهمی از فیلم که تقریباً هیچ چیز در آن تغییر نمی‌کند (معیار اسلایدشو). این اعداد سلامت حرکت و صدا را می‌سنجند نه زیبایی؛ یک اجرا برای هر خانه فقط یک حکایت است. <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/benchmark.md">گزارش کامل</a> · <a href="https://github.com/msmahdinejad/cinewright/tree/main/benchmark">خودتان اجرا کنید</a>.</span></p>
+  <div class="eyebrow rv"><span lang="en">Don't take our word for it</span><span lang="fa">حرف ما را باور نکنید</span></div>
+  <h2 class="rv"><span lang="en">Same prompt. With and without the skill. Measured.</span><span lang="fa">پرامپت یکسان. با و بدون اسکیل. اندازه‌گیری‌شده.</span></h2>
+  <p class="sub rv"><span lang="en">The repository ships a benchmark that hands a coding agent (Codex by default) the same task in a clean folder under different conditions, then measures every film. Numbers below come straight from the committed results — no hand-typing.</span><span lang="fa">ریپو یک بنچمارک دارد که همان تسک را در پوشهٔ تمیز و شرایط مختلف به ایجنت (پیش‌فرض Codex) می‌دهد و هر فیلم را می‌سنجد. اعداد زیر مستقیم از نتایج ثبت‌شده می‌آید — بدون تایپ دستی.</span></p>
+  <div class="cmp rv" id="cmp"><div class="eyebrow" style="margin-bottom:12px"><span id="cmp-t"></span></div><div class="cmpw" id="cmpw"><img id="cmp-a" alt="" src=""><img id="cmp-b" class="top" alt="" src=""><span class="lab l1" id="cmp-l1"></span><span class="lab l2" id="cmp-l2"></span><div class="hd" id="cmp-h"></div></div></div>
+  <div class="bm-grid" id="bm"></div>
+  <p class="note rv"><span lang="en"><b>quiet %</b> = share of the film where almost nothing changes (the slideshow metric — lower is better). It measures motion and sound hygiene, not beauty; one run per cell is an anecdote. <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/benchmark.md">Full report &amp; method</a> · <a href="https://github.com/msmahdinejad/cinewright/tree/main/benchmark">run it yourself</a> — and tell us if it contradicts us.</span><span lang="fa"><b>ساکن %</b> = سهمی از فیلم که تقریباً هیچ چیز در آن تغییر نمی‌کند (معیار اسلایدشو — کمتر بهتر است). سلامت حرکت و صدا را می‌سنجد نه زیبایی؛ یک اجرا برای هر خانه فقط یک حکایت است. <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/benchmark.md">گزارش کامل</a> · <a href="https://github.com/msmahdinejad/cinewright/tree/main/benchmark">خودتان اجرا کنید</a> — و اگر خلافش درآمد بگویید.</span></p>
 </div></section>
 
-<section class="alt" id="install"><div class="wrap">
-  <h2><span lang="en">Install</span><span lang="fa">نصب</span></h2>
-  <p class="sub"><span lang="en">Needs Node ≥ 18, Chrome/Edge/Chromium and ffmpeg — the installer checks and tells you what is missing. No <code>npm install</code>.</span><span lang="fa">به Node ≥ 18، Chrome/Edge و ffmpeg نیاز دارد — نصب‌کننده بررسی می‌کند. <code>npm install</code> لازم نیست.</span></p>
-  <div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-p="p1">Codex · Windows</button><button role="tab" aria-selected="false" data-p="p2">Codex · macOS/Linux</button><button role="tab" aria-selected="false" data-p="p3">Claude Code</button><button role="tab" aria-selected="false" data-p="p4">npx skills</button><button role="tab" aria-selected="false" data-p="p5">Docker</button></div>
-  <div class="panel on" id="p1"><div class="codebox"><button class="pill cp">copy</button><pre>irm https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.ps1 | iex</pre></div></div>
-  <div class="panel" id="p2"><div class="codebox"><button class="pill cp">copy</button><pre>curl -fsSL https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.sh | bash</pre></div></div>
-  <div class="panel" id="p3"><div class="codebox"><button class="pill cp">copy</button><pre>/plugin marketplace add msmahdinejad/cinewright
+<section id="install"><div class="orb" style="width:520px;height:520px;background:#8a63ff;inset-inline-end:-160px;top:20%;opacity:.25"></div>
+<div class="wrap">
+  <div class="eyebrow rv"><span lang="en">Get it</span><span lang="fa">دریافت</span></div>
+  <h2 class="rv"><span lang="en">One line. Then just ask.</span><span lang="fa">یک خط. بعد فقط بخواهید.</span></h2>
+  <p class="sub rv"><span lang="en">Needs Node ≥ 18, Chrome/Edge/Chromium and ffmpeg — the installer checks and tells you what is missing. No <code>npm install</code>.</span><span lang="fa">به Node ≥ 18، Chrome/Edge و ffmpeg نیاز دارد — نصب‌کننده بررسی می‌کند و می‌گوید چه کم است. <code>npm install</code> لازم نیست.</span></p>
+  <div class="inst">
+    <div class="rv">
+      <div class="tabs" id="itabs" role="tablist"><button role="tab" aria-selected="true" data-p="p1">Codex · Windows</button><button role="tab" aria-selected="false" data-p="p2">Codex · macOS/Linux</button><button role="tab" aria-selected="false" data-p="p3">Claude Code</button><button role="tab" aria-selected="false" data-p="p4">npx skills</button><button role="tab" aria-selected="false" data-p="p5">Docker</button></div>
+      <div class="panel on" id="p1"><div class="codebox"><button class="pill cp"><span lang="en">copy</span><span lang="fa">کپی</span></button><pre>irm https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.ps1 | iex</pre></div></div>
+      <div class="panel" id="p2"><div class="codebox"><button class="pill cp"><span lang="en">copy</span><span lang="fa">کپی</span></button><pre>curl -fsSL https://raw.githubusercontent.com/msmahdinejad/cinewright/main/install.sh | bash</pre></div></div>
+      <div class="panel" id="p3"><div class="codebox"><button class="pill cp"><span lang="en">copy</span><span lang="fa">کپی</span></button><pre>/plugin marketplace add msmahdinejad/cinewright
 /plugin install cinewright@cinewright</pre></div></div>
-  <div class="panel" id="p4"><div class="codebox"><button class="pill cp">copy</button><pre>npx skills add msmahdinejad/cinewright</pre></div></div>
-  <div class="panel" id="p5"><div class="codebox"><button class="pill cp">copy</button><pre>docker build -t cinewright https://github.com/msmahdinejad/cinewright.git
+      <div class="panel" id="p4"><div class="codebox"><button class="pill cp"><span lang="en">copy</span><span lang="fa">کپی</span></button><pre>npx skills add msmahdinejad/cinewright</pre></div></div>
+      <div class="panel" id="p5"><div class="codebox"><button class="pill cp"><span lang="en">copy</span><span lang="fa">کپی</span></button><pre>docker build -t cinewright https://github.com/msmahdinejad/cinewright.git
 docker run --rm -v "$PWD/film:/work" cinewright scaffold /work --template showreel
 docker run --rm -v "$PWD/film:/work" cinewright render</pre></div></div>
-  <h3 style="margin:26px 0 6px"><span lang="en">Then, in an empty folder, ask:</span><span lang="fa">بعد، در یک پوشهٔ خالی بخواهید:</span></h3>
-  <div class="codebox"><button class="pill cp">copy</button><pre>$cinewright make a dynamic 15-second motion graphics video that shows what an
-incredible motion designer you are, like it's your showreel for a résumé. Go all out.</pre></div>
-  <p class="note"><span lang="en">Restart the agent after installing. “Go all out” switches the skill into studio mode. More prompts: <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/prompts.md">prompt cookbook</a>.</span><span lang="fa">بعد از نصب، ایجنت را ببندید و باز کنید. «Go all out» اسکیل را وارد حالت استودیو می‌کند. پرامپت‌های بیشتر: <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/prompts.md">نمونه‌پرامپت‌ها</a>.</span></p>
+      <div class="steps3">
+        <div><span><b><span lang="en">Restart your agent</span><span lang="fa">ایجنت را ببندید و باز کنید</span></b> — <span lang="en">so it rescans skills.</span><span lang="fa">تا اسکیل‌ها را دوباره بخواند.</span></span></div>
+        <div><span><b><span lang="en">Open an empty folder</span><span lang="fa">یک پوشهٔ خالی باز کنید</span></b> — <span lang="en">one film per folder.</span><span lang="fa">هر فیلم یک پوشه.</span></span></div>
+        <div><span><b><span lang="en">Ask — and say “go all out”</span><span lang="fa">بخواهید — و بگویید «go all out»</span></b> — <span lang="en">that switches on studio mode.</span><span lang="fa">این حالت استودیو را روشن می‌کند.</span></span></div>
+      </div>
+    </div>
+    <div class="glass prompts rv" style="--d:120"><div class="eyebrow" style="margin-bottom:10px"><span lang="en">Try asking</span><span lang="fa">این‌ها را امتحان کنید</span></div><div class="q" id="pq"></div><div class="dots" id="pd"></div>
+      <p class="mini"><span lang="en">More in the <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/prompts.md" style="color:var(--c)">prompt cookbook</a>.</span><span lang="fa">بیشتر در <a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/prompts.md" style="color:var(--c)">نمونه‌پرامپت‌ها</a>.</span></p></div>
+  </div>
 </div></section>
 
 <footer><div class="wrap">
-  <span>MIT © Mohammad Saleh Mahdinejad</span>
-  <a href="https://github.com/msmahdinejad/cinewright">GitHub</a><a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/getting-started.md"><span lang="en">Docs</span><span lang="fa">مستندات</span></a><a href="https://github.com/msmahdinejad/cinewright/blob/main/CONTRIBUTING.md"><span lang="en">Contribute</span><span lang="fa">مشارکت</span></a><a href="https://github.com/msmahdinejad/cinewright/blob/main/CHANGELOG.md">Changelog</a>
-  <span style="margin-inline-start:auto"><span lang="en">Graphics, not photographs: no photoreal people or footage.</span><span lang="fa">گرافیک است نه عکس: آدم یا فیلم واقعی ندارد.</span></span>
+  <div class="big-word" id="bw" aria-label="Cinewright"></div>
+  <div class="flinks"><span>MIT © Mohammad Saleh Mahdinejad</span><a href="https://github.com/msmahdinejad/cinewright">GitHub</a><a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/getting-started.md"><span lang="en">Docs</span><span lang="fa">مستندات</span></a><a href="https://github.com/msmahdinejad/cinewright/blob/main/CONTRIBUTING.md"><span lang="en">Contribute</span><span lang="fa">مشارکت</span></a><a href="https://github.com/msmahdinejad/cinewright/blob/main/CHANGELOG.md">Changelog</a><a href="https://github.com/msmahdinejad/cinewright/blob/main/docs/how-it-works.md"><span lang="en">How it works</span><span lang="fa">چگونه کار می‌کند</span></a><span class="sp"><span lang="en">Graphics, not photographs: no photoreal people or footage.</span><span lang="fa">گرافیک است نه عکس: آدم یا فیلم واقعی ندارد.</span></span></div>
 </div></footer>
 
-<script>
-(()=>{
-  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],root=document.documentElement;
-  const safe=(f)=>{try{return f()}catch(e){return null}};
-  // language + theme (remembered when storage is available)
-  const setLang=l=>{root.lang=l;root.dir=l==='fa'?'rtl':'ltr';$('#lang').textContent=l==='fa'?'English':'فارسی';safe(()=>localStorage.setItem('pcv-lang',l))};
-  setLang(safe(()=>localStorage.getItem('pcv-lang'))||((navigator.language||'').startsWith('fa')?'fa':'en'));
-  $('#lang').onclick=()=>setLang(root.lang==='fa'?'en':'fa');
-  const setTheme=t=>{if(t==='light')root.dataset.theme='light';else delete root.dataset.theme;$('#theme').textContent=t==='light'?'☀':'☾';safe(()=>localStorage.setItem('pcv-theme',t))};
-  setTheme(safe(()=>localStorage.getItem('pcv-theme'))||'dark');$('#theme').onclick=()=>setTheme(root.dataset.theme==='light'?'dark':'light');
-  // install tabs + copy
-  $$('.tabs button').forEach(b=>b.onclick=()=>{$$('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$$('.panel').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p))});
-  $$('.cp').forEach(b=>b.onclick=async()=>{const t=b.parentElement.querySelector('pre').innerText;try{await navigator.clipboard.writeText(t);b.textContent='copied ✓'}catch(e){const r=document.createRange();r.selectNodeContents(b.parentElement.querySelector('pre'));getSelection().removeAllRanges();getSelection().addRange(r);b.textContent='press Ctrl+C'}setTimeout(()=>b.textContent='copy',1800)});
-  // benchmark table from the committed results (docs/assets/benchmark/summary.json)
-  fetch('assets/benchmark/summary.json').then(r=>r.json()).then(rows=>{
-    const f=x=>x==null?'–':(Math.round(x*10)/10);
-    $('#bt tbody').innerHTML=rows.map(r=>`<tr><td><b>${r.taskTitle}</b></td><td>${r.label}${r.model?` <span class="tag">${r.model}</span>`:''}</td><td class="num">${r.ok?Math.round(r.length)+' s':'✘'}</td><td class="num">${f(r.quietPct)}</td><td class="num">${f(r.lra)}</td><td><span class="tag ${r.kind==='run'?'v':''}">${r.kind==='run'?'runner':'measured after the fact'}</span></td></tr>`).join('')||'<tr><td colspan="6">No results yet.</td></tr>';
-    // side-by-side previews for any task that has both a no-skill and a with-skill runner result
-    const pairs=[...new Set(rows.map(r=>r.task))].map(t=>({b:rows.find(r=>r.task===t&&r.kind==='run'&&r.condition==='baseline'&&r.preview),s:rows.find(r=>r.task===t&&r.kind==='run'&&r.condition!=='baseline'&&r.preview)})).filter(p=>p.b&&p.s);
-    if(pairs.length){$('#cmp').classList.add('on');$('#vs').innerHTML=pairs.slice(0,2).map(p=>`<div class="card"><img loading="lazy" src="${p.b.preview}" alt="no skill"><div class="pad"><h3>${p.b.taskTitle}</h3><p>no skill · quiet ${f(p.b.quietPct)}%</p></div></div><div class="card"><img loading="lazy" src="${p.s.preview}" alt="with skill"><div class="pad"><h3>${p.s.taskTitle}</h3><p>with skill · quiet ${f(p.s.quietPct)}%</p></div></div>`).join('')}
-  }).catch(()=>{$('#bt tbody').innerHTML='<tr><td colspan="6">Open docs/benchmark.md for the results.</td></tr>'});
-})();
-</script>
+<dialog id="dlg"><div style="position:relative"><button class="ib x" id="dlg-x" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg></button><video id="dlg-v" controls playsinline preload="none"></video><p class="fb" id="dlg-fb"></p></div></dialog>
+
+<noscript><style>.rv{opacity:1;transform:none}.split .w{opacity:1;transform:none;filter:none}</style></noscript>
+<script src="assets/js/hero.js" defer></script>
+<script src="assets/js/live.js" defer></script>
+<script src="assets/js/site.js" defer></script>
 </body>
 </html>

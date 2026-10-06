@@ -16,7 +16,7 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 | brief · reviews | a written brief.md and the number of `qc/review-N.md` rounds found in the project | yes · 3 |
 | wall · tokens | agent wall-clock time and input+output tokens (Codex JSONL) | – |
 
-> **No automated head-to-head runs have been committed yet.** The rows below are earlier outputs that were measured after the fact (labelled, with their conditions). Run `node benchmark/run.mjs --suite quick` and open a PR with `benchmark/results/<run-id>/` to add yours — raw summaries and contact sheets only, never the video.
+> **1 agent run(s)** recorded below under *measured by the runner*; every other row is an earlier output measured after the fact (clearly labelled).
 
 ## Product film with a creative-director brief — `product-avorythm`
 
@@ -52,9 +52,16 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 
 | run | how it was produced | length | quiet % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |
 |---|---|---:|---:|---:|---:|---|---|---|---|
+| Codex, no skill #1 | **runner** · codex-cli 0.148.0 · skill none · ⚠ contaminated | 15.0 s | 0 | 0 s | 4 | -14.5 / 1 | – | no · 0 | 12 min · 1219k |
 | Codex + skill v1.1 | measured after the fact · codex · gpt-6.1-sol · skill 1.1 | 15.0 s | 11 | 1.5 s | 0 | -14.1 / 3.5 | – | – | – · – |
 
 <details open><summary>Contact sheets and previews</summary>
+
+**Codex, no skill #1**
+
+![Codex, no skill preview](assets/benchmark/20261006-1742-showreel-15s-baseline-r1/preview.webp)
+
+![Codex, no skill contact sheet](assets/benchmark/20261006-1742-showreel-15s-baseline-r1/sheet.jpg)
 
 **Codex + skill v1.1**
 

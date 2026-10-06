@@ -2,7 +2,7 @@
 
 <img src="docs/assets/anim/showreel-fa.webp" alt="شوریل موشن‌گرافیک که کاملاً با کد ساخته شده" width="720">
 
-# cinewright
+# Cinewright (سینه‌رایت)
 
 **یک «اسکیل» برای ایجنت‌های کدنویس (Codex، Claude Code و …) که یادشان می‌دهد ویدیوهای سینمایی و حرفه‌ای بسازند — فقط با کد.**
 
@@ -23,8 +23,8 @@
 
 <table dir="ltr">
 <tr>
-<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="فیلم محصول فارسی: یک منشور یک صدا را به چهار خروجی می‌شکند"><br><sub>فیلم محصول (۳۰ ثانیه، متن فارسی راست‌به‌چپ، موسیقی اصلی) — <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/avorythm-film.mp4">MP4</a> · <a href="skills/cinewright/references/case-studies/avorythm/README.md">روند ساخت</a></sub></td>
-<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="تریلر سینمایی تیره"><br><sub>قالب سینمایی (۲۰ ثانیه) — ذرات، عنوان سه‌بعدی کروم، پرواز بر فراز شهر شبانه. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/cinema-template.mp4">MP4</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="فیلم محصول فارسی: یک منشور یک صدا را به چهار خروجی می‌شکند"><br><sub>فیلم محصول (۳۰ ثانیه، متن فارسی راست‌به‌چپ، موسیقی اصلی) — <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.1.0/avorythm-film.mp4">MP4</a> · <a href="skills/cinewright/references/case-studies/avorythm/README.md">روند ساخت</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="تریلر سینمایی تیره"><br><sub>قالب سینمایی (۲۰ ثانیه) — ذرات، عنوان سه‌بعدی کروم، پرواز بر فراز شهر شبانه. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.1.0/cinema-template.mp4">MP4</a></sub></td>
 </tr>
 </table>
 

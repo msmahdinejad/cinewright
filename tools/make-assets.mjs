@@ -2,6 +2,7 @@
 // make-assets.mjs — regenerate every picture/animation used by README and docs from the skill itself (nothing is hand-made).
 //
 //   node tools/make-assets.mjs films  <samples-dir>     animated-WebP highlights cut from the sample films (needs the MP4s; they live in GitHub Releases)
+//   node tools/make-assets.mjs videos <samples-dir>     720p web MP4s for the website lightbox
 //   node tools/make-assets.mjs reels                    technique reels: a few atlas recipes per family as one animated WebP each (renders with the skill's own atlas harness)
 //   node tools/make-assets.mjs all <samples-dir>
 //
@@ -58,5 +59,14 @@ function reels() {
   }
 }
 
-if (cmd === 'films') films(arg); else if (cmd === 'reels') reels(); else if (cmd === 'all') { films(arg); reels(); }
+// web-sized MP4s (720p, CRF 27) for the website's lightbox: small enough to live in git, good enough to watch with sound
+function videos(dir) {
+  if (!dir || !fs.existsSync(dir)) { console.error('usage: make-assets.mjs videos <folder with the sample MP4s>'); process.exit(1); }
+  fs.mkdirSync(path.join(OUT, 'video'), { recursive: true });
+  for (const [f, name] of [['avorythm_16x9.mp4', 'avorythm'], ['cinema-template-en_16x9.mp4', 'cinema'], ['showreel-template-en_16x9.mp4', 'showreel'], ['showreel-template-fa_16x9.mp4', 'showreel-fa']]) {
+    const src = path.join(dir, f); if (!fs.existsSync(src)) { console.warn('skip (missing)', src); continue; } const dst = path.join(OUT, 'video', name + '.mp4');
+    run('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', '-i', src, '-vf', 'scale=1280:-2', '-c:v', 'libx264', '-crf', '27', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '96k', '-movflags', '+faststart', dst]); console.log('✔', path.relative(ROOT, dst), kb(dst));
+  }
+}
+if (cmd === 'videos') videos(arg); else if (cmd === 'films') films(arg); else if (cmd === 'reels') reels(); else if (cmd === 'all') { films(arg); reels(); videos(arg); }
 else console.log(fs.readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(1, 8).join('\n'));

@@ -62,5 +62,12 @@ for (const f of A.families) {
 }
 put('docs/atlas.md', md);
 
+// the same catalogue as data for the website's interactive explorer
+const runnable = e => e.blocks.some(b => ['js scene', 'js gl', 'glsl', 'js audio'].includes(b.info));
+put('docs/assets/data/atlas.json', JSON.stringify({
+  entries: A.entries.map(e => ({ id: e.id, f: e.family, t: e.title, u: (e.fields.use || e.fields.palette || '').slice(0, 240), g: e.tags.slice(0, 8), r: runnable(e) ? 1 : 0 })),
+  families: A.families.map(f => ({ id: f.family, t: f.title.replace(/^[^—-]+[—-]\s*/, ''), n: f.count })),
+}) + '\n');
+
 if (check) { if (stale.length) { console.error('✘ generated docs are out of date — run: node tools/gen-docs.mjs\n  ' + stale.slice(0, 12).join('\n  ')); process.exit(1); } console.log('✔ generated docs are up to date'); }
 else console.log(`✔ docs/atlas.md (${A.entries.length} entries) and docs/assets/gallery/ written`);

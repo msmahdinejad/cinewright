@@ -11,7 +11,7 @@
 //
 // Conditions:  baseline = no skill (any installed copy of cinewright is disabled for this run) · skill = skills/cinewright from this checkout ·
 //              name=path = another copy of the skill (e.g. an older version) · all conditions get the identical task prompt and the identical delivery footer.
-// Options:     --model <m> · --effort low|medium|high · --timeout-min 45 · --reps N · --out <dir> · --keep-going (default) · --fake-video <mp4> (pipeline test, no agent)
+// Options:     --skill-version <label> (recorded in the results) · --model <m> · --effort low|medium|high · --timeout-min 45 · --reps N · --out <dir> · --keep-going (default) · --fake-video <mp4> (pipeline test, no agent)
 //
 // SAFETY: the agent runs with full access (`--dangerously-bypass-approvals-and-sandbox`) inside a throw-away folder under benchmark/runs/. Run benchmarks on a machine or container you are happy to let an agent use.
 import { spawn, spawnSync } from 'node:child_process';
@@ -112,7 +112,7 @@ for (const [n, job] of jobs.entries()) {
   const video = findVideo(work), session = sessionStats(path.join(dir, 'events.jsonl'));
   const summary = {
     schema: 1, id: `${runId}/${job.id}`, kind: 'run', task: job.task.id, domain: job.task.domain, condition: job.cond.name, rep: job.rep, label: job.cond.name === 'baseline' ? `${agentName === 'codex' ? 'Codex' : 'Agent'}, no skill` : `${agentName === 'codex' ? 'Codex' : 'Agent'} + skill (${job.cond.name})`,
-    agent: agentName === 'codex' ? codexVersion : 'custom', model: opt.model || null, effort: opt.effort || null, skill: job.cond.skill ? (() => { try { return JSON.parse(fs.readFileSync(path.join(path.dirname(job.cond.skill), '..', 'package.json'), 'utf8')).version; } catch { return 'custom'; } })() : 'none',
+    agent: agentName === 'codex' ? codexVersion : 'custom', model: opt.model || null, effort: opt.effort || null, skill: job.cond.skill ? (opt['skill-version'] || (() => { try { return JSON.parse(fs.readFileSync(path.join(path.dirname(job.cond.skill), '..', 'package.json'), 'utf8')).version; } catch { return 'custom'; } })()) : 'none',
     date: new Date().toISOString().slice(0, 10), wallSeconds: Math.round(res.seconds), exitCode: res.code, timedOut: res.timedOut, note: '',
     video: video ? measureVideo(video) : { ok: false, error: 'no video was produced' }, session, project: projectStats(work), files: {},
     integrity: { skillVisible: !!job.cond.skill, touchedSkill: session?.touchedSkill ?? null, contaminated: !job.cond.skill && !!session?.touchedSkill },

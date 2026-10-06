@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "id": "20261006-1742/showreel-15s__baseline__r1",
+  "kind": "run",
+  "task": "showreel-15s",
+  "domain": "motion-design",
+  "condition": "baseline",
+  "rep": 1,
+  "label": "Codex, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": null,
+  "effort": "high",
+  "skill": "none",
+  "date": "2026-10-06",
+  "wallSeconds": 709,
+  "exitCode": 0,
+  "timedOut": false,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 5.97,
+    "audio": {
+      "lufs": -14.5,
+      "lra": 1,
+      "truePeak": 0,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0139,
+      "mean": 0.0328,
+      "quietPct": 0,
+      "cuts": 3,
+      "longestStatic": 0,
+      "curve": "█▂▂▂▃█▄▄▃▃█▅▄▅▅██▃▂▂▃██▁▁▂▂▃"
+    },
+    "scenes": {
+      "changes": 4,
+      "perMinute": 16
+    }
+  },
+  "session": {
+    "events": 83,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 6,
+      "command_execution": 40,
+      "reasoning": 21,
+      "todo_list": 4,
+      "mcp_tool_call": 8
+    },
+    "turns": 1,
+    "inputTokens": 1195174,
+    "outputTokens": 23926,
+    "cachedInputTokens": 1070848,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 15-second procedural motion-design showreel with kinetic typography, animated 3D torus forms, geometric transitions, and bold art direction.  \nAdded an original beat-synced electronic soundtrack and exported as 1920×1080 H.264 video with AAC stereo audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": true,
+    "contaminated": true
+  }
+}

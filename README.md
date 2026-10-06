@@ -2,7 +2,7 @@
 
 <img src="docs/assets/anim/showreel.webp" alt="A bright poster-style motion-graphics showreel rendered entirely from code" width="720">
 
-# cinewright
+# Cinewright
 
 **An agent skill that teaches Codex, Claude Code and friends to make cinema-grade videos — entirely from code.**
 
@@ -13,9 +13,11 @@ Every frame is a deterministic WebGL/canvas page. Every sound is synthesised. No
 [![Agent skill](https://img.shields.io/badge/agent-skill-40f5f5.svg)](skills/cinewright/SKILL.md)
 [![Zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](package.json)
 
-[**Website**](https://msmahdinejad.github.io/cinewright/) · [Getting started](docs/getting-started.md) · [Atlas](docs/atlas.md) · [Prompt cookbook](docs/prompts.md) · [Benchmark](docs/benchmark.md) · [**فارسی**](README.fa.md)
+[**Website** (live engine demo)](https://msmahdinejad.github.io/cinewright/) · [Getting started](docs/getting-started.md) · [Atlas](docs/atlas.md) · [Prompt cookbook](docs/prompts.md) · [Benchmark](docs/benchmark.md) · [**فارسی**](README.fa.md)
 
 </div>
+
+> **Formerly `pure-code-video`.** Renamed in 2.1.0 — same project, shorter name. To upgrade, run the installer again: it removes the old `pure-code-video` copy and installs `cinewright`. The agent prompt is now `$cinewright`.
 
 ---
 
@@ -23,12 +25,12 @@ Every frame is a deterministic WebGL/canvas page. Every sound is synthesised. No
 
 <table>
 <tr>
-<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="Persian product film: a prism splits one voice into four outputs"><br><sub><b>Product film</b> (30 s, Persian RTL, original score) — a prism splits one voice into four outputs. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/avorythm-film.mp4">MP4</a> · <a href="skills/cinewright/references/case-studies/avorythm/README.md">how it was made</a></sub></td>
-<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="Dark cinematic trailer: particles, chrome 3D title, night-city flight"><br><sub><b>Cinema template</b> (20 s) — particles → chrome 3D name → kinetic poster → night-city flight → burst. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/cinema-template.mp4">MP4</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/avorythm-turn.webp" alt="Persian product film: a prism splits one voice into four outputs"><br><sub><b>Product film</b> (30 s, Persian RTL, original score) — a prism splits one voice into four outputs. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.1.0/avorythm-film.mp4">MP4</a> · <a href="skills/cinewright/references/case-studies/avorythm/README.md">how it was made</a></sub></td>
+<td width="50%"><img src="docs/assets/anim/cinema.webp" alt="Dark cinematic trailer: particles, chrome 3D title, night-city flight"><br><sub><b>Cinema template</b> (20 s) — particles → chrome 3D name → kinetic poster → night-city flight → burst. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.1.0/cinema-template.mp4">MP4</a></sub></td>
 </tr>
 <tr>
 <td><img src="docs/assets/anim/avorythm-burst.webp" alt="Scripts become particles that lock into a logo"><br><sub><b>Particles → logo</b> — 50 000 GPU points morph from scripts into the mark, with a shock ring and a camera punch on the hit.</sub></td>
-<td><img src="docs/assets/anim/showreel-fa.webp" alt="Persian-language showreel"><br><sub><b>Showreel template, Persian</b> (17.5 s) — slam type, 3D plastic, girih pattern, liquid metal, tunnel. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.0.0/showreel-template-fa.mp4">MP4</a></sub></td>
+<td><img src="docs/assets/anim/showreel-fa.webp" alt="Persian-language showreel"><br><sub><b>Showreel template, Persian</b> (17.5 s) — slam type, 3D plastic, girih pattern, liquid metal, tunnel. <a href="https://github.com/msmahdinejad/cinewright/releases/download/v2.1.0/showreel-template-fa.mp4">MP4</a></sub></td>
 </tr>
 </table>
 
@@ -136,12 +138,13 @@ node benchmark/report.mjs                   # → docs/benchmark.md
 ```
 
 <!-- BENCH:START -->
-**Measured so far** (3 earlier output(s) measured after the fact — every row says how it was made; details and caveats in [docs/benchmark.md](docs/benchmark.md)):
+**Measured so far** (1 runner result(s) + 3 earlier output(s) measured after the fact — every row says how it was made; details and caveats in [docs/benchmark.md](docs/benchmark.md)):
 
 | task | how it was made | length | quiet % ↓ | loudness range (LU) |
 |---|---|---:|---:|---:|
 | `product-avorythm` | Codex + skill v1.1 (measured after the fact) | 44 s | 61 | 6.1 |
 | `product-avorythm` | Claude + skill v2 (measured after the fact) | 30 s | 0 | 5.9 |
+| `showreel-15s` | Codex, no skill (runner) | 15 s | 0 | 1 |
 | `showreel-15s` | Codex + skill v1.1 (measured after the fact) | 15 s | 11 | 3.5 |
 
 *quiet % = share of the film where almost nothing changes (lower is better).*
@@ -159,6 +162,7 @@ Full tables, contact sheets and caveats: **[docs/benchmark.md](docs/benchmark.md
 | [Atlas](docs/atlas.md) | all 239 techniques with galleries |
 | [Benchmark](docs/benchmark.md) | method, metrics, results |
 | [FAQ](docs/faq.md) | limits, licensing, safety |
+| [Site guide](docs/site-guide.md) | how the website is built (and how to do the same for your own project) |
 | [`SKILL.md`](skills/cinewright/SKILL.md) · [`protocol.md`](skills/cinewright/references/protocol.md) · [`engine.md`](skills/cinewright/references/engine.md) | what the agent reads |
 
 ## Limits (honestly)
