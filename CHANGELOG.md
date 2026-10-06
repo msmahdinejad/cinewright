@@ -11,6 +11,10 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 - The website was rebuilt from scratch: live in-browser demo of the engine, a frame scrubber, an interactive atlas explorer, animated benchmark charts, Persian/English.
 
 ### Added
+- **`qc.mjs look` — the frame-fill gate** (also part of `check`): the share of each frame that is not background. Found by the first Codex benchmark run, where a technically clean film of thin lines on empty black passed every other check and lost to an agent with no skill. Calibrated on nine reference films (27–53 % median fill for good ones, 6–8 % for thin ones).
+- `qc.mjs craft` now requires *substantive* review files (≥ 3 findings, times, ≥ ~450 characters) and recognises atlas ids written without backticks.
+- `inspire.mjs` leaves the restrained styles out of "go all out" briefs and prints a *boldness floor* per direction; `protocol.md` has a measured Boldness section.
+- `benchmark/reeval.mjs` (re-measure finished runs with the current metrics); frame fill in the benchmark report.
 - `PCV_GPU=off|on|auto` environment override (used by the Docker image, where software GL is the only option).
 - Docker image, GitHub Actions CI (lint, installers on three OSes, execution of every atlas recipe in a container).
 

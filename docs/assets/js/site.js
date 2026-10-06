@@ -174,8 +174,17 @@
   /* ── benchmark: bars from the committed results, optional before/after slider ──── */
   fetch('assets/benchmark/summary.json').then(r => r.json()).then(rows => {
     const tasks = [...new Set(rows.map(r => r.task))]; const host = $('#bm');
-    const draw = () => { host.innerHTML = tasks.map(t => { const rs = rows.filter(r => r.task === t); return `<div class="card bm rv in"><h3>${esc(rs[0].taskTitle)}</h3><div class="dm">${esc(t)}</div>${rs.map(r => { const q = r.quietPct == null ? 0 : r.quietPct; const cls = q > 40 ? 'bad' : q < 15 ? 'good' : ''; return `<div class="bar"><div class="lb"><span>${esc(r.label)}${r.model ? ' · ' + esc(r.model) : ''}</span><b>${r.ok ? q + '%' : '✘'}</b></div><div class="tr"><div class="fl ${cls}" data-w="${q}"></div></div><small>${r.ok ? Math.round(r.length) + ' s · LRA ' + (r.lra ?? '–') + ' LU · ' : ''}${r.kind === 'run' ? L('measured by the runner', 'اندازه‌گیری رانر') : L('measured after the fact', 'اندازه‌گیری پس از ساخت')}</small></div>`; }).join('')}</div>`; }).join('');
-      const bio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { $$('.fl', e.target).forEach(f => { f.style.width = f.dataset.w + '%'; }); bio.unobserve(e.target); } }), { threshold: .3 }); $$('.bm', host).forEach(c => bio.observe(c)); };
+    const bar = (name, val, pct, cls) => `<div class="bar"><div class="lb"><span>${name}</span><b>${val}</b></div><div class="tr"><div class="fl ${cls}" data-w="${pct}"></div></div></div>`;
+    const draw = () => {
+      host.innerHTML = tasks.map(t => { const rs = rows.filter(r => r.task === t); return `<div class="card bm rv in"><h3>${esc(rs[0].taskTitle)}</h3><div class="dm">${esc(t)}</div>${rs.map(r => {
+        if (!r.ok) return `<div class="bar"><div class="lb"><span>${esc(r.label)}</span><b>✘</b></div></div>`;
+        const q = r.quietPct ?? 0, f = r.fill, who = `${esc(r.label)}${r.model ? ' · ' + esc(r.model) : ''}`;
+        return `<div class="who">${who}<small>${Math.round(r.length)} s · ${r.kind === 'run' ? L('measured by the runner', 'اندازه‌گیری رانر') : L('measured after the fact', 'اندازه‌گیری پس از ساخت')}</small></div>`
+          + bar(L('quiet % — lower is better', 'ساکن ٪ — کمتر بهتر'), q + '%', q, q > 40 ? 'bad' : q < 15 ? 'good' : '')
+          + (f == null ? '' : bar(L('frame fill % — higher is better', 'پُری قاب ٪ — بیشتر بهتر'), f + '%', Math.min(100, f * 1.6), f < 15 ? 'bad' : f >= 25 ? 'good' : ''));
+      }).join('')}</div>`; }).join('');
+      const bio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { $$('.fl', e.target).forEach(f => { f.style.width = f.dataset.w + '%'; }); bio.unobserve(e.target); } }), { threshold: .25 }); $$('.bm', host).forEach(c => bio.observe(c));
+    };
     draw(); document.addEventListener('langchange', draw);
     const pair = tasks.map(t => ({ t, b: rows.find(r => r.task === t && r.kind === 'run' && r.condition === 'baseline' && r.preview), s: rows.find(r => r.task === t && r.kind === 'run' && r.condition !== 'baseline' && r.preview) })).find(p => p.b && p.s);
     if (pair) {

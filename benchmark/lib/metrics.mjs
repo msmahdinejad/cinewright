@@ -46,10 +46,17 @@ export function scenes(file, dur) {
   return { changes: n, perMinute: +(n / (dur / 60)).toFixed(1) };
 }
 
+/** Frame fill via the skill's `qc.mjs look` (is the picture full, or thin lines on empty black?). */
+export function look(file) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'pcv-bm-')), r = run(process.execPath, [path.join(SKILL_SCRIPTS, 'qc.mjs'), 'look', path.resolve(file)], { cwd: tmp });
+  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch { /* ignore */ }
+  const m = /median (\d+)% · empty frames \(< 8%\) (\d+)% · dark frames (\d+)%/.exec((r.stdout || '') + (r.stderr || '')); return m ? { medianFill: +m[1], emptyPct: +m[2], darkPct: +m[3] } : null;
+}
+
 /** Everything about the file. */
 export function measureVideo(file) {
   const p = probe(file); if (!p) return { ok: false, error: 'not a readable video' };
-  return { ok: true, ...p, audio: p.hasAudio ? audio(file) : null, energy: energy(file), scenes: scenes(file, p.duration) };
+  return { ok: true, ...p, audio: p.hasAudio ? audio(file) : null, energy: energy(file), look: look(file), scenes: scenes(file, p.duration) };
 }
 
 /** Contact sheet (jpg) and an 8-second animated preview (webp). */

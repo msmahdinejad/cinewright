@@ -46,6 +46,7 @@ The **[atlas](atlas.md)** is 239 short recipes — use / how / avoid / pairs-wit
 | gate | catches |
 |---|---|
 | `qc.mjs energy` | the slideshow: share of near-static time, longest static hold, cuts |
+| `qc.mjs look` | the *thin lines on empty black* film: median frame fill, empty frames, dark-and-sparse stretches |
 | `qc.mjs audio` | muddy mixes, clipping, dead air, wrong loudness |
 | `qc.mjs craft` | no brief, < 6 atlas techniques, < 4 transitions, `Math.random()` in frame code, fewer than three review rounds |
 | `render.mjs verify` | non-determinism (same time ⇒ same pixels, any order, any worker) |

@@ -41,6 +41,7 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 | metric | meaning | better |
 |---|---|---|
 | quiet % | share of the film where almost nothing changes frame-to-frame (\`qc.mjs energy\`) | lower |
+| frame fill % | median share of each frame that is not background (\`qc.mjs look\`): thin lines on empty black score under 10, full-bleed posters 30–55 | higher |
 | longest static | the longest stretch with almost no change, seconds | lower |
 | scene changes | substantial picture changes (ffmpeg scene score > 0.25) | context |
 | LUFS / LRA | loudness (social target ≈ −14) and loudness range (dynamics; < 2 LU is flat) | −14 / higher |
@@ -58,10 +59,12 @@ for (const [taskId, list] of byTask) {
   const t = taskOf(taskId), title = t ? `${t.title} — \`${taskId}\`` : `\`${taskId}\``;
   md += `## ${title}\n\n`;
   if (t) md += `*Domain: ${t.domain} · ${t.aspect} · target ${t.duration} s · ${t.lang === 'fa' ? 'Persian' : 'English'} prompt*\n\n`;
-  md += `| run | how it was produced | length | quiet % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |\n|---|---|---:|---:|---:|---:|---|---|---|---|\n`;
+  md += `| run | how it was produced | length | quiet % | frame fill % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |
+|---|---|---:|---:|---:|---:|---:|---|---|---|---|
+`;
   for (const r of list) {
     const v = r.video || {}, e = v.energy || {}, a = v.audio, p = r.project, how = `${r.kind === 'run' ? '**runner**' : 'measured after the fact'} · ${r.agent || '?'}${r.model ? ' · ' + r.model : ''} · skill ${r.skill}${r.integrity?.contaminated ? ' · ⚠ contaminated' : ''}${r.timedOut ? ' · timed out' : ''}`;
-    md += `| ${r.label}${r.rep ? ' #' + r.rep : ''} | ${how} | ${v.ok ? v.duration.toFixed(1) + ' s' : '✘ ' + (v.error || 'no video')} | ${v.ok ? f1(e.quietPct) : '–'} | ${v.ok ? f1(e.longestStatic) + ' s' : '–'} | ${v.ok ? v.scenes?.changes ?? '–' : '–'} | ${a ? `${f1(a.lufs)} / ${f1(a.lra)}` : v.ok ? '**no audio**' : '–'} | ${p?.craft ? `${p.craft.failures}/${p.craft.warnings}` : '–'} | ${p ? `${p.briefWritten ? 'yes' : 'no'} · ${p.reviewRounds}` : '–'} | ${mins(r.wallSeconds)} · ${tok(r)} |\n`;
+    md += `| ${r.label}${r.rep ? ' #' + r.rep : ''} | ${how} | ${v.ok ? v.duration.toFixed(1) + ' s' : '✘ ' + (v.error || 'no video')} | ${v.ok ? f1(e.quietPct) : '–'} | ${v.ok ? f1(v.look?.medianFill) : '–'} | ${v.ok ? f1(e.longestStatic) + ' s' : '–'} | ${v.ok ? v.scenes?.changes ?? '–' : '–'} | ${a ? `${f1(a.lufs)} / ${f1(a.lra)}` : v.ok ? '**no audio**' : '–'} | ${p?.craft ? `${p.craft.failures}/${p.craft.warnings}` : '–'} | ${p ? `${p.briefWritten ? 'yes' : 'no'} · ${p.reviewRounds}` : '–'} | ${mins(r.wallSeconds)} · ${tok(r)} |\n`;
   }
   md += '\n';
   const thumbs = list.map(r => [r, copyAsset(r, 'sheet'), copyAsset(r, 'preview')]).filter(x => x[1] || x[2]);
@@ -84,7 +87,7 @@ emit('docs/benchmark.md', md);
 
 // compact table for the README (between the BENCH markers) and slim JSON for the website
 const assetPath = (r, name) => r.files?.[name] ? `assets/benchmark/${slug(r.id)}/${r.files[name]}` : null;
-const slim = r => ({ id: r.id, task: r.task, taskTitle: taskOf(r.task)?.title || r.task, label: r.label, kind: r.kind, agent: r.agent, model: r.model, skill: r.skill, condition: r.condition, ok: !!r.video?.ok, length: r.video?.duration ?? null, quietPct: r.video?.energy?.quietPct ?? null, longestStatic: r.video?.energy?.longestStatic ?? null, lufs: r.video?.audio?.lufs ?? null, lra: r.video?.audio?.lra ?? null, brief: r.project?.briefWritten ?? null, reviews: r.project?.reviewRounds ?? null, wallSeconds: r.wallSeconds ?? null, sheet: assetPath(r, 'sheet'), preview: assetPath(r, 'preview'), note: r.note || '' });
+const slim = r => ({ id: r.id, task: r.task, taskTitle: taskOf(r.task)?.title || r.task, label: r.label, kind: r.kind, agent: r.agent, model: r.model, skill: r.skill, condition: r.condition, ok: !!r.video?.ok, length: r.video?.duration ?? null, quietPct: r.video?.energy?.quietPct ?? null, fill: r.video?.look?.medianFill ?? null, longestStatic: r.video?.energy?.longestStatic ?? null, lufs: r.video?.audio?.lufs ?? null, lra: r.video?.audio?.lra ?? null, brief: r.project?.briefWritten ?? null, reviews: r.project?.reviewRounds ?? null, wallSeconds: r.wallSeconds ?? null, sheet: assetPath(r, 'sheet'), preview: assetPath(r, 'preview'), note: r.note || '' });
 emit('docs/assets/benchmark/summary.json', JSON.stringify(rows.map(slim), null, 1) + '\n');
 const tableRows = rows.map(r => `| \`${r.task}\` | ${r.label} (${r.kind === 'run' ? 'runner' : 'measured after the fact'}) | ${r.video?.ok ? r.video.duration.toFixed(0) + ' s' : '✘'} | ${r.video?.ok ? f1(r.video.energy?.quietPct) : '–'} | ${r.video?.audio ? f1(r.video.audio.lra) : '–'} |`).join('\n');
 const compact = rows.length

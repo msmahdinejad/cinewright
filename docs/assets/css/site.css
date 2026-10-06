@@ -294,3 +294,5 @@ html.go #intro{clip-path:inset(0 0 100% 0)}
 .ac::after,.pn::after,.step::after,.bm::after,.film .tx::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(260px circle at var(--sx,50%) var(--sy,-40%),rgba(138,99,255,.2),rgba(64,245,245,.06) 50%,transparent 70%);opacity:0;transition:opacity .3s}
 .ac:hover::after,.pn:hover::after,.step:hover::after,.bm:hover::after,.film:hover .tx::after{opacity:1}
 .step,.film .tx{position:relative}
+
+.bm .who{margin:18px 0 2px;font-weight:600;font-size:15px;color:#fff}.bm .who small{display:block;font-weight:400;font-size:12.5px;color:var(--dim)}.bm .who:first-of-type{margin-top:8px}

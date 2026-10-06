@@ -16,7 +16,7 @@ const errors = [], warns = [];
 const err = m => errors.push(m), warn = m => warns.push(m);
 const rd = f => fs.readFileSync(f, 'utf8');
 const rel = f => path.relative(ROOT, f).replace(/\\/g, '/');
-function walk(dir, out = []) { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { if (['.git', 'node_modules', '.render'].includes(e.name)) continue; const p = path.join(dir, e.name); e.isDirectory() ? walk(p, out) : out.push(p); } return out; }
+function walk(dir, out = []) { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, e.name); if (['.git', 'node_modules', '.render', '.shots'].includes(e.name) || p === path.join(ROOT, 'benchmark', 'runs') || p === path.join(ROOT, 'benchmark', '.work')) continue; e.isDirectory() ? walk(p, out) : out.push(p); } return out; }
 const files = walk(ROOT);
 
 /* 1 ─ SKILL.md */

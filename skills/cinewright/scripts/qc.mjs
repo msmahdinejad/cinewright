@@ -8,6 +8,7 @@
 //   node tools/qc.mjs energy [file.mp4]         motion/pacing curve: how much of the picture changes per ½ s, static holds, cut rate (the anti-slideshow check)
 //   node tools/qc.mjs frames file.mp4 3.5,12     full-size PNG stills from the encoded file → qc/
 //   node tools/qc.mjs palette image.png [--n 6]  dominant colours (hex) + luminance, to match a brand/reference photo
+//   node tools/qc.mjs look [file.mp4]           frame FILL: is the picture full or thin lines on empty black? (median fill, empty frames, dark+sparse) — also part of `check`
 //   node tools/qc.mjs craft                      studio-mode gate on the PROJECT (not the mp4): brief.md complete? >= 6 atlas techniques from >= 4 families? >= 4 transitions? deterministic code? 3 review rounds? (also part of `check`)
 import { spawnSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
@@ -167,6 +168,35 @@ function qcEnergy(file) {
   quietPct > .45 ? note('WARN', `${(quietPct * 100).toFixed(0)}% of the film is near-static — compare with references/gallery: stronger pieces keep ≥ 3 things moving at different speeds in every shot`) : note('PASS', 'pacing: enough of the film is in motion');
 }
 
+/* ───────────────────────── look: is the frame FILLED? (the "thin lines on empty black" detector) ───────────────────────── */
+function qcLook(file) {
+  console.log(`\n── look: ${file}`);
+  const W = 160, H = 90, N = W * H, fb = N * 3;
+  const r = run(FFMPEG, ['-v', 'error', '-i', file, '-vf', `fps=2,scale=${W}:${H}:flags=area`, '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], { maxBuffer: 1 << 29, encoding: 'buffer' });
+  const buf = r.stdout, frames = buf ? Math.floor(buf.length / fb) : 0;
+  if (!frames) { note('WARN', 'could not decode frames for the look check'); return; }
+  const cov = [], luma = [];
+  for (let f = 0; f < frames; f++) {
+    const o = f * fb, hist = new Uint16Array(4096); let l = 0;
+    for (let i = 0; i < N; i++) { const R = buf[o + i * 3], G = buf[o + i * 3 + 1], B = buf[o + i * 3 + 2]; hist[(R >> 4) << 8 | (G >> 4) << 4 | (B >> 4)]++; l += .2126 * R + .7152 * G + .0722 * B; }
+    let best = 0; for (let k = 1; k < 4096; k++) if (hist[k] > hist[best]) best = k;                       // the background = the most common colour of the frame
+    const br = ((best >> 8) << 4) + 8, bg = (((best >> 4) & 15) << 4) + 8, bb = ((best & 15) << 4) + 8; let c = 0;
+    for (let i = 0; i < N; i++) if (Math.abs(buf[o + i * 3] - br) + Math.abs(buf[o + i * 3 + 1] - bg) + Math.abs(buf[o + i * 3 + 2] - bb) > 64) c++;
+    cov.push(c / N); luma.push(l / N);
+  }
+  const med = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; }, pct = x => Math.round(x * 100);
+  const medCov = med(cov), empty = cov.filter(c => c < .08).length / frames, dark = luma.filter(l => l < 22).length / frames;
+  note('INFO', `frame fill = share of each frame that is not background (2 samples/s): median ${pct(medCov)}% · empty frames (< 8%) ${pct(empty)}% · dark frames ${pct(dark)}%   (reference films: 27–53% median, ≤ 10% empty)`);
+  console.log('  ' + cov.map(c => '▁▂▃▄▅▆▇█'[Math.min(7, Math.floor(c / .08))]).join('') + '   fill per ½ s (▁ ≈ empty … █ ≥ 56 % filled)');
+  const runs = []; let st = -1; cov.forEach((c, i) => { if (c < .08) { if (st < 0) st = i; } else { if (st >= 0 && i - st >= 3) runs.push([st / 2, i / 2]); st = -1; } }); if (st >= 0 && cov.length - st >= 3) runs.push([st / 2, cov.length / 2]);
+  if (runs.length) note('INFO', `nearly empty for ≥ 1.5 s at: ${runs.map(([x, y]) => `${x.toFixed(1)}–${y.toFixed(1)}s`).join(', ')} — fix exactly these seconds`);
+  let bad = false;
+  if (medCov < .15) { bad = true; note('WARN', `frames are mostly empty background (median fill ${pct(medCov)}%) — scale the hero up (≥ 40% of the frame height), put a real background behind it (shader / gradient mesh / pattern) instead of flat black, use bigger type. If the restraint is the concept, say so in brief.md`); }
+  if (empty >= .35) { bad = true; note('WARN', `${pct(empty)}% of the film has almost nothing in frame — fill the quiet stretches (bigger elements, a second layer, particles, light) or cut them`); }
+  if (dark >= .6 && medCov < .25) { bad = true; note('WARN', `${pct(dark)}% of the film is dark AND sparse — it will read as "a few lines on black"; raise the hero's scale and add colour/light`); }
+  if (!bad) note('PASS', `frames are filled (median fill ${pct(medCov)}%)`);
+}
+
 /* ───────────────────────── craft (studio mode): did the plan, the code and the process meet the ambition budget? ───────────────────────── */
 async function qcCraft() {
   console.log('\n── craft (studio mode: plan · code · process)');
@@ -180,13 +210,13 @@ async function qcCraft() {
   if (!brief) note('WARN', 'no brief.md — write it BEFORE building: one-sentence promise, visual verb, hero moment, last image, style bible (5 hex), shot list with atlas technique ids (protocol.md §1)');
   else {
     if (brief.length < 500) note('WARN', `brief.md is only ${brief.length} characters — a real brief names the concept, the style bible and a shot list`);
-    const missing = [['promise', /promise|وعده/i], ['visual verb', /verb|فعل/i], ['hero moment', /hero|اوج/i], ['last image', /last image|final image|ending|تصویر آخر|پایان/i], ['shot list', /shot ?list|storyboard|شات|استوری/i]].filter(([, re]) => !re.test(brief)).map(([n]) => n);
+    const missing = [['promise', /promise|وعده/i], ['visual verb', /verb|فعل/i], ['hero moment', /hero|اوج/i], ['last image', /last image|final image|ending|تصویر آخر|پایان/i], ['shot list', /shots?\b|shot ?list|storyboard|شات|استوری/i]].filter(([, re]) => !re.test(brief)).map(([n]) => n);
     missing.length >= 2 ? note('WARN', `brief.md does not mention: ${missing.join(', ')} (see the step-1 checklist in SKILL.md)`) : note('PASS', 'brief.md covers the concept checklist');
     const hex = new Set((brief.match(/#[0-9a-f]{6}\b/gi) || []).map(x => x.toLowerCase()));
     hex.size >= 4 ? note('PASS', `style bible has a palette (${hex.size} colours)`) : note('WARN', `brief.md lists ${hex.size} hex colours — write the 5-token palette (bg · base · accent · accent2 · light)`);
     const tokens = [...new Set([...brief.matchAll(/`([a-z][a-z0-9]*(?:-[a-z0-9]+)+)`/g)].map(m => m[1]))];
     if (A) {
-      const byId = new Map(A.entries.map(e => [e.id, e])), ids = tokens.filter(t => byId.has(t)), fam = new Set(ids.map(t => byId.get(t).family)), unknown = tokens.filter(t => !byId.has(t));
+      const byId = new Map(A.entries.map(e => [e.id, e])), mentioned = id => new RegExp('(^|[^a-z0-9-])' + id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z0-9-]|$)').test(brief), ids = A.entries.map(e => e.id).filter(mentioned), fam = new Set(ids.map(t => byId.get(t).family)), unknown = tokens.filter(t => !byId.has(t));
       ids.length >= 6 && fam.size >= 4 ? note('PASS', `brief.md cites ${ids.length} atlas techniques from ${fam.size} families (${[...fam].join(', ')})`) : note('WARN', `brief.md cites ${ids.length} atlas technique(s) from ${fam.size} family/families — the budget is ≥ 6 from ≥ 4. Browse: node tools/atlas.mjs search <topic> · list <family>; name each technique you use by its id in the shot list`);
       if (unknown.length) note('INFO', `not atlas ids (fine if they are your own names): ${unknown.slice(0, 8).join(', ')}`);
     } else tokens.length >= 6 ? note('PASS', `brief.md names ${tokens.length} techniques (atlas not reachable from here, ids not validated)`) : note('WARN', `brief.md names ${tokens.length} id-shaped techniques — the budget is ≥ 6 from ≥ 4 families`);
@@ -204,7 +234,10 @@ async function qcCraft() {
   if (audio && !/cues/.test(audio)) note('WARN', 'audio.mjs does not read the shared <script id="cues"> — picture and sound will drift apart when you retime');
   // ── process
   let reviews = []; try { reviews = fs.readdirSync(path.join(ROOT, 'qc')).filter(n => /^review-\d+\.md$/i.test(n)); } catch { /* no qc dir */ }
-  reviews.length >= 3 ? note('PASS', `${reviews.length} written review rounds (qc/review-*.md)`) : note('WARN', `${reviews.length} review round(s) in qc/ — studio mode asks for three (A motion · B craft · C sound), each a written fix list after LOOKING at frames; a first render is a skeleton, not a film`);
+  const rich = reviews.filter(n => { const t = rd('qc/' + n) || ''; return t.length >= 450 && (t.match(/^\s*(?:\d+[.)]|[-*])\s+/gm) || []).length >= 3 && /\d+(?:\.\d+)?\s*(?:s\b|sec|–|-\d)/.test(t); });   // a real fix list: ≥ 3 findings, with times, enough words
+  if (reviews.length < 3) note('WARN', `${reviews.length} review round(s) in qc/ — studio mode asks for three (A motion · B craft · C sound), each a written fix list after LOOKING at frames; a first render is a skeleton, not a film`);
+  else if (rich.length < 3) note('WARN', `${reviews.length} review files, but only ${rich.length} are substantive — a real fix list has ≥ 3 findings, each naming the time/scene, the cause and the exact change (≥ ~450 characters); see references/case-studies/avorythm/qc/review-*.md`);
+  else note('PASS', `${reviews.length} written review rounds with real fix lists (qc/review-*.md)`);
 }
 
 /* ───────────────────────── dispatch ───────────────────────── */
@@ -214,10 +247,11 @@ else if (cmd === 'sheet') qcSheet(inputFile(['.mp4', '.mov', '.webm']));
 else if (cmd === 'energy') qcEnergy(inputFile(['.mp4', '.mov', '.webm', '.mkv']));
 else if (cmd === 'frames') qcFrames(path.resolve(positional[0]), positional[1] || '1');
 else if (cmd === 'palette') qcPalette(path.resolve(positional[0]));
+else if (cmd === 'look') qcLook(inputFile(['.mp4', '.mov', '.webm', '.mkv']));
 else if (cmd === 'craft') await qcCraft();
-else if (cmd === 'check') { const f = inputFile(['.mp4', '.mov', '.webm', '.mkv']); qcVideo(f); qcEnergy(f); qcAudio(f); await qcCraft(); }
-else { console.error('unknown command. try: check | craft | video | audio | energy | sheet | frames | palette'); process.exit(1); }
-if (cmd === 'check' || cmd === 'craft' || cmd === 'video' || cmd === 'audio' || cmd === 'energy') {
+else if (cmd === 'check') { const f = inputFile(['.mp4', '.mov', '.webm', '.mkv']); qcVideo(f); qcEnergy(f); qcLook(f); qcAudio(f); await qcCraft(); }
+else { console.error('unknown command. try: check | craft | look | video | audio | energy | sheet | frames | palette'); process.exit(1); }
+if (cmd === 'check' || cmd === 'craft' || cmd === 'look' || cmd === 'video' || cmd === 'audio' || cmd === 'energy') {
   const f = results.filter(r => r[0] === 'FAIL').length, w = results.filter(r => r[0] === 'WARN').length;
   console.log(`\n${f ? '✘' : w ? '!' : '✔'} ${f} failure(s), ${w} warning(s).${f || w ? ' Fix or consciously accept each, then re-run.' : ' Ship it.'}`); process.exit(f ? 2 : 0);
 }

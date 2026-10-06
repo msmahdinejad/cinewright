@@ -26,8 +26,11 @@ const words = lower.replace(/[^a-z0-9؀-ۿ\s-]/g, ' ').split(/\s+/).filter(w => 
 if (persian) bias.push('persian', 'heritage'); if (/dev|code|open.?source|api|terminal|developer/.test(lower)) bias.push('terminal', 'code', 'glass'); if (/kid|child|fun|play|toy|family/.test(lower)) bias.push('playful', 'clay', 'paper');
 if (/luxur|premium|brand|elegan|fashion/.test(lower)) bias.push('cinematic', 'noir', 'clean'); if (/music|party|night|club|game|gaming/.test(lower)) bias.push('neon', 'glitch', 'brutalist'); if (/space|ai\b|intelligen|science|future/.test(lower)) bias.push('space', 'liquid', 'holo');
 if (/data|growth|finance|report|analytic/.test(lower)) bias.push('data', 'swiss', 'glass'); if (/showreel|show reel|portfolio|resume|résumé|motion designer/.test(lower)) bias.push('cinematic', 'kinetic', 'liquid', 'brutalist'); if (/translat|language|dubb|speech|voice|subtitle/.test(lower)) bias.push('translation', 'voice');
-const styles = A.entries.filter(e => e.family === 'styles');
-const ranked = search(A, [...words, ...bias, ...bias], { family: 'styles', n: 30 }); const rest = styles.filter(s => !ranked.includes(s));
+// "go all out / showreel / trailer / wow" asks for SPECTACLE: the restrained styles (thin lines, empty space) are left out unless the brief asks for calm - the first Codex benchmark run showed what happens otherwise
+const BOLD = /go all out|all out|awesome|wow|incredible|spectacular|showreel|show reel|trailer|cinematic|epic|خفن|شگفت/.test(lower) && !/minimal|calm|quiet|zen|subtle|elegan|luxur|premium|clean|آرام|مینیمال/.test(lower);
+const QUIET = new Set(['style-clean-product', 'style-sunset-lofi', 'style-noir-editorial', 'style-ink-calligraphy', 'style-holo-blueprint', 'style-terminal-hacker']);
+const styles = A.entries.filter(e => e.family === 'styles' && !(BOLD && QUIET.has(e.id)));
+const ranked = search(A, [...words, ...bias, ...bias], { family: 'styles', n: 30 }).filter(e => styles.includes(e)); const rest = styles.filter(s => !ranked.includes(s));
 const chosenStyles = []; // diverse: best match, a contrasting match, a wildcard
 if (ranked[0]) chosenStyles.push(ranked[0]); for (const s of ranked.slice(1)) { if (chosenStyles.length >= N) break; const overlap = s.tags.filter(t => chosenStyles.some(c => c.tags.includes(t) && !['style'].includes(t))).length; if (overlap <= 2) chosenStyles.push(s); }
 while (chosenStyles.length < N) { const c = pick(rest.concat(ranked), 1, chosenStyles); if (!c) break; chosenStyles.push(c); }
@@ -81,6 +84,7 @@ for (const d of out) {
   console.log(`- **Concept device:** ${d.device.id} — ${first(d.device.fields.use)}`); console.log(`- **Metaphor bank:** ${d.meta.id} — ${first(d.meta.fields.use)}   → ${first(d.meta.fields.how)}`);
   console.log(`- **Twist (makes it yours):** ${d.twist}`); console.log(`- **Camera language:** ${d.cam}`); console.log(`- **Hook (first 1.5 s) — choose one:** an impossible image already in motion · a 2–4 word statement slammed on the beat · black + a pulse, then a hit at 0.8 s · the finished result first, then rewind`);
   console.log(`- **Palette** (bg · base · accent · accent2 · light): ${d.palette.join('  ')}   **Fonts:** ${d.fonts.map(f => 'K.FONTS.' + f).join(', ')}`); console.log(`- **Motion:** ${d.style.fields.motion}`); console.log(`- **Grade:** ${d.style.fields.look}`);
+  if (BOLD) console.log('- **Boldness floor** (checked by `qc.mjs look`): the hero fills >= 40 % of the frame height; the background is never flat black (shader / gradient / pattern); median frame fill >= 25 %; at least one full-bleed moment; headline type >= 12 % of the frame height');
   console.log(`- **Techniques to use (≥ 6, from ≥ 4 families):**`); for (const id of d.tech) { const e = byId(id); console.log(`    - \`${id}\` [${e.family}] — ${e.title}`); }
   console.log(`- **Transitions (≥ 4 different):** ${d.trans.join(' · ')}`); console.log(`- **Sound plan:** ${d.snd.length ? d.snd.map(s => '`' + s + '`').join(' · ') : 'see sound.md'}  (+ \`sfx-whoosh-set\` before cuts, \`sfx-hit-stack\` on the peak, duck 0.2 s before it)`);
   console.log(`- **Avoid:** ${d.style.fields.avoid}`); console.log(`- **Timeline skeleton** (adjust to your story; cut on beats):`);

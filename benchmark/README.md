@@ -57,6 +57,7 @@ Sets: `quick` (3 tasks), `core` (6), `full` (all 10). Add your own task by appen
 Computed by [`lib/metrics.mjs`](lib/metrics.mjs) from the finished MP4 (ffmpeg/ffprobe + the skill's own `qc.mjs`) and from the agent's JSONL event log:
 
 - **quiet %**, **longest static hold** — the anti-slideshow metric (`qc.mjs energy`);
+- **frame fill** — the share of each frame that is not background (`qc.mjs look`): catches films of thin lines on empty black;
 - **scene changes** per film (ffmpeg scene score);
 - **LUFS / LRA / true peak / silent share** — loudness, dynamics, dead air;
 - **craft** — `qc.mjs craft` on the project (brief, atlas techniques, transitions, determinism, review rounds), when the agent used the skill's project layout;
