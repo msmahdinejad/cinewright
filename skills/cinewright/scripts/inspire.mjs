@@ -79,6 +79,9 @@ if (opt.json) { console.log(JSON.stringify(out.map(d => ({ direction: d.name, st
 
 console.log(`# Creative directions  (brief ${brief.trim().split(/\s+/).length} words · ${dur} s${vertical ? ' · vertical' : ''}${persian ? ' · Persian audience → bilingual text, RTL-aware motion' : ''})`);
 console.log(`Pick ONE (or take the device from one and the style from another — but keep a single style system). Write it into brief.md, then \`node atlas.mjs show <id>\` for every technique below.\n`);
+const TPL = /showreel|show reel|portfolio|resume|résumé|motion designer|reel/.test(lower) ? 'showreel' : /music|lyric|visuali[sz]er|audio-reactive/.test(lower) ? 'music' : /explainer|walkthrough|tutorial|saas|dashboard|app/.test(lower) ? 'explainer' : /trailer|cinematic|launch|brand|tech|ai|teaser|product/.test(lower) ? 'cinema' : '';
+if (TPL) console.log(`**Fork, don't start blank:** \`scaffold.mjs <dir> --template ${TPL}\` already gives a bold, QC-clean film (GPU transitions, camera, 3D, particles, score). Re-theme it (copy, palette, shot order, your concept) and replace a scene only when you have a better one — blank-page films from this skill have come out thin.
+`);
 for (const d of out) {
   console.log(`## Direction ${String.fromCharCode(64 + d.k)} — "${d.name}"  ·  style: ${d.style.title} (${d.style.id})`);
   console.log(`- **Concept device:** ${d.device.id} — ${first(d.device.fields.use)}`); console.log(`- **Metaphor bank:** ${d.meta.id} — ${first(d.meta.fields.use)}   → ${first(d.meta.fields.how)}`);
