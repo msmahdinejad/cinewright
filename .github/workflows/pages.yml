@@ -27,7 +27,7 @@ jobs:
         with: { node-version: 22 }
       - run: node tools/gen-docs.mjs && node benchmark/report.mjs
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with: { path: docs }
       - id: deployment
         uses: actions/deploy-pages@v5
