@@ -1,0 +1,4 @@
+Use $cinewright. make a dynamic 15-second motion graphics video that shows what an incredible motion designer you are, like it's your showreel for a résumé. go all out.
+
+---
+Benchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.

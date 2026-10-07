@@ -1,0 +1,4 @@
+Create a 6-second logo sting for "Northwind Labs", a fictional climate-data startup. Invent a simple mark and a wordmark, reveal them with real impact, and give it sound design (a hit, a whoosh, a short musical resolve). Go all out.
+
+---
+Benchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.

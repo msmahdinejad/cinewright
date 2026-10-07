@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "id": "20261006-1742/logo-sting-6s__skill__r1",
+  "kind": "run",
+  "task": "logo-sting-6s",
+  "domain": "brand",
+  "condition": "skill",
+  "rep": 1,
+  "label": "Codex + Cinewright (first 2.1 build)",
+  "agent": "codex-cli 0.148.0",
+  "model": null,
+  "effort": "high",
+  "skill": "2.1.0",
+  "date": "2026-10-07",
+  "wallSeconds": 46108,
+  "exitCode": 1,
+  "timedOut": true,
+  "note": "The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black.",
+  "video": {
+    "ok": false,
+    "error": "no video was produced"
+  },
+  "session": {
+    "events": 40,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 3,
+      "command_execution": 16,
+      "todo_list": 1,
+      "mcp_tool_call": 6,
+      "reasoning": 5,
+      "collab_tool_call": 2
+    },
+    "turns": 0,
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "cachedInputTokens": 0,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "I’ve got the sound pass running; now I’m replacing the template with the real mark reveal.\n"
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2038,
+    "reviewRounds": 0,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {},
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

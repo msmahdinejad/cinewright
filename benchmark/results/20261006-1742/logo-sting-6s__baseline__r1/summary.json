@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "id": "20261006-1742/logo-sting-6s__baseline__r1",
+  "kind": "run",
+  "task": "logo-sting-6s",
+  "domain": "brand",
+  "condition": "baseline",
+  "rep": 1,
+  "label": "Codex, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": null,
+  "effort": "high",
+  "skill": "none",
+  "date": "2026-10-06",
+  "wallSeconds": 700,
+  "exitCode": 0,
+  "timedOut": false,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 6,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 5.08,
+    "audio": {
+      "lufs": -17.1,
+      "lra": 6.7,
+      "truePeak": -0.8,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0048,
+      "mean": 0.0068,
+      "quietPct": 45,
+      "cuts": 0,
+      "longestStatic": 2.5,
+      "curve": "▁▂▂▆▃▃▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 4,
+      "emptyPct": 100,
+      "darkPct": 100
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 47,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 4,
+      "command_execution": 26,
+      "reasoning": 8,
+      "todo_list": 5
+    },
+    "turns": 1,
+    "inputTokens": 951098,
+    "outputTokens": 21183,
+    "cachedInputTokens": 882304,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\nSix-second, 1080p60 sting: procedural wind fields converge into a custom northward “N” and crisp Northwind Labs wordmark.\nOriginal synthesized whoosh, bass impact, and musical resolve; verified H.264 video with stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

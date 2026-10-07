@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "id": "20261006-1742/showreel-15s__skill__r1",
+  "kind": "run",
+  "task": "showreel-15s",
+  "domain": "motion-design",
+  "condition": "skill",
+  "rep": 1,
+  "label": "Codex + Cinewright (first 2.1 build)",
+  "agent": "codex-cli 0.148.0",
+  "model": null,
+  "effort": "high",
+  "skill": "2.1.0",
+  "date": "2026-10-06",
+  "wallSeconds": 920,
+  "exitCode": 0,
+  "timedOut": false,
+  "note": "The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black.",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 8.13,
+    "audio": {
+      "lufs": -14,
+      "lra": 0.9,
+      "truePeak": -1.4,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0089,
+      "mean": 0.0358,
+      "quietPct": 21,
+      "cuts": 6,
+      "longestStatic": 2,
+      "curve": "▁▁▁▇▁▁▁▄▄▁▂▂████▃▁▂▆▃▄▃█▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 6,
+      "emptyPct": 53,
+      "darkPct": 60
+    },
+    "scenes": {
+      "changes": 7,
+      "perMinute": 28
+    }
+  },
+  "session": {
+    "events": 84,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 7,
+      "command_execution": 46,
+      "todo_list": 4,
+      "reasoning": 22
+    },
+    "turns": 1,
+    "inputTokens": 1821459,
+    "outputTokens": 17708,
+    "cachedInputTokens": 1679744,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 15-second procedural motion-design showreel with kinetic typography, precision radial systems, chrome-style sculpture, particle architecture, and a hero orbital burst.\nAdded an original synchronized broken-electro soundtrack with impacts, risers, bass, arpeggios, and a resolved end-card chord."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2038,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 3
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

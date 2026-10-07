@@ -138,16 +138,17 @@ node benchmark/report.mjs                   # → docs/benchmark.md
 ```
 
 <!-- BENCH:START -->
-**Measured so far** (3 runner result(s) + 3 earlier output(s) measured after the fact — every row says how it was made; details and caveats in [docs/benchmark.md](docs/benchmark.md)):
+**Measured so far** (4 runner result(s) + 3 earlier output(s) measured after the fact — every row says how it was made; details and caveats in [docs/benchmark.md](docs/benchmark.md)):
 
 | task | how it was made | length | quiet % ↓ | loudness range (LU) |
 |---|---|---:|---:|---:|
 | `logo-sting-6s` | Codex, no skill (runner) | 6 s | 45 | 6.7 |
+| `logo-sting-6s` | Codex + Cinewright (first 2.1 build) (runner) | ✘ | – | – |
 | `product-avorythm` | Codex + skill v1.1 (measured after the fact) | 44 s | 61 | 6.1 |
 | `product-avorythm` | Claude + skill v2 (measured after the fact) | 30 s | 0 | 5.9 |
 | `showreel-15s` | Codex, no skill (runner) | 15 s | 0 | 1 |
 | `showreel-15s` | Codex + skill v1.1 (measured after the fact) | 15 s | 11 | 3.5 |
-| `showreel-15s` | Codex + skill (skill) (runner) | 15 s | 21 | 0.9 |
+| `showreel-15s` | Codex + Cinewright (first 2.1 build) (runner) | 15 s | 21 | 0.9 |
 
 *quiet % = share of the film where almost nothing changes (lower is better).*
 <!-- BENCH:END -->

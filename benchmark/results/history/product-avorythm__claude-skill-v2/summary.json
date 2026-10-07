@@ -8,7 +8,7 @@
   "agent": "claude-code (Claude Sonnet 5.5)",
   "model": null,
   "skill": "2.0.0",
-  "date": "2026-10-05",
+  "date": "2026-10-07",
   "wallSeconds": null,
   "note": "Built by following the v2 protocol by hand in a Claude Code session (the case study in skills/cinewright/references/case-studies/avorythm). A different agent than the Codex rows: compare with care.",
   "video": {
@@ -35,6 +35,11 @@
       "cuts": 1,
       "longestStatic": 0,
       "curve": "▁▄▄▃▄▄▄▇▂▃▂▂▂▂██▂▂▂▂▂▂█▄▅▇██▇█▆▃▃▃▄▂▂▇▂▂▂▂▂▂▅▇▃▂▄▂▂▃▄▂▂▄"
+    },
+    "look": {
+      "medianFill": 28,
+      "emptyPct": 8,
+      "darkPct": 35
     },
     "scenes": {
       "changes": 5,

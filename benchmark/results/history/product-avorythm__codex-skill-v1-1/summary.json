@@ -8,7 +8,7 @@
   "agent": "codex",
   "model": "gpt-6.1-sol",
   "skill": "1.1",
-  "date": "2026-10-05",
+  "date": "2026-10-07",
   "wallSeconds": null,
   "note": "The maintainer's own run on 2026-09-30 with the first public version of the skill (prompt 2 of the feedback round).",
   "video": {
@@ -35,6 +35,11 @@
       "cuts": 6,
       "longestStatic": 4,
       "curve": "▂▁▁▂▁▁▇█▂▁▁▁▄█▁▇▁▁▁▂▁▁▁▁▁▁▁▁█▁▁▁▁▁▁▁▁▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▄█▆▄▄█▁▁▁█▂▁▁▁▁▁▁█▁▁▁▁▁▂▁▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 8,
+      "emptyPct": 47,
+      "darkPct": 0
     },
     "scenes": {
       "changes": 5,

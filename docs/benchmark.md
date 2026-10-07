@@ -17,7 +17,7 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 | brief · reviews | a written brief.md and the number of `qc/review-N.md` rounds found in the project | yes · 3 |
 | wall · tokens | agent wall-clock time and input+output tokens (Codex JSONL) | – |
 
-> **3 agent run(s)** recorded below under *measured by the runner*; every other row is an earlier output measured after the fact (clearly labelled).
+> **4 agent run(s)** recorded below under *measured by the runner*; every other row is an earlier output measured after the fact (clearly labelled).
 
 ## Logo sting — `logo-sting-6s`
 
@@ -25,7 +25,8 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 
 | run | how it was produced | length | quiet % | frame fill % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |
 |---|---|---:|---:|---:|---:|---:|---|---|---|---|
-| Codex, no skill #1 | **runner** · codex-cli 0.148.0 · skill none · ⚠ contaminated | 6.0 s | 45 | – | 2.5 s | 0 | -17.1 / 6.7 | – | no · 0 | 12 min · 972k |
+| Codex, no skill #1 | **runner** · codex-cli 0.148.0 · skill none | 6.0 s | 45 | 4 | 2.5 s | 0 | -17.1 / 6.7 | – | no · 0 | 12 min · 972k |
+| Codex + Cinewright (first 2.1 build) #1 | **runner** · codex-cli 0.148.0 · skill 2.1.0 · timed out | ✘ no video was produced | – | – | – | – | – | 0/1 | yes · 0 | 768 min · 0k |
 
 <details open><summary>Contact sheets and previews</summary>
 
@@ -37,14 +38,16 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 
 </details>
 
+- **Codex + Cinewright (first 2.1 build) #1:** The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black.
+
 ## Product film with a creative-director brief — `product-avorythm`
 
 *Domain: product · free · target 30 s · Persian prompt*
 
 | run | how it was produced | length | quiet % | frame fill % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |
 |---|---|---:|---:|---:|---:|---:|---|---|---|---|
-| Codex + skill v1.1 | measured after the fact · codex · gpt-6.1-sol · skill 1.1 | 44.0 s | 61 | – | 4 s | 5 | -13.9 / 6.1 | – | – | – · – |
-| Claude + skill v2 | measured after the fact · claude-code (Claude Sonnet 5.5) · skill 2.0.0 | 30.0 s | 0 | – | 0 s | 5 | -14.1 / 5.9 | 0/0 | yes · 3 | – · – |
+| Codex + skill v1.1 | measured after the fact · codex · gpt-6.1-sol · skill 1.1 | 44.0 s | 61 | 8 | 4 s | 5 | -13.9 / 6.1 | – | – | – · – |
+| Claude + skill v2 | measured after the fact · claude-code (Claude Sonnet 5.5) · skill 2.0.0 | 30.0 s | 0 | 28 | 0 s | 5 | -14.1 / 5.9 | 0/0 | yes · 3 | – · – |
 
 <details open><summary>Contact sheets and previews</summary>
 
@@ -71,9 +74,9 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 
 | run | how it was produced | length | quiet % | frame fill % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |
 |---|---|---:|---:|---:|---:|---:|---|---|---|---|
-| Codex, no skill #1 | **runner** · codex-cli 0.148.0 · skill none · ⚠ contaminated | 15.0 s | 0 | – | 0 s | 4 | -14.5 / 1 | – | no · 0 | 12 min · 1219k |
-| Codex + skill v1.1 | measured after the fact · codex · gpt-6.1-sol · skill 1.1 | 15.0 s | 11 | – | 1.5 s | 0 | -14.1 / 3.5 | – | – | – · – |
-| Codex + skill (skill) #1 | **runner** · codex-cli 0.148.0 · skill 2.1.0 | 15.0 s | 21 | – | 2 s | 7 | -14 / 0.9 | 0/3 | yes · 3 | 15 min · 1839k |
+| Codex, no skill #1 | **runner** · codex-cli 0.148.0 · skill none | 15.0 s | 0 | 32 | 0 s | 4 | -14.5 / 1 | – | no · 0 | 12 min · 1219k |
+| Codex + skill v1.1 | measured after the fact · codex · gpt-6.1-sol · skill 1.1 | 15.0 s | 11 | 27 | 1.5 s | 0 | -14.1 / 3.5 | – | – | – · – |
+| Codex + Cinewright (first 2.1 build) #1 | **runner** · codex-cli 0.148.0 · skill 2.1.0 | 15.0 s | 21 | 6 | 2 s | 7 | -14 / 0.9 | 0/3 | yes · 3 | 15 min · 1839k |
 
 <details open><summary>Contact sheets and previews</summary>
 
@@ -89,15 +92,16 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 
 ![Codex + skill v1.1 contact sheet](assets/benchmark/showreel-15s-codex-skill-v1-1/sheet.jpg)
 
-**Codex + skill (skill) #1**
+**Codex + Cinewright (first 2.1 build) #1**
 
-![Codex + skill (skill) preview](assets/benchmark/20261006-1742-showreel-15s-skill-r1/preview.webp)
+![Codex + Cinewright (first 2.1 build) preview](assets/benchmark/20261006-1742-showreel-15s-skill-r1/preview.webp)
 
-![Codex + skill (skill) contact sheet](assets/benchmark/20261006-1742-showreel-15s-skill-r1/sheet.jpg)
+![Codex + Cinewright (first 2.1 build) contact sheet](assets/benchmark/20261006-1742-showreel-15s-skill-r1/sheet.jpg)
 
 </details>
 
 - **Codex + skill v1.1:** The maintainer's own run on 2026-09-30 with the first public version of the skill (prompt 1 of the feedback round).
+- **Codex + Cinewright (first 2.1 build) #1:** The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black.
 
 ## Head-to-head summary (runner results only)
 
