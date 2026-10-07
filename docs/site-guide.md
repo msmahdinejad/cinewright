@@ -63,7 +63,20 @@ node tools/shot.mjs http://localhost:8765/index.html --w 390 --h 844 --dpr 2 --m
 
 It prints console errors and the page's horizontal overflow (`sw` must equal `cw`).
 
-## 5 · Do the same for another project — a checklist
+## 5 · One command for another project
+
+`tools/new-site.mjs` turns a small JSON file into a site like this one (WebGL hero, kinetic headline, rotating words, feature cards, how-it-works, install tabs with copy buttons, FAQ, Persian/English) plus the Pages workflow:
+
+```bash
+cp site-template/site.config.example.json my-project.json        # edit: name, repo, headline, features, install commands, colours…
+node tools/new-site.mjs my-project.json --out ../my-project/docs  # writes index.html, assets/, 404.html and .github/workflows/pages.yml
+cd ../my-project && git add . && git commit -m "Add website" && git push
+gh api -X POST repos/OWNER/my-project/pages -f build_type=workflow   # once
+```
+
+The example config is a real one (it builds a site for Avorythm). Strings can be plain text or `{ "en": "…", "fa": "…" }`; `*word*` in the headline gets the gradient. Add your own animation (a hero image from `ffmpeg … -c:v libwebp_anim`, a live demo) by editing the generated `index.html` — it is ordinary HTML.
+
+## 6 · Do the same by hand — a checklist
 
 1. **Decide what the project's "live proof" is** (a demo, a playground, real output, a chart of real results) and generate it with a script, not by hand.
 2. **Copy** `docs/index.html`, `assets/css/site.css`, `assets/js/site.js` and strip what you do not need (keep: tokens, nav, reveal, install tabs, footer).

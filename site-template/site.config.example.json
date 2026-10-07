@@ -1,0 +1,50 @@
+{
+  "name": "Avorythm",
+  "repo": "msmahdinejad/avorythm",
+  "author": "Mohammad Saleh Mahdinejad",
+  "license": "MIT",
+  "languages": ["en", "fa"],
+  "colors": { "c1": "#7a5cff", "c2": "#2fe0e8" },
+  "badge": { "en": "Open source · MIT", "fa": "متن‌باز · MIT" },
+  "tagline": { "en": "Hear every voice — or just read it — in your language", "fa": "هر صدا را بشنو — یا فقط بخوان — به زبان خودت" },
+  "headline": { "en": "Translate *anything playing* in your browser. Live.", "fa": "هر چیزی که در مرورگر پخش می‌شود را *زنده* ترجمه کن." },
+  "lead": {
+    "en": "Avorythm is an open-source real-time translation and AI-dubbing tool for Chrome and the desktop. Pick a tab and a language — get live subtitles and a dubbed voice, even when the video has no subtitles.",
+    "fa": "Avorythm یک ابزار متن‌باز ترجمهٔ زنده و دوبلهٔ هوشمند برای کروم و دسکتاپ است. یک تب و یک زبان انتخاب کنید — حتی اگر ویدیو زیرنویس نداشته باشد، زیرنویس زنده و صدای دوبله می‌گیرید."
+  },
+  "rotator": {
+    "prefix": { "en": "Works with", "fa": "کار می‌کند با" },
+    "words": { "en": ["lectures", "livestreams", "podcasts", "meetings", "any video"], "fa": ["سخنرانی‌ها", "پخش زنده", "پادکست‌ها", "جلسه‌ها", "هر ویدیو"] }
+  },
+  "cta": { "en": "Get Avorythm", "fa": "دریافت Avorythm" },
+  "heroCommand": "git clone https://github.com/msmahdinejad/avorythm",
+  "stats": [
+    { "n": 4, "label": { "en": "independent outputs", "fa": "خروجی مستقل" } },
+    { "n": 3, "label": { "en": "desktop platforms", "fa": "پلتفرم دسکتاپ" } },
+    { "n": 0, "label": { "en": "cost for the API keys (free tiers)", "fa": "هزینهٔ کلیدهای API (طرح رایگان)" } }
+  ],
+  "featuresTitle": { "en": "Four outputs. One tab.", "fa": "چهار خروجی. یک تب." },
+  "features": [
+    { "icon": "🔊", "title": { "en": "Original audio", "fa": "صدای اصلی" }, "text": { "en": "Keep the real voice — or turn it down.", "fa": "صدای واقعی را نگه دارید — یا کمش کنید." } },
+    { "icon": "🎙", "title": { "en": "Dubbed audio", "fa": "صدای دوبله" }, "text": { "en": "An AI voice in your language, in sync.", "fa": "صدای هوش مصنوعی به زبان شما، هم‌زمان." } },
+    { "icon": "💬", "title": { "en": "Source subtitles", "fa": "زیرنویس مبدأ" }, "text": { "en": "What was actually said, as text.", "fa": "آنچه واقعاً گفته شد، به‌صورت متن." } },
+    { "icon": "🌐", "title": { "en": "Translated subtitles", "fa": "زیرنویس ترجمه" }, "text": { "en": "Frosted-glass card, downloadable SRT.", "fa": "کارت شیشهٔ مات، با SRT قابل‌دانلود." } },
+    { "icon": "🎚", "title": { "en": "Any mix", "fa": "هر نسبت میکس" }, "text": { "en": "Blend original and dub at any ratio.", "fa": "صدای اصلی و دوبله را با هر نسبت ترکیب کنید." } },
+    { "icon": "🖥", "title": { "en": "Desktop app", "fa": "برنامهٔ دسکتاپ" }, "text": { "en": "Translate any app's audio and process files.", "fa": "صدای هر برنامه را ترجمه کنید و فایل‌ها را پردازش کنید." } }
+  ],
+  "stepsTitle": { "en": "Three steps.", "fa": "سه قدم." },
+  "steps": [
+    { "title": { "en": "Pick a tab", "fa": "یک تب انتخاب کنید" }, "text": { "en": "Any browser tab that is playing sound.", "fa": "هر تبی که صدا پخش می‌کند." } },
+    { "title": { "en": "Pick a language", "fa": "یک زبان انتخاب کنید" }, "text": { "en": "Your target language.", "fa": "زبان مقصد شما." } },
+    { "title": { "en": "Watch & listen", "fa": "ببینید و بشنوید" }, "text": { "en": "Live subtitles and dubbing, synchronized.", "fa": "زیرنویس و دوبلهٔ زنده، هم‌زمان." } }
+  ],
+  "install": [
+    { "label": "Chrome extension", "code": "git clone https://github.com/msmahdinejad/avorythm\n# then load the extension folder via chrome://extensions → Load unpacked", "note": { "en": "Needs free Google AI Studio (Gemini) and Groq (Whisper) API keys.", "fa": "به کلیدهای رایگان Google AI Studio (Gemini) و Groq (Whisper) نیاز دارد." } },
+    { "label": "Desktop", "code": "git clone https://github.com/msmahdinejad/avorythm\n# see the repository README for the Windows / macOS / Linux build" }
+  ],
+  "faq": [
+    { "q": { "en": "Is it free?", "fa": "رایگان است؟" }, "a": { "en": "The software is MIT-licensed and free. It runs on free-tier API keys from Google AI Studio and Groq.", "fa": "نرم‌افزار با مجوز MIT و رایگان است و با کلیدهای طرح رایگان Google AI Studio و Groq کار می‌کند." } },
+    { "q": { "en": "Does the video need subtitles?", "fa": "ویدیو باید زیرنویس داشته باشد؟" }, "a": { "en": "No — Avorythm transcribes the audio itself.", "fa": "نه — Avorythm خودش صدا را رونویسی می‌کند." } }
+  ],
+  "links": [{ "label": { "en": "Issues", "fa": "مسائل" }, "href": "https://github.com/msmahdinejad/avorythm/issues" }]
+}

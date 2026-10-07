@@ -1,0 +1,13 @@
+/* Components that only the generated project sites use (features grid, FAQ, centred hero). The main stylesheet is shared with the Cinewright site. */
+.hero.center .hero-grid{grid-template-columns:1fr;text-align:center;justify-items:center}.hero.center .lead{margin-inline:auto}.hero.center .cta,.hero.center .rot{justify-content:center}.hero.center .term{max-width:760px;width:100%;text-align:left;margin-inline:auto}
+.feats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}@media(max-width:940px){.feats{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.feats{grid-template-columns:1fr}}
+.fcard{position:relative;padding:26px 24px;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));overflow:hidden;transition:.35s var(--ease)}
+.fcard:hover{transform:translateY(-6px);border-color:var(--line2)}
+.fcard::after,.qa::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(260px circle at var(--sx,50%) var(--sy,-40%),rgba(138,99,255,.2),rgba(64,245,245,.06) 50%,transparent 70%);opacity:0;transition:opacity .3s}.fcard:hover::after,.qa:hover::after{opacity:1}
+.fcard i{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;margin-bottom:16px;font-style:normal;font-size:22px;background:var(--g);color:#06050c;box-shadow:0 10px 30px -10px rgba(138,99,255,.8)}
+.fcard h3{margin:0 0 6px;font:700 20px var(--head);letter-spacing:-.02em}html[lang=fa] .fcard h3{font-weight:400;font-size:22px}.fcard p{margin:0;color:var(--mut);font-size:15.5px}
+.qa{position:relative;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025);margin:10px 0;overflow:hidden}
+.qa summary{cursor:pointer;list-style:none;padding:18px 22px;font-weight:600;display:flex;justify-content:space-between;gap:16px}.qa summary::-webkit-details-marker{display:none}.qa summary::after{content:"+";color:var(--c);font:400 24px/1 var(--mono);transition:.3s}.qa[open] summary::after{transform:rotate(45deg)}
+.qa p{margin:0;padding:0 22px 20px;color:var(--mut)}
+.pipe.n3{grid-template-columns:repeat(3,1fr)}.pipe.n4{grid-template-columns:repeat(4,1fr)}.pipe.n2{grid-template-columns:repeat(2,1fr)}@media(max-width:900px){.pipe.n3,.pipe.n4{grid-template-columns:1fr 1fr}}@media(max-width:560px){.pipe.n3,.pipe.n4,.pipe.n2{grid-template-columns:1fr}}
+.hero-art{border-radius:22px;overflow:hidden;border:1px solid var(--line2);box-shadow:0 50px 120px -30px rgba(138,99,255,.7);line-height:0;background:#000}.hero-art img{width:100%;height:auto;display:block}

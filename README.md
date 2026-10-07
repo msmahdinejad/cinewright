@@ -164,7 +164,7 @@ Full tables, contact sheets and caveats: **[docs/benchmark.md](docs/benchmark.md
 | [Atlas](docs/atlas.md) | all 239 techniques with galleries |
 | [Benchmark](docs/benchmark.md) | method, metrics, results |
 | [FAQ](docs/faq.md) | limits, licensing, safety |
-| [Site guide](docs/site-guide.md) | how the website is built (and how to do the same for your own project) |
+| [Site guide](docs/site-guide.md) | how the website is built — and `tools/new-site.mjs`, which generates one like it for any repository from a JSON file |
 | [`SKILL.md`](skills/cinewright/SKILL.md) · [`protocol.md`](skills/cinewright/references/protocol.md) · [`engine.md`](skills/cinewright/references/engine.md) | what the agent reads |
 
 ## Limits (honestly)
