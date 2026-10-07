@@ -92,8 +92,9 @@ function runAgent(job, work, prompt, evFile, logFile) {
     child = useShell ? spawn(cmdline, { cwd: work, env, shell: true, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true, detached: process.platform !== 'win32' }) : spawn(bin, args, { cwd: work, env, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true, detached: process.platform !== 'win32' });
     child.stdout.on('data', d => ev.write(d)); child.stderr.on('data', d => log.write(d));
     child.stdin.on('error', () => { /* agent exited early */ }); child.stdin.end(prompt);
-    const timer = setTimeout(() => { timedOut = true; log.write('\n[benchmark] timeout — stopping the agent\n'); killTree(child.pid); }, timeoutMs);
-    child.on('close', code => { clearTimeout(timer); ev.end(); log.end(); resolve({ code, timedOut, seconds: (Date.now() - t0) / 1000 }); });
+    let done = false; const finish = code => { if (done) return; done = true; clearTimeout(timer); ev.end(); log.end(); resolve({ code, timedOut, seconds: Math.min((Date.now() - t0) / 1000, timedOut ? timeoutMs / 1000 + 30 : 1e9) }); };   // never wait for stdio to close: an orphaned grandchild (a sub-agent, a Chrome) can hold the pipes for hours
+    const timer = setTimeout(() => { timedOut = true; log.write('\n[benchmark] timeout — stopping the agent\n'); killTree(child.pid); setTimeout(() => finish(null), 20000); }, timeoutMs);
+    child.on('close', finish); child.on('exit', code => setTimeout(() => finish(code), 10000));
     child.on('error', e => { clearTimeout(timer); log.write(String(e)); ev.end(); log.end(); resolve({ code: -1, timedOut, seconds: (Date.now() - t0) / 1000, error: String(e) }); });
   });
 }

@@ -26,7 +26,7 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 | run | how it was produced | length | quiet % | frame fill % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |
 |---|---|---:|---:|---:|---:|---:|---|---|---|---|
 | Codex, no skill #1 | **runner** · codex-cli 0.148.0 · skill none | 6.0 s | 45 | 4 | 2.5 s | 0 | -17.1 / 6.7 | – | no · 0 | 12 min · 972k |
-| Codex + Cinewright (first 2.1 build) #1 | **runner** · codex-cli 0.148.0 · skill 2.1.0 · timed out | ✘ no video was produced | – | – | – | – | – | 0/1 | yes · 0 | 768 min · 0k |
+| Codex + Cinewright (first 2.1 build) #1 | **runner** · codex-cli 0.148.0 · skill 2.1.0 · timed out | ✘ no video was produced | – | – | – | – | – | 0/1 | yes · 0 | 50 min · 0k |
 
 <details open><summary>Contact sheets and previews</summary>
 
@@ -38,7 +38,7 @@ Claims about creative tools are cheap, so this repository ships the means to **m
 
 </details>
 
-- **Codex + Cinewright (first 2.1 build) #1:** The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black.
+- **Codex + Cinewright (first 2.1 build) #1:** The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black. This run hit the 50-minute timeout without producing a video (it had spawned a sound sub-agent and never finished); the wall-clock shown is the timeout.
 
 ## Product film with a creative-director brief — `product-avorythm`
 

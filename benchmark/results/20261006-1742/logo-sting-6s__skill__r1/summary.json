@@ -12,10 +12,10 @@
   "effort": "high",
   "skill": "2.1.0",
   "date": "2026-10-07",
-  "wallSeconds": 46108,
+  "wallSeconds": 3000,
   "exitCode": 1,
   "timedOut": true,
-  "note": "The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black.",
+  "note": "The first build of 2.1, before the fixes this very benchmark motivated (frame-fill gate, substantive reviews, fork-a-template, no unattended sub-agents). The agent followed the protocol — brief, atlas ids, three review files — but its reviews were four lines each, it viewed no frames, and the film is thin lines on black. This run hit the 50-minute timeout without producing a video (it had spawned a sound sub-agent and never finished); the wall-clock shown is the timeout.",
   "video": {
     "ok": false,
     "error": "no video was produced"
