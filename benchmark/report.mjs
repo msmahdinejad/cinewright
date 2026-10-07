@@ -82,6 +82,7 @@ function avg(l, f) { const v = l.map(f).filter(x => typeof x === 'number'); retu
 if (pairs.length) {
   md += `## Head-to-head summary (runner results only)\n\n| task | quiet % — no skill | quiet % — with skill | LRA — no skill | LRA — with skill |\n|---|---:|---:|---:|---:|\n${pairs.map(p => `| \`${p[0]}\` | ${f1(p[1])} | ${f1(p[2])} | ${f1(p[3])} | ${f1(p[4])} |`).join('\n')}\n\n`;
 }
+const notesFile = path.join(ROOT, 'benchmark', 'notes.md'); if (fs.existsSync(notesFile)) md += fs.readFileSync(notesFile, 'utf8').trim() + String.fromCharCode(10, 10);   // hand-written findings that sit next to the generated tables
 md += `## Caveats (read before quoting any number)\n\n- Agents are stochastic: one run per cell is an anecdote. Use \`--reps 3\` or more before drawing conclusions, and report the spread.\n- The metrics measure *motion and sound hygiene*, not taste. A film can score perfectly and still be ugly — that is what the blind rating tool is for.\n- Rows made by different agents or models are **not** comparable; the *how it was produced* column says which is which.\n- "Contaminated" means a no-skill run nevertheless read the skill; such runs should be discarded.\n- The runner disables any globally installed copy of the skill for baseline runs (\`skills.config\` in Codex) and installs the version under test into the run's own project folder, so a stale install on your machine cannot leak into the comparison.\n`;
 emit('docs/benchmark.md', md);
 

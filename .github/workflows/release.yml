@@ -24,7 +24,7 @@ jobs:
       - name: Release notes from CHANGELOG
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          awk -v v="$VERSION" '$0 ~ "^## \[" v "\]" {f=1; next} f && /^## \[/ {exit} f' CHANGELOG.md > notes.md
+          awk -v v="$VERSION" 'index($0, "## [" v "]") == 1 {f=1; next} f && index($0, "## [") == 1 {exit} f' CHANGELOG.md > notes.md
           [ -s notes.md ] || echo "See CHANGELOG.md" > notes.md
       - name: Create GitHub release
         env:
