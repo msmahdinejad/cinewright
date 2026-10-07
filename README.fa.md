@@ -11,7 +11,13 @@
 [![CI](https://github.com/msmahdinejad/cinewright/actions/workflows/ci.yml/badge.svg)](https://github.com/msmahdinejad/cinewright/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-5b3df5.svg)](LICENSE)
 
-[**وب‌سایت**](https://msmahdinejad.github.io/cinewright/) · [شروع سریع](docs/getting-started.md) · [اطلس تکنیک‌ها](docs/atlas.md) · [نمونه‌پرامپت‌ها](docs/prompts.md) · [بنچمارک](docs/benchmark.md) · [English](README.md)
+[**وب‌سایت (اجرای زندهٔ موتور)**](https://msmahdinejad.github.io/cinewright/) · [شروع سریع](docs/getting-started.md) · [اطلس تکنیک‌ها](docs/atlas.md) · [نمونه‌پرامپت‌ها](docs/prompts.md) · [بنچمارک](docs/benchmark.md) · [English](README.md)
+
+</div>
+
+<div dir="rtl">
+
+> **نام قبلی: `pure-code-video`.** در نسخهٔ ۲٫۱ به «سینه‌رایت (Cinewright)» تغییر نام داد. برای ارتقا نصب‌کننده را دوباره اجرا کنید؛ نسخهٔ قدیمی را خودش پاک می‌کند. پرامپت حالا `$cinewright` است.
 
 </div>
 

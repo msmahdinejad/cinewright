@@ -1,0 +1,29 @@
+<!doctype html>
+<!-- Social card (1200×630) for the website and GitHub. Render with:  node tools/shot.mjs file-or-http-url/tools/og.html --w 1200 --h 630 --out docs/assets/img --prefix og  (then rename og-00.png → og.png) -->
+<html><head><meta charset="utf-8"><style>
+@font-face{font-family:"Space Grotesk";src:url(../docs/assets/fonts/space-grotesk-latin.woff2) format("woff2");font-weight:300 700}
+@font-face{font-family:"Inter";src:url(../docs/assets/fonts/inter-latin.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:"JetBrains Mono";src:url(../docs/assets/fonts/jetbrains-mono-latin.woff2) format("woff2")}
+*{box-sizing:border-box;margin:0}html,body{width:1200px;height:630px;background:#05040a;overflow:hidden;color:#f3f2fc;font-family:Inter,sans-serif}
+body{position:relative}
+.bg{position:absolute;inset:0;background:radial-gradient(700px 420px at 12% 8%,rgba(138,99,255,.55),transparent 70%),radial-gradient(640px 420px at 92% 96%,rgba(64,245,245,.40),transparent 70%),radial-gradient(500px 300px at 70% 10%,rgba(255,94,168,.28),transparent 70%)}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:60px 60px;-webkit-mask-image:radial-gradient(70% 80% at 30% 40%,#000,transparent);mask-image:radial-gradient(70% 80% at 30% 40%,#000,transparent)}
+.brand{position:absolute;left:70px;top:58px;display:flex;align-items:center;gap:16px;font:700 34px "Space Grotesk";letter-spacing:-.02em}
+.brand svg{width:48px;height:48px}
+h1{position:absolute;left:70px;top:170px;width:660px;font:700 80px/.98 "Space Grotesk";letter-spacing:-.045em}
+h1 span{background:linear-gradient(100deg,#8a63ff,#ff5ea8 60%,#ffd23f);-webkit-background-clip:text;background-clip:text;color:transparent}
+p{position:absolute;left:70px;top:446px;width:640px;font:500 22px/1.45 Inter;color:#b6b3d6}
+.chips{position:absolute;left:70px;bottom:52px;display:flex;gap:12px;font:500 17px "JetBrains Mono"}
+.chips i{font-style:normal;padding:8px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#d9d7f5}
+.shot{position:absolute;right:56px;top:96px;width:430px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.25);box-shadow:0 50px 120px -20px rgba(138,99,255,.8);transform:rotate(3deg);line-height:0}
+.shot img{width:100%}
+.shot.b{top:318px;right:70px;width:300px;transform:rotate(-4deg);box-shadow:0 40px 90px -20px rgba(0,0,0,.9)}
+</style></head><body>
+<div class="bg"></div><div class="grid"></div>
+<div class="brand"><svg viewBox="0 0 32 32"><path d="M9 22a9 9 0 0 1 0-12" stroke="#8a63ff" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M23 10a9 9 0 0 1 0 12" stroke="#40f5f5" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M16 10.5l1.7 3.8 3.8 1.7-3.8 1.7L16 21.5l-1.7-3.8-3.8-1.7 3.8-1.7z" fill="#fff"/></svg>Cinewright</div>
+<h1>Your coding agent can now <span>direct films.</span></h1>
+<p>An open-source skill for Codex, Claude Code &amp; friends. Every frame is code, every sound is synthesised.</p>
+<div class="chips"><i>239 techniques</i><i>32 GPU transitions</i><i>Persian · RTL</i><i>MIT</i></div>
+<div class="shot"><img src="../docs/assets/img/cinema-city.jpg"></div>
+<div class="shot b"><img src="../docs/assets/img/showreel-type.jpg"></div>
+</body></html>

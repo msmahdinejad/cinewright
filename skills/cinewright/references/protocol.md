@@ -36,7 +36,8 @@ Camera motion in every scene · no element static > 1.2 s without secondary moti
 ## Ambition budget (the floor)
 ≥ 6 atlas techniques from ≥ 4 families · ≥ 3 engines used (2D canvas, GPU shaders/particles, 3D) unless the style system deliberately restricts them · 1 custom element (a shader, a shape language, a path, a pattern) written for this film · 1 signature transition authored for this film (`Trans.define` or a match cut) · bilingual or RTL handling done properly when the brief mentions Persian · a loop/hold/ending designed on purpose.
 
-## Working in parallel (sub-agents, Codex Desktop)
+## Working in parallel (sub-agents — optional, and risky unattended)
+**Default: work alone.** In the first benchmark a non-interactive `codex exec` session spawned a sound sub-agent for a 6-second logo sting and then never finished (it hit the 50-minute timeout with no video) while the same task without sub-agents took 12 minutes. Use sub-agents only in an interactive session where you can watch them, and keep a single-agent path: a film is ~300 lines, and one author keeps picture and sound on the same cue timeline. If you do split the work:
 Split by file so nobody edits the same lines: **soundtrack agent** (`audio.mjs` from the shared cues + `qc.mjs audio`), **scene agents** (one file per scene: `scenes/<id>.js` calling `SCENES.push({ id, at, enter, draw|gl, look })`, loaded by `video.html` before `S.timeline(SCENES)`), **review agent** (renders sheets, writes `qc/review-N.md`, never edits). Give every agent: `brief.md` + style bible, the cue table, the API cheat sheet (`references/engine.md`), and the rule "pure functions of time, no `Math.random`, no `Date.now`, fonts via `K.FONTS`". The lead integrates, renders, runs the review loop, and owns the final contact sheet.
 
 ## Speed & reliability
