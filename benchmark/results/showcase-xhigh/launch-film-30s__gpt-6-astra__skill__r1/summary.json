@@ -1,0 +1,93 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/launch-film-30s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "launch-film-30s",
+  "domain": "product",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 3758,
+  "exitCode": 0,
+  "timedOut": false,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 30,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 14.98,
+    "audio": {
+      "lufs": -14.2,
+      "lra": 2.6,
+      "truePeak": -1.4,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.003,
+      "mean": 0.0055,
+      "quietPct": 52,
+      "cuts": 0,
+      "longestStatic": 3.5,
+      "curve": "▃▁▁▁▁▁▃▁▁▁▁▁▁▁█▁▁▁▁▁▃▁▁▁▁▁▄▁▁▁▁▂▅▄▁▁▁▁▁▃▁▂▁▁▁▁▁▁▄▁▁▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 15,
+      "emptyPct": 2,
+      "darkPct": 20
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 205,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 14,
+      "command_execution": 116,
+      "todo_list": 5,
+      "reasoning": 62
+    },
+    "turns": 1,
+    "inputTokens": 8310856,
+    "outputTokens": 53551,
+    "cachedInputTokens": 7890304,
+    "imageViews": 1,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\n30-second 1080p film featuring a procedural titanium ring, macro lighting, exploded internals, and all three spec callouts.\nOriginal score, metallic clicks, air sweeps, and deep sub reveals; final lockup: **ARC — Know the quiet signal.**"
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 4906,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

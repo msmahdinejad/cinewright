@@ -9,7 +9,7 @@
 //   node atlas.mjs sheet <id|family|all> … [--cols 5] [--tile 380] [--out file.png] [--strip] [--project dir]
 //                                                    renders the recipes and writes ONE contact sheet; open it with your image viewer.
 //                                                    --strip: 6 frames of one recipe (to see its motion)
-//   node atlas.mjs clip <id|family> … [--w 640 --h 360 --fps 24] [--gif] [--reel name] [--out dir]
+//   node atlas.mjs clip <id|family> … [--w 640 --h 360 --fps 24 --quality web|high] [--gif] [--reel name] [--out dir]
 //                                                    renders REAL MOTION: one MP4 (3 s) per recipe, or --reel = all selected recipes in one video; --gif also writes a small GIF
 //   node atlas.mjs gallery [--only family]            regenerate references/gallery/*.jpg (contact sheets of every family + the engine examples)
 //   node atlas.mjs wav <audio-recipe-id> [--out f.wav]  renders a sound recipe to a WAV (check it with: node qc.mjs audio f.wav)
@@ -76,7 +76,7 @@ ctx.paint = d => { const R = K.rng(5), gr = d.createLinearGradient(0, 0, 0, H); 
   for (let i = 0; i < 90; i++) { d.fillStyle = 'rgba(255,255,255,' + (.3 + R() * .6) + ')'; d.beginPath(); d.arc(R() * W, R() * H * .42, (.5 + R() * 1.6) * u, 0, 6.283); d.fill(); }
   K.glow(d, W * .5, H * .6, H * .42, '#ffb066', .55); d.fillStyle = '#ffe2a8'; d.beginPath(); d.arc(W * .5, H * .6, H * .15, 0, 6.283); d.fill();
   [['#4a2a7a', .66, .09, 1.3], ['#2c1a58', .74, .12, 2.1], ['#150e33', .84, .08, 3.4]].forEach(([col, y0, amp, sd]) => { d.fillStyle = col; d.beginPath(); d.moveTo(0, H); for (let x = 0; x <= W; x += 8) d.lineTo(x, H * (y0 - amp * (.5 + .5 * K.noise1(x / W * 3.2 + sd)) ** 1.5)); d.lineTo(W, H); d.closePath(); d.fill(); });
-  K.text(d, 'DREAM', W / 2, H * .2, { size: H * .2, weight: 900, fill: '#ffffff', shadow: { color: 'rgba(0,0,0,.35)', blur: 18 * u, y: 6 * u } }); K.text(d, 'سلام دنیا', W / 2, H * .9, { size: H * .09, weight: 800, fill: '#ffe9c4' });
+  K.text(d, 'DREAM', W / 2, H * .2, { size: H * .2, weight: 900, fill: '#ffffff', shadow: { color: 'rgba(0,0,0,.35)', blur: 18 * u, y: 6 * u } }); K.text(d, 'hello, world', W / 2, H * .9, { size: H * .075, weight: 700, fill: '#ffe9c4' });
   [['#27f0ff', .14], ['#ff4d8d', .86]].forEach(([c, x]) => { d.fillStyle = c; K.rr(d, W * x - H * .07, H * .74 - H * .07, H * .14, H * .14, H * .035); d.fill(); d.fillStyle = '#fff'; K.circle(d, W * x, H * .74, H * .028); d.fill(); }); };
 ctx.demo = () => { if (demoTex) return demoTex; const c2 = K.canvas(W, H); ctx.paint(c2.getContext('2d')); return demoTex = gfx.up(c2); };
 const fail = (id, m) => console.error('RECIPE ' + id + ' FAILED: ' + String(m).replace(/\\s+/g, ' ').slice(0, 400));
@@ -189,7 +189,7 @@ switch (cmd) {
     for (const [name, rs] of jobs) {
       fs.writeFileSync(path.join(dir, 'atlas_page.html'), page(rs, W, H, false));
       const mp4 = path.join(outDir, name + '.mp4');
-      const r = spawnSync(process.execPath, [path.join(dir, 'tools', 'render.mjs'), '--root', dir, '--page', 'atlas_page.html', '--out', mp4, '--no-audio', '--quality', 'web', '--w', String(W), '--h', String(H), '--fps', String(fps), '--workers', opt.workers || '2'], { encoding: 'utf8', cwd: dir, maxBuffer: 1 << 26 });
+      const r = spawnSync(process.execPath, [path.join(dir, 'tools', 'render.mjs'), '--root', dir, '--page', 'atlas_page.html', '--out', mp4, '--no-audio', '--quality', String(opt.quality || 'web'), '--w', String(W), '--h', String(H), '--fps', String(fps), '--workers', opt.workers || '2'], { encoding: 'utf8', cwd: dir, maxBuffer: 1 << 26 });
       const log = (r.stdout || '') + (r.stderr || ''), failed = [...new Set([...log.matchAll(/RECIPE (\S+) FAILED: (.*)/g)].map(m => `${m[1]}: ${m[2]}`))];
       if (r.status !== 0 || failed.length || !fs.existsSync(mp4)) { console.error(log.split('\n').slice(-20).join('\n') + (failed.length ? '\nFAILED recipes:\n  ' + failed.join('\n  ') : '')); process.exit(1); }
       console.log('✔', path.relative(process.cwd(), mp4), (fs.statSync(mp4).size / 1024).toFixed(0) + ' KB');

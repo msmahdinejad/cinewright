@@ -1,30 +1,41 @@
 {
-  "version": 1,
+  "version": 2,
   "footer": "---\nBenchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.",
   "sets": {
+    "headline": [
+      "showreel-15s"
+    ],
     "quick": [
       "showreel-15s",
       "logo-sting-6s",
-      "kinetic-poem-fa"
+      "kinetic-manifesto-20s"
+    ],
+    "showcase": [
+      "launch-film-30s",
+      "trailer-scifi-20s",
+      "kinetic-manifesto-20s",
+      "music-visualizer-20s",
+      "title-sequence-25s",
+      "data-story-vertical-15s"
     ],
     "core": [
       "showreel-15s",
       "logo-sting-6s",
-      "kinetic-poem-fa",
-      "product-avorythm",
       "explainer-app-20s",
-      "trailer-scifi-20s"
+      "trailer-scifi-20s",
+      "launch-film-30s",
+      "kinetic-manifesto-20s"
     ],
     "full": [
       "showreel-15s",
       "logo-sting-6s",
-      "kinetic-poem-fa",
-      "product-avorythm",
       "explainer-app-20s",
       "trailer-scifi-20s",
-      "data-story-vertical-15s",
-      "heritage-observatory-fa",
+      "launch-film-30s",
+      "kinetic-manifesto-20s",
       "music-visualizer-20s",
+      "title-sequence-25s",
+      "data-story-vertical-15s",
       "abstract-loop-8s"
     ]
   },
@@ -36,7 +47,7 @@
       "duration": 15,
       "lang": "en",
       "title": "Motion-designer showreel",
-      "prompt": "make a dynamic 15-second motion graphics video that shows what an incredible motion designer you are, like it's your showreel for a résumé. go all out."
+      "prompt": "make a dynamic 15-second motion graphics video that shows what an incredible motion designer you are, like it's your showreel for a résumé. Go all out."
     },
     {
       "id": "logo-sting-6s",
@@ -48,31 +59,13 @@
       "prompt": "Create a 6-second logo sting for \"Northwind Labs\", a fictional climate-data startup. Invent a simple mark and a wordmark, reveal them with real impact, and give it sound design (a hit, a whoosh, a short musical resolve). Go all out."
     },
     {
-      "id": "kinetic-poem-fa",
-      "domain": "typography",
-      "aspect": "16:9",
-      "duration": 15,
-      "lang": "fa",
-      "title": "Persian kinetic typography",
-      "prompt": "یک ویدیوی ۱۵ ثانیه‌ای تایپوگرافی متحرک (kinetic typography) از این بیت حافظ بساز: «الا یا ایها الساقی ادر کاسا و ناولها / که عشق آسان نمود اول ولی افتاد مشکل‌ها». متن فارسی باید درست شکل‌گرفته و راست‌به‌چپ باشد. موسیقی را خودت بساز. فقط با کد کار کن. Go all out."
-    },
-    {
-      "id": "product-avorythm",
+      "id": "launch-film-30s",
       "domain": "product",
-      "aspect": "free",
-      "duration": 30,
-      "lang": "fa",
-      "title": "Product film with a creative-director brief",
-      "promptFile": "prompts/product-avorythm.md"
-    },
-    {
-      "id": "explainer-app-20s",
-      "domain": "explainer",
       "aspect": "16:9",
-      "duration": 20,
+      "duration": 30,
       "lang": "en",
-      "title": "App explainer",
-      "prompt": "Make a 20-second explainer video for \"Pocketwise\", a fictional app that turns shared household expenses into a simple monthly summary. Show the problem, the app UI (invent the screens), one satisfying data moment (numbers/chart), and end with the name and a one-line tagline. Original music and UI sound design. Go all out."
+      "title": "Product launch film",
+      "prompt": "Make a 30-second launch film for ARC, a fictional titanium smart ring (the product does not exist, so invent everything). Aim for keynote-level craft: a hero object built from code (procedural 3D, no assets) with believable metal and light, slow macro camera moves, one \"inside the ring\" exploded moment, three crisp spec call-outs (9-day battery · sleep & HRV · 50 m water resistant) and a final lockup with the name and a tagline you write. Build tension, reveal, pay off. Original score plus foley-style sound design (clicks, air, a deep sub hit on the reveal). Go all out."
     },
     {
       "id": "trailer-scifi-20s",
@@ -84,22 +77,22 @@
       "prompt": "Make a 20-second cinematic teaser trailer for a fictional science-fiction film called \"LAST SIGNAL\" (a lone station keeps receiving a transmission from its own future). Think title cards, camera moves, atmosphere, a build to one huge moment, and a score. No actors, no footage: everything generated. Go all out."
     },
     {
-      "id": "data-story-vertical-15s",
-      "domain": "data",
-      "aspect": "9:16",
-      "duration": 15,
-      "lang": "en",
-      "title": "Vertical data story",
-      "prompt": "Make a 15-second VERTICAL (9:16) social video that tells one statistic in a way people feel: in the fictional city of Lumen, daily bike-share rides grew from 12,000 in 2021 to 87,000 in 2025. Hook in the first second, one hero visual, big readable numbers, music with a drop. Safe areas for phone UI. Go all out."
-    },
-    {
-      "id": "heritage-observatory-fa",
-      "domain": "cultural",
+      "id": "kinetic-manifesto-20s",
+      "domain": "typography",
       "aspect": "16:9",
       "duration": 20,
-      "lang": "fa",
-      "title": "Persian heritage teaser",
-      "prompt": "یک تیزر ۲۰ ثانیه‌ای سینمایی با هویت ایرانی (نقش‌های گیره‌چینی/گره‌سازی، نستعلیق، نور و غبار) برای یک رصدخانهٔ ستاره‌شناسی بساز. متن‌ها فارسی؛ موسیقی با سنتور و نی و ریتم ۶/۸ را خودت بساز. فقط با کد کار کن. Go all out."
+      "lang": "en",
+      "title": "Kinetic typography manifesto",
+      "prompt": "Make a 20-second kinetic typography film that delivers this manifesto word for word: \"We don't wait for inspiration. We build it. Frame by frame. Line by line. Until the thing you imagined starts to move.\" Type is the only hero: it must scale, slice, orbit, morph, collide and resolve in time with an original drum-driven track; mix typefaces and weights, include one 3D / perspective moment and one beat of total silence before the last line. Go all out."
+    },
+    {
+      "id": "explainer-app-20s",
+      "domain": "explainer",
+      "aspect": "16:9",
+      "duration": 20,
+      "lang": "en",
+      "title": "App explainer",
+      "prompt": "Make a 20-second explainer video for \"Pocketwise\", a fictional app that turns shared household expenses into a simple monthly summary. Show the problem, the app UI (invent the screens), one satisfying data moment (numbers/chart), and end with the name and a one-line tagline. Original music and UI sound design. Go all out."
     },
     {
       "id": "music-visualizer-20s",
@@ -109,6 +102,24 @@
       "lang": "en",
       "title": "Audio-reactive visualizer",
       "prompt": "First compose a 20-second original electronic track (synthesise it yourself), then make an audio-reactive music visualizer for it: the picture must respond to the kick, the bass and the melody, with a build and a drop. No text except a small title at the end. Go all out."
+    },
+    {
+      "id": "title-sequence-25s",
+      "domain": "cinematic",
+      "aspect": "16:9",
+      "duration": 25,
+      "lang": "en",
+      "title": "Prestige-drama title sequence",
+      "prompt": "Make a 25-second main-title sequence for a fictional prestige thriller series called \"THE HOLLOW HOURS\" (a night-shift detective in a city that never sleeps). Saul Bass meets a modern streaming title: abstract imagery built from shapes, light, grain and type — cut-paper layers, flickering neon, rain on glass, a clock that unravels — with credit-style typography (invent the credits) and a brooding original score with a heartbeat pulse. Go all out."
+    },
+    {
+      "id": "data-story-vertical-15s",
+      "domain": "data",
+      "aspect": "9:16",
+      "duration": 15,
+      "lang": "en",
+      "title": "Vertical data story",
+      "prompt": "Make a 15-second VERTICAL (9:16) social video that tells one statistic in a way people feel: in the fictional city of Lumen, daily bike-share rides grew from 12,000 in 2021 to 87,000 in 2025. Hook in the first second, one hero visual, big readable numbers, music with a drop. Safe areas for phone UI. Go all out."
     },
     {
       "id": "abstract-loop-8s",

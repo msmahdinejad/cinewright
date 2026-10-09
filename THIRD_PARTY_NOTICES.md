@@ -23,4 +23,4 @@ Each font remains © its respective *Project Authors* (see the upstream reposito
 
 ## Sample media
 
-The MP4 files attached to GitHub Releases were produced by this skill from code; their soundtracks are synthesised by `templates/lib/synth.mjs`. They contain no third-party footage, music or samples. The Avorythm case study refers to the open-source product [Avorythm](https://github.com/msmahdinejad/avorythm) by the same author; its logo is not included in this repository.
+The MP4 files attached to GitHub Releases were produced by this skill from code; their soundtracks are synthesised by `templates/lib/synth.mjs`. They contain no third-party footage, music or samples.

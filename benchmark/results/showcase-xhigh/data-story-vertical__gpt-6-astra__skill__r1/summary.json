@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/data-story-vertical__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "data-story-vertical",
+  "domain": "data",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 2854,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 20.52,
+    "audio": {
+      "lufs": -14.3,
+      "lra": 2.7,
+      "truePeak": -1.4,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0203,
+      "mean": 0.029,
+      "quietPct": 0,
+      "cuts": 2,
+      "longestStatic": 0,
+      "curve": "█▁▁▅▁▁▂▆▇████▆▆▄▅▄▄▄▃█▅▄█▂▂▂"
+    },
+    "look": {
+      "medianFill": 35,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 5,
+      "perMinute": 20
+    }
+  },
+  "session": {
+    "events": 158,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 8,
+      "command_execution": 84,
+      "todo_list": 7,
+      "reasoning": 31,
+      "mcp_tool_call": 14
+    },
+    "turns": 1,
+    "inputTokens": 5792689,
+    "outputTokens": 26747,
+    "cachedInputTokens": 5383168,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 15-second 9:16 code-only Lumen data story: 12,000 → 87,000 rides, dots forming a river of light, count-up, chart, drop, and end card.\nRendered at 1080×1920 with H.264 video, AAC audio, and an original synthesized beat; final QC passes."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 1853,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

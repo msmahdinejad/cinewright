@@ -1,0 +1,13 @@
+{
+  "type": ["word-slam", "echo-stack", "extrude-block", "text-window"],
+  "3d": ["text3d-chrome", "city-night-flight", "helix-ribbon", "terrain-synthwave"],
+  "particles": ["particles-morph-word", "particles-galaxy-swirl", "particles-burst-spark", "particles-mesh-surface"],
+  "shaders": ["glsl-raymarch-metaballs", "glsl-retro-sun", "glsl-julia-zoom", "glsl-truchet-weave"],
+  "looks": ["look-vhs", "look-ascii", "look-stained-glass", "look-kaleido"],
+  "logos": ["logo-stamp-shockwave", "logo-shatter-in", "logo-glitch-in", "logo-gl-bloom-ring"],
+  "graphic": ["gfx-girih-reveal", "gfx-flow-field", "gfx-sunburst", "gfx-dot-globe"],
+  "ui": ["ui-dashboard-kpis", "ui-code-typing", "ui-notification-stack", "ui-donut-progress"],
+  "hero-a": ["relief-logo", "orbit-rings"],
+  "hero-b": ["tunnel-rings", "glass-gems"],
+  "engine": ["planet-atmosphere", "wire-hologram", "cubes-wave", "product-pedestal"]
+}

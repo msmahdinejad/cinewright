@@ -24,6 +24,7 @@ jobs:
         with: { node-version: "${{ matrix.node }}" }
       - run: npm test
       - run: node benchmark/report.mjs --check
+      - run: node tools/make-assets.mjs check
 
   installers:
     name: Installers (${{ matrix.os }})

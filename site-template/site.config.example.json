@@ -1,50 +1,50 @@
 {
-  "name": "Avorythm",
-  "repo": "msmahdinejad/avorythm",
-  "author": "Mohammad Saleh Mahdinejad",
+  "name": "Pocketwise",
+  "repo": "your-name/pocketwise",
+  "author": "Your Name",
   "license": "MIT",
   "languages": ["en", "fa"],
   "colors": { "c1": "#7a5cff", "c2": "#2fe0e8" },
   "badge": { "en": "Open source · MIT", "fa": "متن‌باز · MIT" },
-  "tagline": { "en": "Hear every voice — or just read it — in your language", "fa": "هر صدا را بشنو — یا فقط بخوان — به زبان خودت" },
-  "headline": { "en": "Translate *anything playing* in your browser. Live.", "fa": "هر چیزی که در مرورگر پخش می‌شود را *زنده* ترجمه کن." },
+  "tagline": { "en": "Shared expenses, settled in one tap", "fa": "هزینه‌های مشترک، با یک لمس تسویه" },
+  "headline": { "en": "Split the bills. *Keep the friends.*", "fa": "هزینه‌ها را تقسیم کن. *دوستی‌ها را نگه دار.*" },
   "lead": {
-    "en": "Avorythm is an open-source real-time translation and AI-dubbing tool for Chrome and the desktop. Pick a tab and a language — get live subtitles and a dubbed voice, even when the video has no subtitles.",
-    "fa": "Avorythm یک ابزار متن‌باز ترجمهٔ زنده و دوبلهٔ هوشمند برای کروم و دسکتاپ است. یک تب و یک زبان انتخاب کنید — حتی اگر ویدیو زیرنویس نداشته باشد، زیرنویس زنده و صدای دوبله می‌گیرید."
+    "en": "Pocketwise is a small open-source app that turns shared household expenses into a simple monthly summary. Add a bill, see who owes what, settle up — no spreadsheets, no awkward messages.",
+    "fa": "Pocketwise یک اپ کوچک و متن‌باز است که هزینه‌های مشترک خانه را به یک خلاصهٔ ماهانهٔ ساده تبدیل می‌کند. یک صورت‌حساب اضافه کنید، ببینید چه کسی چقدر بدهکار است و تسویه کنید — بدون اکسل، بدون پیام‌های معذب‌کننده."
   },
   "rotator": {
-    "prefix": { "en": "Works with", "fa": "کار می‌کند با" },
-    "words": { "en": ["lectures", "livestreams", "podcasts", "meetings", "any video"], "fa": ["سخنرانی‌ها", "پخش زنده", "پادکست‌ها", "جلسه‌ها", "هر ویدیو"] }
+    "prefix": { "en": "Made for", "fa": "ساخته‌شده برای" },
+    "words": { "en": ["flatmates", "couples", "road trips", "office lunches", "weddings"], "fa": ["هم‌خانه‌ای‌ها", "زوج‌ها", "سفرها", "ناهار اداری", "عروسی‌ها"] }
   },
-  "cta": { "en": "Get Avorythm", "fa": "دریافت Avorythm" },
-  "heroCommand": "git clone https://github.com/msmahdinejad/avorythm",
+  "cta": { "en": "Get Pocketwise", "fa": "دریافت Pocketwise" },
+  "heroCommand": "git clone https://github.com/your-name/pocketwise",
   "stats": [
-    { "n": 4, "label": { "en": "independent outputs", "fa": "خروجی مستقل" } },
-    { "n": 3, "label": { "en": "desktop platforms", "fa": "پلتفرم دسکتاپ" } },
-    { "n": 0, "label": { "en": "cost for the API keys (free tiers)", "fa": "هزینهٔ کلیدهای API (طرح رایگان)" } }
+    { "n": 3, "label": { "en": "taps to add a bill", "fa": "لمس برای افزودن صورت‌حساب" } },
+    { "n": 12, "label": { "en": "currencies", "fa": "ارز" } },
+    { "n": 0, "label": { "en": "accounts required", "fa": "حساب کاربری لازم" } }
   ],
-  "featuresTitle": { "en": "Four outputs. One tab.", "fa": "چهار خروجی. یک تب." },
+  "featuresTitle": { "en": "Everything a shared home needs.", "fa": "هر چیزی که یک خانهٔ مشترک لازم دارد." },
   "features": [
-    { "icon": "🔊", "title": { "en": "Original audio", "fa": "صدای اصلی" }, "text": { "en": "Keep the real voice — or turn it down.", "fa": "صدای واقعی را نگه دارید — یا کمش کنید." } },
-    { "icon": "🎙", "title": { "en": "Dubbed audio", "fa": "صدای دوبله" }, "text": { "en": "An AI voice in your language, in sync.", "fa": "صدای هوش مصنوعی به زبان شما، هم‌زمان." } },
-    { "icon": "💬", "title": { "en": "Source subtitles", "fa": "زیرنویس مبدأ" }, "text": { "en": "What was actually said, as text.", "fa": "آنچه واقعاً گفته شد، به‌صورت متن." } },
-    { "icon": "🌐", "title": { "en": "Translated subtitles", "fa": "زیرنویس ترجمه" }, "text": { "en": "Frosted-glass card, downloadable SRT.", "fa": "کارت شیشهٔ مات، با SRT قابل‌دانلود." } },
-    { "icon": "🎚", "title": { "en": "Any mix", "fa": "هر نسبت میکس" }, "text": { "en": "Blend original and dub at any ratio.", "fa": "صدای اصلی و دوبله را با هر نسبت ترکیب کنید." } },
-    { "icon": "🖥", "title": { "en": "Desktop app", "fa": "برنامهٔ دسکتاپ" }, "text": { "en": "Translate any app's audio and process files.", "fa": "صدای هر برنامه را ترجمه کنید و فایل‌ها را پردازش کنید." } }
+    { "icon": "🧾", "title": { "en": "Add a bill", "fa": "افزودن صورت‌حساب" }, "text": { "en": "Photo, amount, who paid — done.", "fa": "عکس، مبلغ، پرداخت‌کننده — تمام." } },
+    { "icon": "⚖️", "title": { "en": "Fair splits", "fa": "تقسیم عادلانه" }, "text": { "en": "Equal, by share, or by item.", "fa": "مساوی، سهمی یا آیتمی." } },
+    { "icon": "📊", "title": { "en": "Monthly summary", "fa": "خلاصهٔ ماهانه" }, "text": { "en": "One page: totals, trends, who owes whom.", "fa": "یک صفحه: جمع‌ها، روندها، چه کسی به چه کسی بدهکار است." } },
+    { "icon": "🔔", "title": { "en": "Gentle reminders", "fa": "یادآوری ملایم" }, "text": { "en": "A nudge, not a nag.", "fa": "یک یادآوری، نه سرزنش." } },
+    { "icon": "🌍", "title": { "en": "Any currency", "fa": "هر ارزی" }, "text": { "en": "Travel with mixed money, settle in one.", "fa": "با پول‌های مختلف سفر کنید، با یکی تسویه کنید." } },
+    { "icon": "🔒", "title": { "en": "Local-first", "fa": "محلی‌اول" }, "text": { "en": "Your data stays on your devices.", "fa": "داده‌هایتان روی دستگاه‌های خودتان می‌ماند." } }
   ],
   "stepsTitle": { "en": "Three steps.", "fa": "سه قدم." },
   "steps": [
-    { "title": { "en": "Pick a tab", "fa": "یک تب انتخاب کنید" }, "text": { "en": "Any browser tab that is playing sound.", "fa": "هر تبی که صدا پخش می‌کند." } },
-    { "title": { "en": "Pick a language", "fa": "یک زبان انتخاب کنید" }, "text": { "en": "Your target language.", "fa": "زبان مقصد شما." } },
-    { "title": { "en": "Watch & listen", "fa": "ببینید و بشنوید" }, "text": { "en": "Live subtitles and dubbing, synchronized.", "fa": "زیرنویس و دوبلهٔ زنده، هم‌زمان." } }
+    { "title": { "en": "Add a bill", "fa": "یک صورت‌حساب اضافه کنید" }, "text": { "en": "Snap the receipt, pick who paid.", "fa": "رسید را بگیرید، پرداخت‌کننده را انتخاب کنید." } },
+    { "title": { "en": "Split it", "fa": "تقسیمش کنید" }, "text": { "en": "Equal, by share or by item.", "fa": "مساوی، سهمی یا آیتمی." } },
+    { "title": { "en": "Settle up", "fa": "تسویه کنید" }, "text": { "en": "One tap, everyone is even.", "fa": "یک لمس، همه تسویه‌اند." } }
   ],
   "install": [
-    { "label": "Chrome extension", "code": "git clone https://github.com/msmahdinejad/avorythm\n# then load the extension folder via chrome://extensions → Load unpacked", "note": { "en": "Needs free Google AI Studio (Gemini) and Groq (Whisper) API keys.", "fa": "به کلیدهای رایگان Google AI Studio (Gemini) و Groq (Whisper) نیاز دارد." } },
-    { "label": "Desktop", "code": "git clone https://github.com/msmahdinejad/avorythm\n# see the repository README for the Windows / macOS / Linux build" }
+    { "label": "Web app", "code": "git clone https://github.com/your-name/pocketwise\ncd pocketwise && npm start", "note": { "en": "Runs locally; nothing to sign up for.", "fa": "محلی اجرا می‌شود؛ ثبت‌نام لازم نیست." } },
+    { "label": "Docker", "code": "docker run --rm -p 8080:8080 ghcr.io/your-name/pocketwise" }
   ],
   "faq": [
-    { "q": { "en": "Is it free?", "fa": "رایگان است؟" }, "a": { "en": "The software is MIT-licensed and free. It runs on free-tier API keys from Google AI Studio and Groq.", "fa": "نرم‌افزار با مجوز MIT و رایگان است و با کلیدهای طرح رایگان Google AI Studio و Groq کار می‌کند." } },
-    { "q": { "en": "Does the video need subtitles?", "fa": "ویدیو باید زیرنویس داشته باشد؟" }, "a": { "en": "No — Avorythm transcribes the audio itself.", "fa": "نه — Avorythm خودش صدا را رونویسی می‌کند." } }
+    { "q": { "en": "Is it free?", "fa": "رایگان است؟" }, "a": { "en": "Yes — MIT-licensed, no accounts, no ads.", "fa": "بله — با مجوز MIT، بدون حساب کاربری و بدون تبلیغ." } },
+    { "q": { "en": "Where is my data?", "fa": "داده‌های من کجاست؟" }, "a": { "en": "On your device. Export or delete it any time.", "fa": "روی دستگاه شما. هر زمان می‌توانید خروجی بگیرید یا پاک کنید." } }
   ],
-  "links": [{ "label": { "en": "Issues", "fa": "مسائل" }, "href": "https://github.com/msmahdinejad/avorythm/issues" }]
+  "links": [{ "label": { "en": "Issues", "fa": "مسائل" }, "href": "https://github.com/your-name/pocketwise/issues" }]
 }

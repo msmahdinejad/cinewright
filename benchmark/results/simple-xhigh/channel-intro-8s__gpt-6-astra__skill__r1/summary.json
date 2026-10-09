@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "simple-xhigh/channel-intro-8s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "channel-intro-8s",
+  "domain": "motion graphics",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0-final",
+  "date": "2026-10-09",
+  "wallSeconds": 1626,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 8,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 5.69,
+    "audio": {
+      "lufs": -14.2,
+      "lra": 0.7,
+      "truePeak": -1.4,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0321,
+      "mean": 0.0404,
+      "quietPct": 14,
+      "cuts": 5,
+      "longestStatic": 0,
+      "curve": "██▇▄▄██▂█▃█▃▁▁"
+    },
+    "look": {
+      "medianFill": 31,
+      "emptyPct": 6,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 2,
+      "perMinute": 15
+    }
+  },
+  "session": {
+    "events": 128,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 7,
+      "command_execution": 68,
+      "reasoning": 36,
+      "todo_list": 7,
+      "mcp_tool_call": 6
+    },
+    "turns": 1,
+    "inputTokens": 5333367,
+    "outputTokens": 24998,
+    "cachedInputTokens": 5109888,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\nSelf-building 3D pixel logo, bold kinetic typography, electric transitions, and “Tech, with a heartbeat.”\n8 seconds at 1080p60, with original synthesized hits, stereo whooshes, and a musical sting—H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 1688,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

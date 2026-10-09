@@ -1,0 +1,91 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/sci-fi-hud__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "sci-fi-hud",
+  "domain": "ui",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-07",
+  "wallSeconds": 1201,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 6.41,
+    "audio": {
+      "lufs": -18.6,
+      "lra": 9.5,
+      "truePeak": -2.1,
+      "silentShare": 0.1
+    },
+    "energy": {
+      "median": 0.002,
+      "mean": 0.0089,
+      "quietPct": 82,
+      "cuts": 3,
+      "longestStatic": 3,
+      "curve": "▆▁▁▁█▁▁▁▁▁▁█▁▁▁▁▁█▁▁▁▁█▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 9,
+      "emptyPct": 37,
+      "darkPct": 97
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 93,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 10,
+      "command_execution": 40,
+      "reasoning": 34,
+      "todo_list": 4
+    },
+    "turns": 1,
+    "inputTokens": 1629712,
+    "outputTokens": 28605,
+    "cachedInputTokens": 1484672,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\nProcedural 15-second cinematic starship HUD boot sequence with radial menus, hex grids, scanning lines, rotating wireframe planet, orbit markers, telemetry counters, waveform scope, and amber diagnostics.  \nIncludes CRT scanlines, parallax micro-motion, glitch cuts, synthesized UI beeps, servo whirs, rising power-up tone, and final “ALL SYSTEMS NOMINAL” confirm chord."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

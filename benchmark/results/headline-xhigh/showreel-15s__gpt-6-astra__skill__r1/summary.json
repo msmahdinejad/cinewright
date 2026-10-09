@@ -1,0 +1,94 @@
+{
+  "schema": 2,
+  "id": "headline-xhigh/showreel-15s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "showreel-15s",
+  "domain": "motion-design",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 2021,
+  "exitCode": 0,
+  "timedOut": false,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 19.87,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 1.2,
+      "truePeak": -1.1,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0296,
+      "mean": 0.0494,
+      "quietPct": 11,
+      "cuts": 5,
+      "longestStatic": 1.5,
+      "curve": "█▂▆██▅▇▆█▆▃▄████▅▂█▂█▅▅▆█▁▁▁"
+    },
+    "look": {
+      "medianFill": 30,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 3,
+      "perMinute": 12
+    }
+  },
+  "session": {
+    "events": 194,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 8,
+      "command_execution": 122,
+      "todo_list": 6,
+      "reasoning": 43,
+      "mcp_tool_call": 10
+    },
+    "turns": 1,
+    "inputTokens": 9028494,
+    "outputTokens": 25581,
+    "cachedInputTokens": 8734848,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\nBuilt “FORM / IN MOTION”: kinetic typography, chrome sculptures, optical patterns, and 42,000 choreographed particles.\n15 seconds at 1080p60, with original beat-synced music and sound design; verified H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2180,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

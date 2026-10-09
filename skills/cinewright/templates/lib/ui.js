@@ -44,11 +44,11 @@
   UI.card = (g, x, y, w, h, { radius = 20, fill, stroke = true, shadow = true } = {}) => { g.save(); if (shadow) { g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 40; g.shadowOffsetY = 16; } rr(g, x, y, w, h, radius); g.fillStyle = fill || T().panel; g.fill(); g.restore(); if (stroke) { g.strokeStyle = T().line; g.lineWidth = 1.5; rr(g, x + .75, y + .75, w - 1.5, h - 1.5, radius); g.stroke(); } };
 
   /* ───────── controls ───────── */
-  UI.button = (g, x, y, w, h, label, { primary = true, press = 0, hover = 0, radius, color, size = h * .4 } = {}) => {
+  UI.button = (g, x, y, w, h, label, { primary = true, press = 0, hover = 0, radius, color, size = h * .4, ink } = {}) => {
     const c = color || (primary ? T().accent : T().panel2), r = radius ?? h / 2; g.save(); g.translate(x + w / 2, y + h / 2); g.scale(1 - .05 * press, 1 - .05 * press); g.translate(-w / 2, -h / 2);
     if (primary) { g.shadowColor = rgba(c, .5 + .3 * hover); g.shadowBlur = 24 + 20 * hover; g.shadowOffsetY = 8; }
     rr(g, 0, 0, w, h, r); g.fillStyle = mix(c, '#ffffff', .12 * hover); g.fill(); g.shadowColor = 'transparent'; if (!primary) { g.strokeStyle = T().line; g.lineWidth = 1.5; g.stroke(); }
-    K.text(g, label, w / 2, h / 2, { size, weight: 700, fill: primary ? '#fff' : T().ink, max: w * .86 }); g.restore();
+    K.text(g, label, w / 2, h / 2, { size, weight: 700, fill: ink || (primary ? '#fff' : T().ink), max: w * .86 }); g.restore();
   };
   UI.toggle = (g, x, y, on, { w = 84, h = 48, color } = {}) => {
     const p = E.outBack(clamp(on)), c = color || T().accent2; rr(g, x, y, w, h, h / 2); g.fillStyle = mix('#3a3f52', c, clamp(on)); g.fill();

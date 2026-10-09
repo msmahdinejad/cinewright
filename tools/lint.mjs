@@ -16,7 +16,8 @@ const errors = [], warns = [];
 const err = m => errors.push(m), warn = m => warns.push(m);
 const rd = f => fs.readFileSync(f, 'utf8');
 const rel = f => path.relative(ROOT, f).replace(/\\/g, '/');
-function walk(dir, out = []) { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, e.name); if (['.git', 'node_modules', '.render', '.shots'].includes(e.name) || p === path.join(ROOT, 'benchmark', 'runs') || p === path.join(ROOT, 'benchmark', '.work')) continue; e.isDirectory() ? walk(p, out) : out.push(p); } return out; }
+/* benchmark/runs, .work and samples are local, git-ignored scratch: never linted */
+function walk(dir, out = []) { for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, e.name); if (['.git', 'node_modules', '.render', '.shots'].includes(e.name) || ['runs', '.work', 'samples'].some(d => p === path.join(ROOT, 'benchmark', d))) continue; e.isDirectory() ? walk(p, out) : out.push(p); } return out; }
 const files = walk(ROOT);
 
 /* 1 ─ SKILL.md */
@@ -80,7 +81,7 @@ for (const f of files.filter(f => f.endsWith('.md'))) {
 }
 
 /* 6 ─ size guard */
-for (const f of files) { const s = fs.statSync(f).size; if (s > 8 * 1024 * 1024) err(`${rel(f)} is ${(s / 1048576).toFixed(1)} MB — put media in GitHub Releases, not in git`); }
+for (const f of files) { const s = fs.statSync(f).size; if (s > (/.(mp4|webm)$/.test(f) ? 14 : 8) * 1024 * 1024) err(`${rel(f)} is ${(s / 1048576).toFixed(1)} MB — keep committed media small (web MP4s ≤ 14 MB); full-quality sources belong in GitHub Releases`); }
 
 for (const w of warns) console.log('! warn ', w);
 for (const e of errors) console.log('✘ FAIL ', e);

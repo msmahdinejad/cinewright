@@ -1,0 +1,92 @@
+{
+  "schema": 2,
+  "id": "simple-xhigh/person-intro-15s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "person-intro-15s",
+  "domain": "motion graphics",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-09",
+  "wallSeconds": 1382,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 4.16,
+    "audio": {
+      "lufs": -14.4,
+      "lra": 1.2,
+      "truePeak": -1.7,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0027,
+      "mean": 0.0235,
+      "quietPct": 57,
+      "cuts": 1,
+      "longestStatic": 2,
+      "curve": "█▂▁▁▁▁▅█▅▁▁▃█▂▁▁▁█▂▁▁▁██▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 14,
+      "emptyPct": 3,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 93,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 6,
+      "todo_list": 5,
+      "command_execution": 42,
+      "reasoning": 29,
+      "mcp_tool_call": 4
+    },
+    "turns": 1,
+    "inputTokens": 2647606,
+    "outputTokens": 37968,
+    "cachedInputTokens": 2563584,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n15-second 1080p60 intro with kinetic typography, procedural 3D, three skills, animated stats, a quote, and an @mayachen finale.\nOriginal electronic music and synchronized sound design; H.264 video with stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

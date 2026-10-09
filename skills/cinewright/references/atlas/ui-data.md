@@ -6,27 +6,27 @@ Numbers: ease them (`value = target · outExpo(p)`), group digits, and keep unit
 
 ## ui-app-flow — Type, click, result (with a real cursor)
 tags: ui app flow window browser cursor click input button type explainer product demo 2d medium
-use: the core of any product explainer: "paste text → press Translate → result appears"; shows the product doing its job in 4 seconds
+use: the core of any product explainer: "describe it → press Render → result appears"; shows the product doing its job in 4 seconds
 how: `UI.browser`/`UI.window` returns the content rect; `UI.input` with `K.typed` text and caret, `UI.button` with a `press` value that peaks at the click time, `UI.cursor(g, t, path, clicks)` (keyframed pointer with click ripples), then the result card pops in (`K.pop`). All times in one small timeline.
 pair: sfx-ui-ticks (type + click sounds at the same times), cam-push-in
 ```js scene
 //@ {"peak":2.35,"bg":"#0c0e16"}
-const tt = lt, r = UI.browser(g, W * .12, H * .1, W * .76, H * .8, { url: 'avorythm.app/translate', tabs: ['Avorythm'] });
-const txt = K.typed('Hello, how are you today?', K.prog(tt, .2, 1.3)), press = Math.max(0, 1 - Math.abs(tt - 1.75) * 8);
-UI.input(g, r.x + r.w * .08, r.y + r.h * .12, r.w * .84, r.h * .14, txt, { placeholder: 'Type something…', focus: K.prog(tt, .1, .3), caret: tt < 1.7, t: tt, size: r.h * .06 });
-UI.button(g, r.x + r.w * .08, r.y + r.h * .34, r.w * .3, r.h * .13, 'Translate', { press, hover: K.prog(tt, 1.4, 1.7), size: r.h * .055 });
-if (tt > 1.8) K.pop(g, tt - 1.8, r.x + r.w * .5, r.y + r.h * .7, () => { UI.card(g, -r.w * .42, -r.h * .12, r.w * .84, r.h * .24, { radius: 18 }); K.text(g, 'سلام، امروز حالت چطوره؟', 0, 0, { size: r.h * .075, weight: 700, fill: '#fff' }); }, { dur: .5, over: 1.4 });
+const tt = lt, r = UI.browser(g, W * .12, H * .1, W * .76, H * .8, { url: 'pocketwise.app/summary', tabs: ['Pocketwise'] });
+const txt = K.typed('A 15-second launch teaser', K.prog(tt, .2, 1.3)), press = Math.max(0, 1 - Math.abs(tt - 1.75) * 8);
+UI.input(g, r.x + r.w * .08, r.y + r.h * .12, r.w * .84, r.h * .14, txt, { placeholder: 'Describe your film…', focus: K.prog(tt, .1, .3), caret: tt < 1.7, t: tt, size: r.h * .06 });
+UI.button(g, r.x + r.w * .08, r.y + r.h * .34, r.w * .3, r.h * .13, 'Render', { press, hover: K.prog(tt, 1.4, 1.7), size: r.h * .055 });
+if (tt > 1.8) K.pop(g, tt - 1.8, r.x + r.w * .5, r.y + r.h * .7, () => { UI.card(g, -r.w * .42, -r.h * .12, r.w * .84, r.h * .24, { radius: 18 }); K.text(g, 'ویدیوی تو آماده است', 0, 0, { size: r.h * .075, weight: 700, fill: '#fff' }); }, { dur: .5, over: 1.4 });
 UI.cursor(g, tt, [[0, r.x + r.w * .9, r.y + r.h * .8], [.15, r.x + r.w * .4, r.y + r.h * .19], [1.5, r.x + r.w * .2, r.y + r.h * .405, K.E.inOutCubic, .1], [2.3, r.x + r.w * .7, r.y + r.h * .88]], [1.75], { scale: 1.1 * u * 2 });
 ```
 
 ## ui-chat-bubbles — Conversation with typing dots
 tags: ui chat messages bubbles conversation persian rtl typing social 2d cheap
-use: communication products, social proof, "two people, two languages" (mix Persian and English bubbles); the typing indicator builds anticipation
+use: communication products, social proof, "two people, two scripts" (mix Persian and English bubbles); the typing indicator builds anticipation
 how: `UI.chat(g, x, y, w, items, t, {size})` pops bubbles in at their `at` times (`who: 'me' | 'them'`); right-to-left text aligns right automatically; `UI.typingDots` before the reply. Put the thread in a `UI.phone` screen.
 ```js scene
 //@ {"peak":2.3,"bg":"#10122a"}
 const s = UI.phone(g, W * .36, H * .04, H * .92); g.save(); g.beginPath(); K.rr(g, s.x, s.y, s.w, s.h, s.r); g.clip(); g.fillStyle = '#0f111a'; g.fillRect(s.x, s.y, s.w, s.h);
-const y1 = UI.chat(g, s.x + s.w * .05, s.y + s.h * .1, s.w * .9, [{ who: 'them', text: 'Can you hear me clearly?', at: .2 }, { who: 'me', text: 'بله، کاملاً واضح!', at: 1.0 }, { who: 'them', text: 'Amazing — live translation!', at: 1.9 }], lt, { size: s.w * .078, gap: s.w * .035 });
+const y1 = UI.chat(g, s.x + s.w * .05, s.y + s.h * .1, s.w * .9, [{ who: 'them', text: 'Is the render done yet?', at: .2 }, { who: 'me', text: 'بله، همین الان تمام شد!', at: 1.0 }, { who: 'them', text: 'Amazing — it has sound too!', at: 1.9 }], lt, { size: s.w * .078, gap: s.w * .035 });
 if (lt > 2.4) UI.typingDots(g, s.x + s.w * .12, y1 + s.w * .04, lt); g.restore();
 ```
 
@@ -36,7 +36,7 @@ use: developer/open-source/API stories ("it's just three lines"), tutorials; mak
 how: `UI.code(g, x, y, w, h, codeString, {t, speed, size, title})` types characters at `speed` per second with tokenised colouring and a caret; pair it with a result panel that appears when the last line completes.
 ```js scene
 //@ {"peak":2.8,"bg":"#0b0d14"}
-UI.code(g, W * .1, H * .12, W * .8, H * .76, "import { translate } from 'avorythm'\n\nconst stream = translate({\n  from: 'en', to: 'fa',\n  live: true,\n})\n\nstream.on('text', t => console.log(t))", { t: lt, speed: 48, size: H * .042, title: 'quickstart.js' });
+UI.code(g, W * .1, H * .12, W * .8, H * .76, "import { render } from 'cinewright'\n\nconst film = render({\n  scene: 'launch',\n  fps: 30,\n})\n\nfilm.on('frame', n => console.log(n))", { t: lt, speed: 48, size: H * .042, title: 'quickstart.js' });
 ```
 
 ## ui-dashboard-kpis — KPIs, line chart and bars
@@ -53,11 +53,11 @@ UI.card(g, W * .62, H * .4, W * .32, H * .5, { radius: 22 }); UI.barChart(g, W *
 
 ## ui-notification-stack — Toasts sliding in
 tags: ui notification toast alert badge social proof 2d cheap
-use: "things happening in real time" (messages, payments, translations arriving), social-proof moments, phone lock-screen looks
+use: "things happening in real time" (messages, payments, renders finishing), social-proof moments, phone lock-screen looks
 how: `UI.toast(g, x, y, w, p, {title, body, icon, color})` slides/bounces in from the top; stack three with staggered `p` and increasing y.
 ```js scene
 //@ {"peak":2.2,"bg":"#101428"}
-[['New translation', 'سلام دنیا → Hello world', 'globe', '#27f0ff', .2], ['Live captions on', 'English · Persian · Arabic', 'mic', '#7a5cff', .8], ['Export ready', 'dubbed-video.mp4 · 48 MB', 'download', '#7dff9b', 1.4]].forEach(([title, body, icon, col, at], i) => UI.toast(g, W * .3, H * (.14 + i * .22), W * .4, lt - at, { title, body, icon, color: col, life: 9 }));
+[['New render', 'reel.mp4 · 15 s · 1080p', 'globe', '#27f0ff', .2], ['Sound design ready', 'kick · bass · pad · bells', 'mic', '#7a5cff', .8], ['Export ready', 'final-4k.mp4 · 48 MB', 'download', '#7dff9b', 1.4]].forEach(([title, body, icon, col, at], i) => UI.toast(g, W * .3, H * (.14 + i * .22), W * .4, lt - at, { title, body, icon, color: col, life: 9 }));
 ```
 
 ## ui-glass-panels — Frosted glass cards over a living background
@@ -67,7 +67,7 @@ how: paint the background to the canvas first (`c.paint` / a shader frame via `d
 ```js scene
 //@ {"peak":1.6}
 c.paint(g); const fr = store.fr ||= new K.Frost(W, H, 4); fr.snap(g.canvas, 9);
-[[.12, .18, .36, .3, 'Live captions'], [.52, .14, .36, .22, '42 languages'], [.52, .42, .36, .3, 'Open source']].forEach(([x, y, w, h, label], i) => { const e = K.E.outBack(K.prog(lt, i * .15, i * .15 + .7)); g.save(); g.translate(0, (1 - e) * H * .06); g.globalAlpha = Math.min(1, e * 2); fr.glass(g, W * x, H * y, W * w, H * h, H * .035, { glow: 'rgba(120,160,255,.35)' }); K.text(g, label, W * (x + w / 2), H * (y + h / 2), { size: H * .06, weight: 800, fill: '#fff' }); g.restore(); });
+[[.12, .18, .36, .3, 'Live preview'], [.52, .14, .36, .22, '32 transitions'], [.52, .42, .36, .3, 'Open source']].forEach(([x, y, w, h, label], i) => { const e = K.E.outBack(K.prog(lt, i * .15, i * .15 + .7)); g.save(); g.translate(0, (1 - e) * H * .06); g.globalAlpha = Math.min(1, e * 2); fr.glass(g, W * x, H * y, W * w, H * h, H * .035, { glow: 'rgba(120,160,255,.35)' }); K.text(g, label, W * (x + w / 2), H * (y + h / 2), { size: H * .06, weight: 800, fill: '#fff' }); g.restore(); });
 ```
 
 ## ui-donut-progress — Ring progress with a big number
@@ -83,19 +83,19 @@ Type.counter(g, 98 * K.E.outExpo(p), cx - H * .02, cy, { size: H * .2, weight: 8
 ```
 
 ## ui-waveform-voice — Voice waveform → text
-tags: ui waveform audio voice speech equalizer bars microphone translation dubbing 2d medium
+tags: ui waveform audio voice speech equalizer bars microphone captions podcast 2d medium
 use: any story about voice, speech, music, dubbing, podcasts; the waveform is the universal "sound" glyph; here it turns into subtitle text (voice → words)
 how: `K.bars(g, x, y, w, h, n, fn, {gap, color, mirror})` with an amplitude function built from smooth noise × an envelope (loud while "speaking", quiet after); the words appear with `K.words` as the voice envelope peaks. Drive `fn` from real audio data with `K.audioData()` + `analyze-audio.mjs` when you have a soundtrack.
 ```js scene
 //@ {"peak":1.6,"bg":"#0a0c1a","look":{"bloom":0.7}}
 const env = K.smoothstep(0, .4, lt) * (1 - K.smoothstep(2.0, 2.6, lt)); UI.icon(g, 'mic', W * .5, H * .22, H * .06, '#9ab0ff');
 K.bars(g, W * .15, H * .5, W * .7, H * .3, 56, (uu, i) => (.12 + .88 * Math.abs(K.noise2(i * .45, lt * 5.5))) * env * (.35 + .65 * Math.sin(Math.PI * uu)) + .03, { gap: .45, color: K.gradient(g, W * .15, 0, W * .85, 0, [[0, '#7a5cff'], [1, '#27f0ff']]), mirror: true });
-K.words(g, 'Hello, how are you today?', W / 2, H * .82, lt - .7, { size: H * .06, weight: 700, fill: '#fff', each: .16, max: W * .8 });
+K.words(g, 'Make every frame move', W / 2, H * .82, lt - .7, { size: H * .06, weight: 700, fill: '#fff', each: .16, max: W * .8 });
 ```
 
 ## ui-network-graph — Nodes, links and travelling signals
-tags: ui network graph nodes links signal connection languages community diagram 2d medium
-use: "everything is connected", communities, languages, servers, supply chains; signals travelling along edges read as live data
+tags: ui network graph nodes links signal connection community diagram 2d medium
+use: "everything is connected", communities, servers, supply chains; signals travelling along edges read as live data
 how: place nodes on rings with a deterministic RNG, link nearest neighbours, draw edges faintly, then send bright pulses along random edges (`K.trail` / a moving dot with `K.glow`). Label nodes with names in several scripts — Persian/Arabic via Vazirmatn, Cyrillic/Greek via Inter (no CJK glyphs are bundled).
 ```js scene
 //@ {"peak":1.6,"bg":"#070a16","look":{"bloom":0.9}}
@@ -113,7 +113,7 @@ use: "customise everything", feature lists as live controls, privacy/settings st
 how: `UI.toggle(g, x, y, on01)` (animate `on` 0→1 with an ease) and `UI.slider(g, x, y, w, v)`; stack in a `UI.card`, label with `K.text`; flip one every 0.35 s and add a tick sound.
 ```js scene
 //@ {"peak":2.0,"bg":"#101324"}
-UI.card(g, W * .28, H * .1, W * .44, H * .8, { radius: 26 }); ['Live captions', 'Dub my voice', 'Offline mode', 'Open source'].forEach((label, i) => { const y = H * (.2 + i * .15); K.text(g, label, W * .33, y + H * .025, { size: H * .042, weight: 600, fill: '#e6e9ff', align: 'left' }); UI.toggle(g, W * .6, y, K.prog(lt, .3 + i * .35, .6 + i * .35), { w: W * .08, h: W * .045, color: ['#27f0ff', '#ff4fd8', '#ffd23f', '#7dff9b'][i] }); });
+UI.card(g, W * .28, H * .1, W * .44, H * .8, { radius: 26 }); ['Motion blur', 'Film grain', 'Sound design', 'Open source'].forEach((label, i) => { const y = H * (.2 + i * .15); K.text(g, label, W * .33, y + H * .025, { size: H * .042, weight: 600, fill: '#e6e9ff', align: 'left' }); UI.toggle(g, W * .6, y, K.prog(lt, .3 + i * .35, .6 + i * .35), { w: W * .08, h: W * .045, color: ['#27f0ff', '#ff4fd8', '#ffd23f', '#7dff9b'][i] }); });
 UI.slider(g, W * .33, H * .82, W * .34, .35 + .45 * K.E.inOutCubic(K.prog(lt, 1.2, 2.4)));
 ```
 
@@ -131,3 +131,21 @@ for (let i = 0; i < N; i++) { const c = i % cols, r = Math.floor(i / cols), x = 
   g.beginPath(); g.arc(0, -cell * .22, cell * .13, 0, K.TAU); g.fill(); g.beginPath(); g.roundRect(-cell * .17, -cell * .06, cell * .34, cell * .34, cell * .12); g.fill(); g.restore(); }
 K.text(g, Math.round(shown) + '%', W * .73, H * .46, { size: H * .26, weight: 900, fill: '#fff', glow: { color: '#40f5f5', blur: H * .03 } }); K.text(g, 'your statistic goes here', W * .73, H * .66, { size: H * .04, weight: 600, fill: '#aab4ff', max: W * .3 });
 ```
+
+## mg-list-rows — Menu / agenda / speaker rows
+tags: motion graphics list menu agenda speakers prices rows icon pill promo
+use: a menu with prices, a schedule, three speakers with talk titles, steps (`list` scene)
+how: rows slide in from alternating sides 0.25 s apart; each row = icon disc + label + muted note + a pill with the value; label text shrinks to fit so it can never touch the pill
+avoid: more than five rows on a phone-sized frame; prices without a visual anchor
+
+## mg-fact-flood — One icon, one number, one sentence
+tags: motion graphics infographic fact number icon flood colour explainer
+use: each fact of an infographic or explainer (`fact` scene): a colour flood, one big self-drawing icon in rings, one counting number, one sentence
+how: change the flood colour from fact to fact (`color`: a/b/c/d), alternate with a `chart` scene, keep the sentence under 9 words
+avoid: two numbers in one fact; paragraphs
+
+## mg-chart-scenes — Bars, ring or line with the key value highlighted
+tags: motion graphics chart bars ring line data infographic highlight
+use: a comparison or a progress value (`chart` scene): bars grow with outExpo, a ring fills to its percent, a line draws left to right
+how: highlight exactly one value in the accent colour and mute the rest; label the highlighted value with a counter; add a one-line caption saying what to notice
+avoid: more than 6 bars; 3-D charts; legends that need reading

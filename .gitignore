@@ -21,3 +21,6 @@ Thumbs.db
 /tmp/
 *.tmp
 .shots/
+
+# raw source films for the website/README (published as release assets, derived media is committed)
+/benchmark/samples/

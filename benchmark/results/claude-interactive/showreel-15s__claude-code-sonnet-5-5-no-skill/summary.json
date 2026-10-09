@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "id": "showreel-15s__claude-code-sonnet-5-5-no-skill",
+  "kind": "measured",
+  "task": "showreel-15s",
+  "condition": "baseline",
+  "label": "Claude Code (Sonnet 5.5), no skill",
+  "agent": "Claude Code, interactive session",
+  "model": "claude-sonnet-5-5",
+  "skill": "none",
+  "date": "2026-10-07",
+  "wallSeconds": null,
+  "note": "Made in an interactive session, not an unattended run: the same Claude session that made the with-skill film, so it is not blind. It did NOT open or use the skill — plain Python + Pillow + numpy + ffmpeg, two passes (a first draft, then one polish pass after looking at stills), about 30 minutes. The generator script is committed next to this summary.",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 3.71,
+    "audio": {
+      "lufs": -17.1,
+      "lra": 2,
+      "truePeak": -1.5,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0219,
+      "mean": 0.0415,
+      "quietPct": 21,
+      "cuts": 7,
+      "longestStatic": 0,
+      "curve": "▅▄▁▁██▄▃▃▃██████▇▄▂▁██▅▂▁█▁▁"
+    },
+    "look": {
+      "medianFill": 16,
+      "emptyPct": 7,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 10,
+      "perMinute": 40
+    }
+  },
+  "session": null,
+  "project": null,
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  }
+}

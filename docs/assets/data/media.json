@@ -1,0 +1,1260 @@
+{
+ "generated": "2026-10-09",
+ "tasks": [
+  {
+   "id": "person-intro-15s",
+   "title": {
+    "en": "Introduce a person",
+    "fa": "معرفی یک آدم"
+   },
+   "prompt": "Make a 15-second motion graphics video that introduces a person: Maya Chen, a senior product designer from Toronto (invent the details). Show her name and role, three skills, three numbers (years of experience, projects shipped, awards) and a short quote, and end on her handle @mayachen. Clean, modern, energetic — the kind of intro a personal brand would open a talk or a portfolio with. Original music and sound design. Go all out."
+  },
+  {
+   "id": "promo-vertical-12s",
+   "title": {
+    "en": "Vertical social promo",
+    "fa": "پرومو عمودی شبکه‌های اجتماعی"
+   },
+   "prompt": "Make a 12-second vertical (9:16) social-media promo for a fictional coffee shop called \"Brew & Co.\" announcing three autumn drinks with prices — Maple Latte €4.50, Spiced Cold Brew €4.00, Pumpkin Mocha €4.80 — and a call to action: \"Open daily 7–19 · Main Street\". Bold type, flat shapes and simple icon drawings (cups, leaves, beans), a beat-synced edit, punchy sound. Go all out."
+  },
+  {
+   "id": "channel-intro-8s",
+   "title": {
+    "en": "Channel intro",
+    "fa": "اینترو کانال"
+   },
+   "prompt": "Make an 8-second YouTube channel intro for a fictional tech-review channel called \"Pixel Pulse\": a logo mark that builds itself, the name, a one-line tagline you write, punchy transitions and sound design (a hit, whooshes, a short musical sting). Bold, bright, memorable. Go all out."
+  },
+  {
+   "id": "infographic-20s",
+   "title": {
+    "en": "Animated infographic",
+    "fa": "اینفوگرافیک متحرک"
+   },
+   "prompt": "Make a 20-second animated infographic explainer titled \"Why sleep matters\" with three facts — adults need 7–9 hours; one night of poor sleep can cut focus by about a third; a regular bedtime improves mood — each with an animated icon or chart (moon, brain, clock), counting numbers, a clear visual hierarchy, upbeat original music and sound design. Go all out."
+  },
+  {
+   "id": "showreel",
+   "title": {
+    "en": "Résumé showreel",
+    "fa": "شوریل رزومه"
+   },
+   "prompt": "make a dynamic 15-second motion graphics video that shows what an incredible motion designer you are, like it's your showreel for a résumé. Go all out."
+  }
+ ],
+ "items": [
+  {
+   "id": "ident",
+   "section": "hero",
+   "src": "cinewright-ident",
+   "agent": "Claude Code + Cinewright",
+   "title": {
+    "en": "The Cinewright ident",
+    "fa": "معرفی سینه‌رایت"
+   },
+   "encode": {
+    "w": 1280,
+    "crf": 22,
+    "audio": false
+   },
+   "poster": 9.4,
+   "readme": {
+    "from": 0,
+    "dur": 12,
+    "w": 760,
+    "fps": 15,
+    "q": 74
+   },
+   "video": "assets/video/hero/ident.mp4",
+   "posterImg": "assets/img/hero/ident.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 12,
+   "bytes": 3149520,
+   "audio": false,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 12
+   }
+  },
+  {
+   "id": "herocard-a",
+   "section": "herocard",
+   "src": "reel-hero-a",
+   "encode": {
+    "w": 960,
+    "crf": 23,
+    "audio": false
+   },
+   "poster": 1.5,
+   "video": "assets/video/herocard/herocard-a.mp4",
+   "posterImg": "assets/img/herocard/herocard-a.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 6,
+   "bytes": 526154,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 6
+   }
+  },
+  {
+   "id": "herocard-b",
+   "section": "herocard",
+   "src": "reel-hero-b",
+   "encode": {
+    "w": 960,
+    "crf": 23,
+    "audio": false
+   },
+   "poster": 1.5,
+   "video": "assets/video/herocard/herocard-b.mp4",
+   "posterImg": "assets/img/herocard/herocard-b.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 6,
+   "bytes": 711307,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 6
+   }
+  },
+  {
+   "id": "engine",
+   "section": "engine",
+   "src": "reel-engine",
+   "encode": {
+    "w": 960,
+    "crf": 23,
+    "audio": false
+   },
+   "poster": 1.5,
+   "video": "assets/video/engine/engine.mp4",
+   "posterImg": "assets/img/engine/engine.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 1267083,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-type",
+   "section": "reel",
+   "family": "type",
+   "src": "reel-type",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 1.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-type.mp4",
+   "posterImg": "assets/img/reel/reel-type.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 560119,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-3d",
+   "section": "reel",
+   "family": "three-d",
+   "src": "reel-3d",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 1.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-3d.mp4",
+   "posterImg": "assets/img/reel/reel-3d.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 2579964,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-particles",
+   "section": "reel",
+   "family": "particles",
+   "src": "reel-particles",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 1.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-particles.mp4",
+   "posterImg": "assets/img/reel/reel-particles.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 3656276,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-shaders",
+   "section": "reel",
+   "family": "shaders",
+   "src": "reel-shaders",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 4.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-shaders.mp4",
+   "posterImg": "assets/img/reel/reel-shaders.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 2170424,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-looks",
+   "section": "reel",
+   "family": "looks",
+   "src": "reel-looks",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 1.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-looks.mp4",
+   "posterImg": "assets/img/reel/reel-looks.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 1213719,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-logos",
+   "section": "reel",
+   "family": "logos",
+   "src": "reel-logos",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 1.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-logos.mp4",
+   "posterImg": "assets/img/reel/reel-logos.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 519433,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-graphic",
+   "section": "reel",
+   "family": "graphic",
+   "src": "reel-graphic",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 1.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-graphic.mp4",
+   "posterImg": "assets/img/reel/reel-graphic.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 1420535,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "reel-ui",
+   "section": "reel",
+   "family": "ui-data",
+   "src": "reel-ui",
+   "encode": {
+    "w": 960,
+    "crf": 24,
+    "audio": false
+   },
+   "poster": 1.5,
+   "readme": {
+    "from": 0,
+    "dur": 6,
+    "w": 440,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/reel/reel-ui.mp4",
+   "posterImg": "assets/img/reel/reel-ui.jpg",
+   "width": 960,
+   "height": 540,
+   "duration": 12,
+   "bytes": 330416,
+   "audio": false,
+   "source": {
+    "width": 960,
+    "height": 540,
+    "duration": 12
+   }
+  },
+  {
+   "id": "cmp-codex-astra-baseline",
+   "section": "compare",
+   "pair": "codex-gpt-6-astra",
+   "side": "without",
+   "src": "showreel__codex-gpt-6-astra__baseline",
+   "from": "run:headline-xhigh/showreel-15s__gpt-6-astra__baseline__r1",
+   "metrics": "headline-xhigh/showreel-15s__gpt-6-astra__baseline__r1",
+   "agent": "Codex · gpt-6-astra · xhigh",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 6,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 520,
+    "fps": 12,
+    "q": 64
+   },
+   "video": "assets/video/compare/cmp-codex-astra-baseline.mp4",
+   "posterImg": "assets/img/compare/cmp-codex-astra-baseline.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 1576823,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   },
+   "task": "showreel",
+   "alt": {
+    "en": "Codex without the skill: a bold Python/GLSL reel with five scenes",
+    "fa": "Codex بدون اسکیل: شوریل جسور Python/GLSL با پنج صحنه"
+   }
+  },
+  {
+   "id": "cmp-codex-astra-skill",
+   "section": "compare",
+   "pair": "codex-gpt-6-astra",
+   "side": "with",
+   "src": "showreel__codex-gpt-6-astra__skill",
+   "from": "run:headline-xhigh/showreel-15s__gpt-6-astra__skill__r1",
+   "metrics": "headline-xhigh/showreel-15s__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 6,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 520,
+    "fps": 12,
+    "q": 64
+   },
+   "video": "assets/video/compare/cmp-codex-astra-skill.mp4",
+   "posterImg": "assets/img/compare/cmp-codex-astra-skill.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 4186011,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   },
+   "task": "showreel",
+   "read": {
+    "en": "Unaided, the agent makes a clean poster-style reel that keeps returning to one glossy blob. With the skill the same agent cuts between more genuinely different looks — chrome 3D, a GPU particle ring, op-art waves, kinetic type — spends far less time static (11 % vs 25 %) and has a real mix (loudness range 1.2 vs 0.2 LU). The price: about 5.5× the tokens.",
+    "fa": "بدون اسکیل، ایجنت یک شوریل تمیز در سبک پوستر می‌سازد که مدام به یک حباب براق برمی‌گردد. با اسکیل همان ایجنت بین نگاه‌های واقعاً متفاوت‌تر می‌پرد — سه‌بعدی کروم، حلقهٔ ذرات GPU، موج‌های آپ‌آرت، تایپ جنبشی — زمان ساکن بسیار کمتری دارد (۱۱٪ در برابر ۲۵٪) و میکس واقعی دارد (دامنهٔ بلندی ۱٫۲ در برابر ۰٫۲). بهایش: حدود ۵٫۵ برابر توکن."
+   },
+   "alt": {
+    "en": "Codex with the skill: chrome 3D, GPU particles, op-art waves, a ring of light and a title card",
+    "fa": "Codex با اسکیل: سه‌بعدی کروم، ذرات GPU، موج‌های آپ‌آرت، حلقهٔ نور و کارت عنوان"
+   }
+  },
+  {
+   "id": "cmp-codex-sol-baseline",
+   "section": "compare",
+   "pair": "codex-gpt-6.1-sol",
+   "side": "without",
+   "src": "showreel__codex-gpt-6.1-sol__baseline",
+   "from": "run:headline-xhigh/showreel-15s__gpt-6.1-sol__baseline__r1",
+   "metrics": "headline-xhigh/showreel-15s__gpt-6.1-sol__baseline__r1",
+   "agent": "Codex · gpt-6.1-sol · xhigh",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 6,
+   "video": "assets/video/compare/cmp-codex-sol-baseline.mp4",
+   "posterImg": "assets/img/compare/cmp-codex-sol-baseline.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 2247570,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   },
+   "task": "showreel"
+  },
+  {
+   "id": "cmp-codex-sol-skill",
+   "section": "compare",
+   "pair": "codex-gpt-6.1-sol",
+   "side": "with",
+   "src": "showreel__codex-gpt-6.1-sol__skill",
+   "from": "run:headline-xhigh/showreel-15s__gpt-6.1-sol__skill__r1",
+   "metrics": "headline-xhigh/showreel-15s__gpt-6.1-sol__skill__r1",
+   "agent": "Codex · gpt-6.1-sol · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 6,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 720,
+    "fps": 15,
+    "q": 72
+   },
+   "video": "assets/video/compare/cmp-codex-sol-skill.mp4",
+   "posterImg": "assets/img/compare/cmp-codex-sol-skill.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 4069976,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   },
+   "task": "showreel",
+   "read": {
+    "en": "On this model the unaided film is already a polished, cohesive poster reel in acid green and violet, and measured motion is similar (static 11 % vs 14 %). The skill’s film is darker and shows more kinds of technique — chrome 3D type, GPU particles, a UI graph editor, metaballs — with a wider loudness range (2.3 vs 1.4 LU). It took 65 minutes and about 7× the tokens; whether it is better is a matter of taste.",
+    "fa": "روی این مدل، فیلم بدون اسکیل از قبل یک شوریل پوستری صیقلی و یکدست با سبز اسیدی و بنفش است و حرکت اندازه‌گیری‌شده مشابه است (ساکن ۱۱٪ در برابر ۱۴٪). فیلم اسکیل تیره‌تر است و تکنیک‌های بیشتری نشان می‌دهد — تایپ کروم سه‌بعدی، ذرات GPU، ویرایشگر نمودار، متاباول — با دامنهٔ بلندی بیشتر (۲٫۳ در برابر ۱٫۴). ۶۵ دقیقه و حدود ۷ برابر توکن؛ بهتر بودنش سلیقه‌ای است."
+   }
+  },
+  {
+   "id": "cmp-claude-baseline",
+   "section": "compare",
+   "pair": "claude",
+   "side": "without",
+   "src": "showreel__claude__baseline",
+   "metrics": "showreel-15s__claude-code-sonnet-5-5-no-skill",
+   "agent": "Claude Code · Sonnet 5.5",
+   "agentFamily": "claude",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 6,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 520,
+    "fps": 12,
+    "q": 64
+   },
+   "video": "assets/video/compare/cmp-claude-baseline.mp4",
+   "posterImg": "assets/img/compare/cmp-claude-baseline.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 2413909,
+   "audio": true,
+   "source": {
+    "width": 1280,
+    "height": 720,
+    "duration": 15
+   },
+   "task": "showreel",
+   "alt": {
+    "en": "Claude without the skill: a Python and Pillow reel",
+    "fa": "Claude بدون اسکیل: شوریل Python و Pillow"
+   }
+  },
+  {
+   "id": "cmp-claude-skill",
+   "section": "compare",
+   "pair": "claude",
+   "side": "with",
+   "src": "showreel__claude__skill",
+   "metrics": "showreel-15s__claude-code-sonnet-5-5-cinewright",
+   "agent": "Claude Code · Sonnet 5.5 + Cinewright",
+   "agentFamily": "claude",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 7.4,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 520,
+    "fps": 12,
+    "q": 64
+   },
+   "video": "assets/video/compare/cmp-claude-skill.mp4",
+   "posterImg": "assets/img/compare/cmp-claude-skill.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 5019818,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   },
+   "task": "showreel",
+   "read": {
+    "en": "Claude’s run without the skill is a tidy 15-second Python + Pillow reel with a plain synthesised soundtrack. With the skill the same agent used the GPU engine — colour floods, a chrome knot, particles, a dashboard, liquid metal, a tunnel — and a dynamic, mixed score (frame fill 48 % vs 16 %, no static stretch). This pair came from an interactive session by the same Claude that wrote the skill, so it is not blind.",
+    "fa": "اجرای Claude بدون اسکیل یک شوریل ۱۵ ثانیه‌ای مرتب با Python و Pillow است با موسیقی ساده. با اسکیل همان ایجنت از موتور GPU استفاده کرد — سیل رنگ، گرهٔ کروم، ذرات، داشبورد، فلز مایع، تونل — و موسیقی پویا و میکس‌شده (پُری قاب ۴۸٪ در برابر ۱۶٪، بدون هیچ مکث ساکن). این جفت در یک جلسهٔ تعاملی با همان Claudeای ساخته شد که اسکیل را نوشته، پس کور نیست."
+   },
+   "alt": {
+    "en": "Claude with the skill: colour floods, a chrome knot, particles, a dashboard, liquid metal, a tunnel, a burst and the name card",
+    "fa": "Claude با اسکیل: سیل رنگ، گرهٔ کروم، ذرات، داشبورد، فلز مایع، تونل، انفجار و کارت نام"
+   }
+  },
+  {
+   "id": "cmp-person-baseline",
+   "section": "compare",
+   "task": "person-intro-15s",
+   "pair": "codex-gpt-6-astra",
+   "side": "without",
+   "src": "person-intro-15s__codex-gpt-6-astra__baseline",
+   "from": "run:simple-xhigh/person-intro-15s__gpt-6-astra__baseline__r1",
+   "metrics": "simple-xhigh/person-intro-15s__gpt-6-astra__baseline__r1",
+   "agent": "Codex · gpt-6-astra · xhigh",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 2,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/compare/cmp-person-baseline.mp4",
+   "posterImg": "assets/img/compare/cmp-person-baseline.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 1125595,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   },
+   "alt": {
+    "en": "Codex without the skill: a cream-and-black editorial intro for Maya Chen with a purple 3D knot, a lime flash, three skill cards and a quote",
+    "fa": "Codex بدون اسکیل: اینترو ویراستاری کرم و مشکی برای مایا چن با گرهٔ سه‌بعدی بنفش، یک چشمک لیمویی، سه کارت مهارت و یک نقل‌قول"
+   }
+  },
+  {
+   "id": "cmp-person-skill",
+   "section": "compare",
+   "task": "person-intro-15s",
+   "pair": "codex-gpt-6-astra",
+   "side": "with",
+   "src": "person-intro-15s__codex-gpt-6-astra__skill",
+   "from": "run:simple-xhigh/person-intro-15s__gpt-6-astra__skill__r1",
+   "metrics": "simple-xhigh/person-intro-15s__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 2,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "read": {
+    "en": "Unaided, Codex makes a tasteful editorial intro — a purple 3D knot, small type on cream and black, a lime flash — but 57 % of the film is near-static and the picture fills only 14 % of the frame. With the skill the same agent builds a bolder, fuller piece: electric-blue and lime blocks, a 3D cursor, interface rows with toggles and sliders, counting numbers, a highlighted quote (frame fill 50 %, nothing static), after writing a brief and three review rounds. The price: about 2.8× the tokens and 1.3× the time.",
+    "fa": "بدون اسکیل، Codex یک اینترو ویراستاری خوش‌سلیقه می‌سازد — گرهٔ سه‌بعدی بنفش، نوشتهٔ ریز روی کرم و مشکی، یک چشمک لیمویی — اما ۵۷٪ فیلم تقریباً ساکن است و تصویر فقط ۱۴٪ قاب را پر می‌کند. با اسکیل همان ایجنت اثری جسورتر و پُرتر می‌سازد: بلوک‌های آبی برقی و لیمویی، نشانگر سه‌بعدی، ردیف‌های رابط با کلید و اسلایدر، اعداد شمارشی، نقل‌قول هایلایت‌شده (پُری قاب ۵۰٪، بدون هیچ مکث ساکن) — بعد از نوشتن بریف و سه دور بازبینی. بهایش: حدود ۲٫۸ برابر توکن و ۱٫۳ برابر زمان."
+   },
+   "video": "assets/video/compare/cmp-person-skill.mp4",
+   "posterImg": "assets/img/compare/cmp-person-skill.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 2068065,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   },
+   "alt": {
+    "en": "Codex with the skill: electric-blue, lime and black blocks — a 3D cursor, interface rows with toggles, counting numbers, a highlighted quote and the @mayachen card",
+    "fa": "Codex با اسکیل: بلوک‌های آبی برقی، لیمویی و مشکی — نشانگر سه‌بعدی، ردیف‌های رابط با کلید، اعداد شمارشی، نقل‌قول هایلایت‌شده و کارت @mayachen"
+   }
+  },
+  {
+   "id": "cmp-promo-baseline",
+   "section": "compare",
+   "task": "promo-vertical-12s",
+   "pair": "codex-gpt-6-astra",
+   "side": "without",
+   "src": "promo-vertical-12s__codex-gpt-6-astra__baseline",
+   "from": "run:simple-xhigh/promo-vertical-12s__gpt-6-astra__baseline__r1",
+   "metrics": "simple-xhigh/promo-vertical-12s__gpt-6-astra__baseline__r1",
+   "agent": "Codex · gpt-6-astra · xhigh",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 3.2,
+   "readme": {
+    "from": 0,
+    "dur": 12,
+    "w": 270,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/compare/cmp-promo-baseline.mp4",
+   "posterImg": "assets/img/compare/cmp-promo-baseline.jpg",
+   "width": 720,
+   "height": 1280,
+   "duration": 12,
+   "bytes": 1093477,
+   "audio": true,
+   "source": {
+    "width": 1080,
+    "height": 1920,
+    "duration": 12
+   },
+   "alt": {
+    "en": "Codex without the skill: an orange-and-yellow poster promo with illustrated cups, a price stamp per drink and a closing menu card",
+    "fa": "Codex بدون اسکیل: پرومو پوستری نارنجی و زرد با فنجان‌های تصویرسازی‌شده، مهر قیمت برای هر نوشیدنی و کارت پایانی منو"
+   }
+  },
+  {
+   "id": "cmp-promo-skill",
+   "section": "compare",
+   "task": "promo-vertical-12s",
+   "pair": "codex-gpt-6-astra",
+   "side": "with",
+   "src": "promo-vertical-12s__codex-gpt-6-astra__skill",
+   "from": "run:simple-xhigh/promo-vertical-12s__gpt-6-astra__skill__r1",
+   "metrics": "simple-xhigh/promo-vertical-12s__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 3.2,
+   "readme": {
+    "from": 0,
+    "dur": 12,
+    "w": 270,
+    "fps": 12,
+    "q": 62
+   },
+   "read": {
+    "en": "Both are tidy poster-style promos with hand-drawn cups and a price stamp per drink — unaided, Codex already lays out a strong vertical (frame fill 36 % vs 37 %). What differs is motion and process: without the skill 41 % of the film is near-static; with it nothing holds still, and the agent wrote a brief and three review rounds first. The mix stays modest in both (loudness range 0.4 vs 0.8 LU). Honest verdict: a draw on design, a win on motion, at about 3.6× the tokens and 1.7× the time.",
+    "fa": "هر دو پرومو در سبک پوستر با فنجان‌های دست‌کشیده و مهر قیمت برای هر نوشیدنی‌اند — Codex بدون اسکیل هم چیدمان عمودی خوبی می‌سازد (پُری قاب ۳۶٪ در برابر ۳۷٪). تفاوت در حرکت و فرایند است: بدون اسکیل ۴۱٪ فیلم تقریباً ساکن است؛ با اسکیل هیچ لحظه‌ای ساکن نیست و ایجنت اول بریف و سه دور بازبینی نوشته است. میکس در هر دو متواضع می‌ماند (دامنهٔ بلندی ۰٫۴ در برابر ۰٫۸). قضاوت صادقانه: در طراحی مساوی، در حرکت برنده — با حدود ۳٫۶ برابر توکن و ۱٫۷ برابر زمان."
+   },
+   "video": "assets/video/compare/cmp-promo-skill.mp4",
+   "posterImg": "assets/img/compare/cmp-promo-skill.jpg",
+   "width": 720,
+   "height": 1280,
+   "duration": 12,
+   "bytes": 1459101,
+   "audio": true,
+   "source": {
+    "width": 1080,
+    "height": 1920,
+    "duration": 12
+   },
+   "alt": {
+    "en": "Codex with the skill: red, mustard and green poster cards with illustrated cups, price stamps and a closing “Fall for your next cup” card",
+    "fa": "Codex با اسکیل: کارت‌های پوستری قرمز، خردلی و سبز با فنجان‌های تصویرسازی‌شده، مهر قیمت و کارت پایانی «Fall for your next cup»"
+   }
+  },
+  {
+   "id": "cmp-channel-baseline",
+   "section": "compare",
+   "task": "channel-intro-8s",
+   "pair": "codex-gpt-6-astra",
+   "side": "without",
+   "src": "channel-intro-8s__codex-gpt-6-astra__baseline",
+   "from": "run:simple-xhigh/channel-intro-8s__gpt-6-astra__baseline__r1",
+   "metrics": "simple-xhigh/channel-intro-8s__gpt-6-astra__baseline__r1",
+   "agent": "Codex · gpt-6-astra · xhigh",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 1.8,
+   "readme": {
+    "from": 0,
+    "dur": 8,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "alt": {
+    "en": "Codex without the skill: a dark navy intro where a pixel “P” builds itself from lime squares, then lime and violet name cards and the Pixel Pulse lock-up",
+    "fa": "Codex بدون اسکیل: اینترو سرمه‌ای تیره که «P» پیکسلی از مربع‌های لیمویی ساخته می‌شود، بعد کارت‌های نام لیمویی و بنفش و قفل‌شدن Pixel Pulse"
+   },
+   "video": "assets/video/compare/cmp-channel-baseline.mp4",
+   "posterImg": "assets/img/compare/cmp-channel-baseline.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 8,
+   "bytes": 642964,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 8
+   }
+  },
+  {
+   "id": "cmp-channel-skill",
+   "section": "compare",
+   "task": "channel-intro-8s",
+   "pair": "codex-gpt-6-astra",
+   "side": "with",
+   "src": "channel-intro-8s__codex-gpt-6-astra__skill",
+   "from": "run:simple-xhigh/channel-intro-8s__gpt-6-astra__skill__r1",
+   "metrics": "simple-xhigh/channel-intro-8s__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 2,
+   "readme": {
+    "from": 0,
+    "dur": 8,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "alt": {
+    "en": "Codex with the skill: a “P” built from lit 3D cubes on violet, colour-flood name reveals, a heartbeat line and the Pixel Pulse lock-up",
+    "fa": "Codex با اسکیل: «P» ساخته‌شده از مکعب‌های سه‌بعدیِ نوردار روی بنفش، رونمایی نام با سیل رنگ، خط ضربان و قفل‌شدن Pixel Pulse"
+   },
+   "read": {
+    "en": "Both build a pixel “P” for Pixel Pulse. Unaided, Codex makes a tidy flat version — squares on a dark field — with 57 % of the film near-static and only 9 % of the frame filled. With the skill the same agent builds the mark from lit 3D cubes, adds colour-flood name reveals and a heartbeat line, and keeps moving throughout (near-static 14 %, frame fill 31 %), after a brief and three review rounds. One honest loss: the no-skill sting has the wider loudness range (7 vs 0.7 LU — a quiet start and a big hit); the skill version’s mix is flatter. The price: about 5.1× the tokens and 1.7× the time.",
+    "fa": "هر دو برای Pixel Pulse یک «P» پیکسلی می‌سازند. بدون اسکیل، Codex نسخهٔ تخت و مرتبی می‌سازد — مربع‌ها روی زمینهٔ تیره — با ۵۷٪ زمان تقریباً ساکن و فقط ۹٪ پُری قاب. با اسکیل همان ایجنت نشان را از مکعب‌های سه‌بعدیِ نوردار می‌سازد، رونمایی نام با سیل رنگ و خط ضربان اضافه می‌کند و همیشه در حرکت می‌ماند (زمان ساکن ۱۴٪، پُری قاب ۳۱٪)، بعد از بریف و سه دور بازبینی. یک باخت صادقانه: استینگِ بدون اسکیل دامنهٔ بلندی بیشتری دارد (۷ در برابر ۰٫۷ — شروع آرام و یک ضربهٔ بزرگ)؛ میکس نسخهٔ با اسکیل یکنواخت‌تر است. بها: حدود ۵٫۱ برابر توکن و ۱٫۷ برابر زمان."
+   },
+   "video": "assets/video/compare/cmp-channel-skill.mp4",
+   "posterImg": "assets/img/compare/cmp-channel-skill.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 8,
+   "bytes": 1320765,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 8
+   }
+  },
+  {
+   "id": "cmp-infographic-baseline",
+   "section": "compare",
+   "task": "infographic-20s",
+   "pair": "codex-gpt-6-astra",
+   "side": "without",
+   "src": "infographic-20s__codex-gpt-6-astra__baseline",
+   "from": "run:simple-xhigh/infographic-20s__gpt-6-astra__baseline__r1",
+   "metrics": "simple-xhigh/infographic-20s__gpt-6-astra__baseline__r1",
+   "agent": "Codex · gpt-6-astra · xhigh",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 5.5,
+   "readme": {
+    "from": 0,
+    "dur": 20,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "alt": {
+    "en": "Codex without the skill: a dark navy explainer with a lime moon, a brain, a clock and card-style facts",
+    "fa": "Codex بدون اسکیل: اکسپلینر سرمه‌ای تیره با ماه و مغز و ساعتِ لیمویی و واقعیت‌هایی در قالب کارت"
+   },
+   "video": "assets/video/compare/cmp-infographic-baseline.mp4",
+   "posterImg": "assets/img/compare/cmp-infographic-baseline.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 20,
+   "bytes": 1160467,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 20
+   }
+  },
+  {
+   "id": "cmp-infographic-skill",
+   "section": "compare",
+   "task": "infographic-20s",
+   "pair": "codex-gpt-6-astra",
+   "side": "with",
+   "src": "infographic-20s__codex-gpt-6-astra__skill",
+   "from": "run:simple-xhigh/infographic-20s__gpt-6-astra__skill__r1",
+   "metrics": "simple-xhigh/infographic-20s__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 6,
+   "readme": {
+    "from": 0,
+    "dur": 20,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "alt": {
+    "en": "Codex with the skill: a bold poster-style explainer in cream, lilac, navy and lime with illustrated moon, brain and clock characters",
+    "fa": "Codex با اسکیل: اکسپلینر جسور در سبک پوستر با رنگ‌های کرم، یاسی، سرمه‌ای و لیمویی و شخصیت‌های تصویرسازی‌شدهٔ ماه، مغز و ساعت"
+   },
+   "read": {
+    "en": "Unaided, Codex builds a neat dark-card explainer — a moon, a brain, a clock — but 73 % of the film is near-static and the soundtrack is flat (loudness range 0.8 LU). With the skill the same agent switches to a bold poster style (cream, lilac, navy and lime), draws characterful moon, brain and clock illustrations and keeps everything moving (near-static 8 %, frame fill 26 % vs 12 %, loudness range 2.2 LU), after writing a brief and three review rounds. The price: about 2.8× the tokens and 1.2× the time.",
+    "fa": "بدون اسکیل، Codex یک اکسپلینر تمیز با کارت‌های تیره می‌سازد — ماه، مغز، ساعت — اما ۷۳٪ فیلم تقریباً ساکن است و صدا یکنواخت (دامنهٔ بلندی ۰٫۸). با اسکیل همان ایجنت به سبک پوستر جسورانه (کرم، یاسی، سرمه‌ای و لیمویی) می‌رود، ماه و مغز و ساعتِ باشخصیت می‌کشد و همه‌چیز را در حرکت نگه می‌دارد (زمان ساکن ۸٪، پُری قاب ۲۶٪ در برابر ۱۲٪، دامنهٔ بلندی ۲٫۲)، بعد از نوشتن بریف و سه دور بازبینی. بهایش: حدود ۲٫۸ برابر توکن و ۱٫۲ برابر زمان."
+   },
+   "video": "assets/video/compare/cmp-infographic-skill.mp4",
+   "posterImg": "assets/img/compare/cmp-infographic-skill.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 20,
+   "bytes": 3147156,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 20
+   }
+  },
+  {
+   "id": "film-event-claude",
+   "section": "showcase",
+   "src": "event-promo__claude__skill",
+   "agent": "Claude Code · Sonnet 5.5 + Cinewright",
+   "agentFamily": "claude",
+   "lang": "en",
+   "title": {
+    "en": "Frame Summit 2026 — a 15-second event promo",
+    "fa": "Frame Summit 2026 — پرومو ۱۵ ثانیه‌ای یک رویداد"
+   },
+   "desc": {
+    "en": "Title with a calendar badge → three speaker rows with a light sweep → the date as three colour floods, one word per beat → a pulsing handle and a button. The whole film is a JSON spec; picture and sound are both drawn from it.",
+    "fa": "تیتر با نشان تقویم ← سه ردیف سخنران با جاروی نور ← تاریخ در سه سیل رنگی، هر کلمه روی یک ضرب ← دستگیرهٔ ضرباندار و یک دکمه. کل فیلم یک مشخصات JSON است؛ تصویر و صدا هر دو از آن ساخته می‌شوند."
+   },
+   "prompt": "Make a 15-second motion graphics promo for a fictional design conference, \"Frame Summit 2026 · Oct 14–16 · Lisbon\": three speakers with their talk titles, a big date moment, bold typography and shapes, and the call to action \"Get tickets at framesummit.io\". Energetic, modern, with a beat-synced edit and sound design. Go all out.",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 2.8,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/showcase/film-event-claude.mp4",
+   "posterImg": "assets/img/showcase/film-event-claude.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 2214181,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   }
+  },
+  {
+   "id": "film-data-story",
+   "section": "showcase",
+   "src": "data-story-vertical__codex-gpt-6-astra",
+   "from": "run:showcase-xhigh/data-story-vertical__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "lang": "en",
+   "title": {
+    "en": "LUMEN — a 15-second vertical data story",
+    "fa": "لومن — داستان داده‌ای عمودی ۱۵ ثانیه‌ای"
+   },
+   "desc": {
+    "en": "12,000 → 87,000 daily rides: a city of dots grows into a river of light, the numbers count up, a line chart draws itself and the drop lands on 87,000. 1080×1920 with phone safe areas.",
+    "fa": "۱۲٬۰۰۰ ← ۸۷٬۰۰۰ سفر روزانه: شهری از نقطه‌ها به رودی از نور تبدیل می‌شود، اعداد می‌شمارند، نمودار خودش را می‌کشد و دراپ روی ۸۷٬۰۰۰ می‌نشیند. ۱۰۸۰×۱۹۲۰ با حاشیهٔ امن موبایل."
+   },
+   "prompt": "Make a 15-second VERTICAL (9:16) social video that makes people feel one statistic: in the fictional city of Lumen, daily bike-share rides grew from 12,000 in 2021 to 87,000 in 2025. Hook in the first second (a number slams in), one hero visual (a city of dots growing into a river of light), big readable numbers that count up, a map or line-chart moment, a beat drop where 87,000 lands, safe areas for phone UI, punchy music with a drop, and an end card with a one-line takeaway. Go all out.",
+   "encode": {
+    "w": 1280,
+    "crf": 25
+   },
+   "poster": 8,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 380,
+    "fps": 12,
+    "q": 68
+   },
+   "video": "assets/video/showcase/film-data-story.mp4",
+   "posterImg": "assets/img/showcase/film-data-story.jpg",
+   "width": 720,
+   "height": 1280,
+   "duration": 15,
+   "bytes": 4737570,
+   "audio": true,
+   "source": {
+    "width": 1080,
+    "height": 1920,
+    "duration": 15
+   }
+  },
+  {
+   "id": "film-pocketwise-claude",
+   "section": "showcase",
+   "src": "pocketwise__claude__skill",
+   "agent": "Claude Code · Sonnet 5.5 + Cinewright",
+   "agentFamily": "claude",
+   "lang": "en",
+   "title": {
+    "en": "Pocketwise — a 20-second app explainer",
+    "fa": "Pocketwise — اکسپلینر ۲۰ ثانیه‌ای یک اپ"
+   },
+   "desc": {
+    "en": "Receipts and group-chat nagging → a 3D phone running a live app UI → gold coins settling four balances to €0.00 after one breath of silence → a monthly dashboard → the mark. Original lo-fi score and UI foley; every frame is code.",
+    "fa": "رسیدها و پیام‌های گروهی ← یک گوشی سه‌بعدی با رابط زندهٔ اپ ← سکه‌های طلایی که چهار حساب را پس از یک نفس سکوت به €۰٫۰۰ می‌رسانند ← داشبورد ماهانه ← نشان. موسیقی لوفای اورجینال و صدای رابط؛ هر فریم کد است."
+   },
+   "prompt": "Make a 20-second explainer video for \"Pocketwise\", a fictional app that turns shared household expenses into a simple monthly summary. Show the problem, the app UI (invent the screens), one satisfying data moment (numbers/chart), and end with the name and a one-line tagline. Original music and UI sound design. Go all out.",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 5,
+   "readme": {
+    "from": 0,
+    "dur": 20,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/showcase/film-pocketwise-claude.mp4",
+   "posterImg": "assets/img/showcase/film-pocketwise-claude.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 20,
+   "bytes": 4303826,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 20
+   }
+  },
+  {
+   "id": "film-manifesto-claude",
+   "section": "showcase",
+   "src": "manifesto-typography__claude__skill",
+   "agent": "Claude Code · Sonnet 5.5 + Cinewright",
+   "agentFamily": "claude",
+   "lang": "en",
+   "title": {
+    "en": "Kinetic manifesto — “We build it”",
+    "fa": "مانیفست جنبشی — «ما می‌سازیم»"
+   },
+   "desc": {
+    "en": "Seven typographic treatments in 20 s on a 174 BPM drum & bass track: slams, a decode, 3D words with a camera flight, stepped frames, drawn outlines, a glitching serif, one beat of silence, particles.",
+    "fa": "هفت تکنیک تایپوگرافی در ۲۰ ثانیه روی ترک درام‌اندبیس ۱۷۴ BPM: اسلم، دیکود، کلمات سه‌بعدی با پرواز دوربین، فریم‌های پلکانی، خطوط کشیده‌شده، یک سریف گلیچی، یک ضرب سکوت و ذرات."
+   },
+   "prompt": "Make a 20-second kinetic typography film that delivers this manifesto word for word: \"We don't wait for inspiration. We build it. Frame by frame. Line by line. Until the thing you imagined starts to move.\" Type is the only hero — at least six different typographic treatments (mask reveal, slice, 3D extrusion with perspective, outline-to-fill, scale-through, glitch, per-letter physics) on a driving original drum-and-bass track at 174 BPM with every cut on the beat. Two saturated colours plus one neutral, huge type (at least 40 % of the frame height), a full-bleed colour flood every ~4 s, one camera flight through the letters in 3D and one beat of total silence before the last line. Sound: drums, bass, risers and a synth stab on every key word. Go all out.",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 5.2,
+   "readme": {
+    "from": 0,
+    "dur": 12,
+    "w": 720,
+    "fps": 15,
+    "q": 70
+   },
+   "video": "assets/video/showcase/film-manifesto-claude.mp4",
+   "posterImg": "assets/img/showcase/film-manifesto-claude.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 20,
+   "bytes": 4595460,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 20
+   }
+  },
+  {
+   "id": "film-title-sequence",
+   "section": "showcase",
+   "src": "title-sequence__codex-gpt-6-astra",
+   "from": "run:showcase-xhigh/title-sequence__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "lang": "en",
+   "title": {
+    "en": "THE HOLLOW HOURS — a prestige title sequence",
+    "fa": "تیتراژ «ساعت‌های توخالی» — سبک ساول‌بس"
+   },
+   "desc": {
+    "en": "Cut-paper skyline, a flickering neon sign, rain on glass, a clock whose hands unravel into thread, a silhouette made of falling particles — drawn in code, scored with a heartbeat pulse and a brass swell.",
+    "fa": "خط افق کاغذبریده، تابلوی نئون سوسوزن، باران روی شیشه، ساعتی که عقربه‌هایش به نخ باز می‌شوند، سایه‌ای از ذرات ریزان — همه با کد، با ضربان قلب و بوق برنجی."
+   },
+   "prompt": "Make a 25-second main-title sequence for a fictional prestige thriller series called \"THE HOLLOW HOURS\" (a night-shift detective in a city that never sleeps) — Saul Bass meets a modern streaming title. Build everything from abstract shapes, light, grain and type: cut-paper layers that peel apart, a flickering neon sign, rain streaking down glass with bokeh street lights, a clock whose hands unravel into thread, a silhouette made of falling particles. Credit-style typography with invented names (\"Created by …\", \"Starring …\"), a brooding original score with a heartbeat pulse and a low brass swell, and a final title lock-up that holds for two seconds. Go all out.",
+   "encode": {
+    "w": 1280,
+    "crf": 25
+   },
+   "poster": 20.5,
+   "readme": {
+    "from": 0,
+    "dur": 20,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/showcase/film-title-sequence.mp4",
+   "posterImg": "assets/img/showcase/film-title-sequence.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 25,
+   "bytes": 3730595,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 25
+   }
+  },
+  {
+   "id": "film-calm-landscape",
+   "section": "showcase",
+   "src": "calm-landscape__codex-gpt-6-astra",
+   "from": "run:showcase-xhigh/calm-landscape__gpt-6-astra__skill__r1",
+   "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+   "agentFamily": "codex",
+   "lang": "en",
+   "title": {
+    "en": "Dusk, moonrise, fireflies — no text",
+    "fa": "غروب، طلوع ماه، کرم شب‌تاب — بدون متن"
+   },
+   "desc": {
+    "en": "A meditative landscape you could loop all evening: layered ridges, drifting mist, a rising moon, fireflies and a gentle original ambient score.",
+    "fa": "منظره‌ای آرام که می‌شود تمام شب تکرارش کرد: رشته‌کوه‌های لایه‌لایه، مه شناور، ماهِ در حال طلوع، کرم شب‌تاب و موسیقی ملایم اورجینال."
+   },
+   "prompt": "Make a 15-second meditative cinematic landscape with no text at all: dusk over a procedural terrain with layered mountain ridges, drifting mist, an aurora ribbon in the sky, a slowly rising moon, fireflies, a slow crane move. A gentle original ambient score (pads, a soft pluck, sparse bells). Palette: deep indigo to rose gold. Make it so beautiful that someone would loop it. Go all out.",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 10,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 720,
+    "fps": 15,
+    "q": 70
+   },
+   "video": "assets/video/showcase/film-calm-landscape.mp4",
+   "posterImg": "assets/img/showcase/film-calm-landscape.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 1172085,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   }
+  },
+  {
+   "id": "film-person-fa-claude",
+   "section": "showcase",
+   "src": "person-intro-fa__claude__skill",
+   "agent": "Claude Code · Sonnet 5.5 + Cinewright",
+   "agentFamily": "claude",
+   "lang": "fa",
+   "title": {
+    "en": "Persian person intro — Maya Chen",
+    "fa": "معرفی یک آدم — مایا چن"
+   },
+   "desc": {
+    "en": "The person-intro preset with Persian copy: only the text changed. `--lang fa` mirrors the whole layout right-to-left and writes Persian digits; the score is generated from the same spec.",
+    "fa": "پریست «معرفی یک آدم» با متن فارسی: فقط متن عوض شده. گزینهٔ `--lang fa` کل چیدمان را راست‌به‌چپ می‌کند و ارقام را فارسی می‌نویسد؛ موسیقی هم از همان مشخصات ساخته می‌شود."
+   },
+   "prompt": "یک موشن‌گرافی ۱۵ ثانیه‌ای فارسی برای معرفی یک آدم بساز: مایا چن، طراح ارشد محصول از تورنتو (جزئیات را خودت بساز). نام و عنوان، سه مهارت، سه عدد (سال تجربه، پروژه‌های تحویل‌شده، جوایز) و یک نقل‌قول کوتاه را نشان بده و با شناسهٔ @mayachen تمام کن. تمیز، مدرن و پرانرژی. موسیقی و صداگذاری اورجینال. تمام‌قد برو.",
+   "encode": {
+    "w": 1280,
+    "crf": 22
+   },
+   "poster": 2.2,
+   "readme": {
+    "from": 0,
+    "dur": 15,
+    "w": 480,
+    "fps": 12,
+    "q": 62
+   },
+   "video": "assets/video/showcase/film-person-fa-claude.mp4",
+   "posterImg": "assets/img/showcase/film-person-fa-claude.jpg",
+   "width": 1280,
+   "height": 720,
+   "duration": 15,
+   "bytes": 1666872,
+   "audio": true,
+   "source": {
+    "width": 1920,
+    "height": 1080,
+    "duration": 15
+   }
+  }
+ ]
+}

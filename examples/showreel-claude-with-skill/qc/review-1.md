@@ -1,0 +1,11 @@
+# Review 1 — look-dev on the first skeleton (what I LOOKED at, what I changed)
+
+Looked at: two `render.mjs sheet --times …` contact sheets (10 + 14 frames) of the first full skeleton, a 0.075 s filmstrip across the 6.2–6.8 s cut, and full-size stills of the hero shots. Skeleton = all nine scenes present, no console errors; the palette (ink · violet · pink · lime · bone) and the type system (Anton + Space Grotesk + JetBrains Mono) already read as one film. Ranked by visual impact:
+
+1. **Slam words overflow the frame (0.7–1.9 s).** In the 1.6 s frame "MOVE" is cropped at the top and "MAKE" touches both edges; "THINGS" would be wider than 1920 px. Cause: the size is `minDim * k` with no width limit, and the Anton capitals are ~0.9 em tall. Fix: `letters()` measures the word and shrinks it to a max width (`W*.9`, `W*.74` for MOVE), `MAKE` gets `max: W*.9`, and the MOVE hop is cut from `.14H` to `.09H` so the bounce never leaves the frame.
+2. **A black hole between PATTERN and UI (6.4–6.55 s).** The filmstrip shows two pure-ink frames: the match-cut disc floods the frame at 6.42 s but the dashboard card only starts to rise at 6.58 s. Cause: the UI scene starts its entrance at lt = 0 below the frame. Fix: the flood now runs 0.86–1.3 s of the shot and the UI cards use `seg(lt + .12, …)` so they are already 25 % in when the cut lands; the HUD switches to bone before the disc covers it (`lightBg` ends at `T.ui - .28`).
+3. **The lime "Export reel" button is unreadable (6.9–8.4 s).** White label on lime is ~1.3 : 1. Cause: `UI.button` hard-codes a white label for primary buttons. Fix: new `ink` option in `lib/ui.js` (the engine, so every future film gets it) and `ink: PAL.ink` here; the toggles now animate with a number (`seg(...)`) instead of a boolean snap.
+4. **The outline word "FORM" behind the chrome knot is almost invisible (2–3.7 s).** 3 px strokes at alpha .5 vanish next to the specular highlights. Fix: 4 px at alpha .8 / .85 so the word reads as a second layer of depth behind the knot.
+5. **The HUD (title, timecode, chapter) is too small at 1.85 % of the frame height.** Fix: 2.1 %, margins 4.8 %.
+
+Not done yet (next rounds): per-shot push-ins and a general camera feel, colour/contrast details, the sound mix.

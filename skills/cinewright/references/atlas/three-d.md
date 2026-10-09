@@ -217,6 +217,30 @@ S.vase.rot = [0, lt * .9, 0]; S.cam.pos = [Math.sin(lt * .4) * 1.5, 1.2, 10 - lt
 gfx.blit(S.render({ clear: [0, 0, 0, 0], dof: { focus: 12, range: 4, blur: 8 } }), { to: rt, blend: 'alpha' });
 ```
 
+## product-ring-macro — A hero ring in brushed titanium: macro camera, coloured light pools, exploded view
+tags: 3d product ring titanium metal macro exploded view wearable watch band torus hero luxury medium
+use: launch films for a physical object (smart ring, watch band, bracelet, a washer-shaped part); any "the thing itself" shot where a 2D outline would look cheap; the exploded view (`ex` 0 → 1) is the "what's inside" beat
+how: a torus (`Geo.torus(R, r)`) in `Mat.pbr` metal (rough .3 = brushed; .05 = mirror), a darker sleeve inside it, tiny emissive sensors; a softbox environment with a cool key, a warm rim and a violet accent (coloured pools of light, not a grey studio); glossy floor; fov 26 and a slow dolly = macro; depth of field follows the ring. The object must be LIT and FILL the frame (≥ 40 % of its height) — never draw it as an outline.
+avoid: a thin glowing 2D circle on black (reads as a loading spinner); mirror-smooth metal with nothing to reflect (needs the coloured env); a static camera.
+```js gl
+//@ {"peak":2.2,"look":{"bloom":0.28,"grain":0.04}}
+const S = store.S ||= (() => { const S = new Scene3D(gfx, { W, H });
+  S.env = Env.softbox({ colors: ['#06090d', '#bfe6ff', '#ff9a4d', '#6a5cff'] }); S.sky = { amt: .2 };
+  S.floor({ y: -1.7, color: '#121923', reflect: .6, fade: .03 }); S.cam.fov = 26;
+  S.shell = S.mesh(Geo.torus(1.5, .36, 128, 48), Mat.pbr({ base: '#a7b0b8', metal: 1, rough: .3 }));
+  S.sleeve = S.mesh(Geo.torus(1.5, .30, 128, 40), Mat.pbr({ base: '#0b0e13', metal: .2, rough: .55 }), { scale: [.96, .96, .96] });
+  S.dots = [0, 1, 2].map(i => S.mesh(Geo.sphere(.07, 20, 14), Mat.emissive('#37f0d8', 2.2)));
+  return S; })();
+fx.bg('gradient', { c: ['#05070c', '#0c3340', '#2a1650', '#05070c'], speed: .12 }, { to: rt });   // a coloured backdrop, never flat black
+const ex = Math.min(1, Math.max(0, (lt - .9) / 1.6));          // 0 = assembled, 1 = exploded (the "what's inside" beat)
+S.shell.rot = [1.05 + .1 * Math.sin(lt * .6), lt * .5, .3]; S.shell.pos = [0, .35 * ex, 0];
+S.sleeve.rot = S.shell.rot; S.sleeve.pos = [0, -.7 * ex, 0];
+S.dots.forEach((d, i) => { const a = i * 2.1 + lt * .5; d.pos = [Math.cos(a) * 1.43, -.35 * ex - .1, Math.sin(a) * 1.43]; });
+const dist = 9.5 - lt * .8;                                     // slow macro dolly
+S.cam.pos = [Math.sin(lt * .35) * dist * .6, 1.6 - lt * .08, dist]; S.cam.target = [0, 0, 0];
+gfx.blit(S.render({ clear: [0, 0, 0, 0], dof: { focus: dist, range: 3.2, blur: 7 } }), { to: rt, blend: 'alpha' });
+```
+
 ## wire-hologram — Holographic wireframe object
 tags: 3d hologram wireframe holo scifi scan cyber torusknot cheap
 use: sci-fi interfaces, "analysis", blueprint/AI/network tones, anything that should feel digital rather than physical

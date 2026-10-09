@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>FORM / IN MOTION</title><link rel="stylesheet" href="fonts/fonts.css"><style>html,body{margin:0;background:#111217;overflow:hidden}canvas{display:block;width:100vw;height:100vh;object-fit:contain}</style></head><body><canvas id="out"></canvas>
+<script id="cues" type="application/json">
+{"bpm":128,"duration":15,"t":{"ignition":0,"matter":2.34375,"type":4.6875,"rhythm":6.5625,"flow":8.4375,"beyond":10.78125,"signature":13.125},"hits":[0,0.46875,0.9375,1.40625,1.875,2.34375,3.28125,4.21875,4.6875,5.15625,5.625,6.09375,6.5625,7.03125,7.5,7.96875,8.4375,9.375,10.3125,10.78125,11.71875,12.65625,13.125]}
+</script>
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/gfx.js"></script><script src="lib/fx.js"></script><script src="lib/trans.js"></script><script src="lib/stage.js"></script><script src="lib/scene3d.js"></script><script src="lib/parts.js"></script><script src="lib/type.js"></script><script src="lib/cine.js"></script>
+<script>
+'use strict';
+const CUES=JSON.parse(document.getElementById('cues').textContent), T=CUES.t, HITS=CUES.hits, BEAT=60/CUES.bpm;
+const Q=K.params(), W=Q.w||1920, H=Q.h||1080, FPS=Q.fps||60, DUR=15, unit=H/1080;
+const PAL={ink:'#111217',paper:'#F0EDE4',orange:'#FF4E28',violet:'#B8A5FF',acid:'#DFFE67'};
+const {E,seg,clamp}=K;
+window.VIDEO={width:W,height:H,fps:FPS,duration:DUR,title:'FORM / IN MOTION',audio:'audio.wav',markers:Object.entries(T).map(([label,time])=>({t:time+.65,label}))};
+const out=document.getElementById('out');out.width=W;out.height=H;
+const post=new Post(out),gfx=new GFX(post),fx=new FX(gfx),stage=new Stage(post,gfx,{fps:FPS});
+const sculpture=new Scene3D(gfx,{W,H,ss:1.15}),portal=new Scene3D(gfx,{W,H,ss:1.15});
+let knot,orbitRing,orbitBall,turbine,innerRing,backRing,particles;
+const flat={bloom:0,grain:.018,ca:0,vignette:0,contrast:1,sat:1};
+const dark={bloom:.21,threshold:.92,grain:.021,ca:0,vignette:.16,contrast:1.02};
+function tx(g,str,x,y,size,color=PAL.ink,opts={}){g.save();g.translate(x,y);g.rotate(opts.rotate||0);g.font=(opts.weight||400)+' '+size+'px '+(opts.font||'Anton');g.textAlign=opts.align||'center';g.textBaseline='middle';g.fillStyle=color;g.strokeStyle=color;g.lineWidth=opts.stroke||1.5;const width=g.measureText(str).width;if(opts.max&&width>opts.max)g.scale(opts.max/width,1);if(opts.outline)g.strokeText(str,0,0);else g.fillText(str,0,0);g.restore();}
+function circle(g,x,y,r,color,width=0){g.beginPath();g.arc(x,y,Math.max(.01,r),0,Math.PI*2);if(width){g.strokeStyle=color;g.lineWidth=width;g.stroke();}else{g.fillStyle=color;g.fill();}}
+function base(g,color){g.scale(W/1920,H/1080);if(color){g.fillStyle=color;g.fillRect(-100,-100,2120,1280);}}
+function cross(g,x,y,color,size=10){g.strokeStyle=color;g.lineWidth=1.5;g.beginPath();g.moveTo(x-size,y);g.lineTo(x+size,y);g.moveTo(x,y-size);g.lineTo(x,y+size);g.stroke();}
+function grid(g,color,step=120,alpha=.12,offset=0){g.save();g.strokeStyle=color;g.lineWidth=1;g.globalAlpha=alpha;g.beginPath();for(let column=-1;column<18;column++){const xx=column*step+offset%step;g.moveTo(xx,0);g.lineTo(xx,1080);}for(let row=0;row<10;row++){g.moveTo(0,row*step);g.lineTo(1920,row*step);}g.stroke();g.restore();}
+function small(g,str,x,y,color=PAL.ink,align='left',size=44){tx(g,str,x,y,size,color,{font:'Space Grotesk',weight:500,align});}
+function orbitLabel(g,str,r,angle,color){g.save();g.translate(960,540);g.rotate(angle);g.font='500 28px Space Grotesk';g.textAlign='center';g.textBaseline='middle';g.fillStyle=color;const step=.093;for(let letter=0;letter<str.length;letter++){g.save();g.rotate((letter-str.length/2)*step);g.translate(0,-r);g.fillText(str[letter],0,0);g.restore();}g.restore();}
+function build(){
+ sculpture.env=Env.studio({colors:['#15121b','#F0EDE4','#B8A5FF','#FF4E28'],amount:1.05});sculpture.cam.fov=34;
+ sculpture.light(0,{dir:[-.5,.8,1],color:PAL.paper,intensity:2.2});sculpture.light(1,{dir:[.7,-.1,.6],color:PAL.orange,intensity:2});
+ knot=sculpture.mesh(Geo.torusKnot({p:2,q:3,radius:1.5,tube:.48,seg:288,radial:32}),Mat.chrome({rough:.14,coat:.7,tint:'#ece5e6'}));
+ orbitRing=sculpture.mesh(Geo.torus(2.75,.045,120,12),Mat.emissive(PAL.orange,.9));
+ orbitBall=sculpture.mesh(Geo.sphere(.25,32),Mat.plastic({base:PAL.orange,rough:.2}));
+ portal.env=Env.studio({colors:['#111217','#F0EDE4','#B8A5FF','#FF4E28'],amount:1.25});portal.cam.fov=37;
+ portal.light(0,{dir:[-.8,1,.6],color:PAL.paper,intensity:2});portal.light(1,{dir:[.8,-.2,.8],color:PAL.orange,intensity:1.3});
+ const geometry=Geo.param((along,around)=>{const theta=along*Math.PI*2,phi=around*Math.PI*2;const ridge=.48+.105*Math.cos(32*theta+phi*2);const radius=1.92+ridge*Math.cos(phi);return[radius*Math.cos(theta),radius*Math.sin(theta),ridge*Math.sin(phi)];},320,56);
+ turbine=portal.mesh(geometry,Mat.chrome({rough:.11,coat:.6,tint:'#c6bfe0'}));
+ innerRing=portal.mesh(Geo.torus(1.4,.028,160,12),Mat.emissive(PAL.acid,1.15),{rot:[Math.PI/2,0,0]});
+ backRing=portal.mesh(Geo.torus(2.55,.09,180,16),Mat.plastic({base:PAL.orange,rough:.22,coat:1}),{rot:[Math.PI/2,0,0],pos:[0,0,-.18]});
+ const total=42000;particles=new Parts.Morph(gfx,{count:total});
+ const cloud=Parts.cloud(total,{w:W*1.6,h:H*1.25,d:850*unit,seed:22});
+ const points=[];for(let index=0;index<total;index++){const theta=K.hash(index*3.71+1)*Math.PI*2,phi=K.hash(index*7.19+7)*Math.PI*2;const rad=(320+110*Math.cos(phi))*unit;points.push([rad*Math.cos(theta),rad*Math.sin(theta),110*Math.sin(phi)*unit]);}
+ particles.shapes([cloud,points,Parts.text('FLOW',{height:460*unit,n:total,family:K.FONTS.display,weight:400})]);
+}
+const MATTER_BG=gfx.prog(`
+uniform float local;
+void main(){vec2 p=(vUv-.5)*vec2(uRes.x/uRes.y,1.);vec3 col=vec3(.055,.06,.075);float halo=exp(-length(p-vec2(.3,.03))*2.3);col+=vec3(.12,.06,.10)*halo;float grid=pow(max(0.,cos(p.x*105.+local*.5)),100.)+pow(max(0.,cos(p.y*105.)),100.);col+=grid*.012;float disk=1.-smoothstep(.365,.368,length(p-vec2(.28,0.)));col=mix(col,vec3(1.,.18,.065),disk);o=vec4(col,1.);}`);
+const OPTICAL=gfx.prog(`
+uniform float local;
+void main(){vec2 p=(vUv-.5)*vec2(uRes.x/uRes.y,1.);float turn=local*.5;mat2 spin=mat2(cos(turn),-sin(turn),sin(turn),cos(turn));p=spin*p;float rad=length(p),ang=atan(p.y,p.x);float warp=.028*sin(ang*8.-local*2.2)*smoothstep(.1,.65,rad);float wave=sin((rad+warp)*74.-local*9.);vec3 ink=vec3(.067,.071,.09),paper=vec3(.941,.929,.894),orange=vec3(1.,.306,.157),violet=vec3(.722,.647,1.);float stripe=smoothstep(-.12,.12,wave);vec3 col=mix(ink,paper,stripe);float wedge=smoothstep(.05,-.03,sin(ang*3.+local*.9));col=mix(col,mix(orange,ink,stripe),wedge*.94);float center=1.-smoothstep(.177,.18,rad);col=mix(col,violet,center);o=vec4(col,1.);}`);
+const SPACE=gfx.prog(`
+uniform float local;
+void main(){vec2 p=(vUv-.5)*vec2(uRes.x/uRes.y,1.);float rad=length(p);vec3 col=vec3(.025,.03,.043);col+=vec3(.07,.038,.15)*exp(-rad*3.4);float rays=pow(max(0.,sin(atan(p.y,p.x)*43.+local*.22)),20.)*.04*smoothstep(.2,.85,rad);col+=vec3(.45,.34,.7)*rays;o=vec4(col,1.);}`);
+Trans.define('formAperture',{ease:'io3',par:[0,1,0,0],look:{ca:.004},glsl:`vec4 tr(vec2 uv){float t=uP;vec2 p=(uv-.5)*vec2(uRes.x/uRes.y,1.);float theta=atan(p.y,p.x);float edge=t*1.35+.025*sin(theta*12.+t*8.)*sin(t*3.14159);float mask=1.-smoothstep(edge-.008,edge+.008,length(p));vec4 c=mix(sA(uv),sB(uv),mask);float rim=exp(-pow((length(p)-edge)/.011,2.))*sin(t*3.14159);c.rgb=mix(c.rgb,vec3(1.,.306,.157),rim);return c;}`});
+function ignition(g,local,time){base(g,PAL.paper);grid(g,PAL.ink,120,.07,local*24);const pulse=K.pulse(time,HITS,.13);small(g,'SHOWREEL',100,90);small(g,'01 / 15s',1820,90,PAL.ink,'right');
+ const open=E.outExpo(seg(local,0,.5));
+ if(local<1.40625){
+ const text='MOTION';g.font='400 410px Anton';const widths=[...text].map(letter=>g.measureText(letter).width),total=widths.reduce((sum,width)=>sum+width,0)+28*5;let position=960-total/2;
+ for(let index=0;index<text.length;index++){const height=E.outBack(seg(local,index*.045,.5+index*.045));g.save();g.translate(position+widths[index]/2,545+(1-height)*570);g.scale(1,1+.025*pulse);tx(g,text[index],0,0,410,PAL.ink);g.restore();position+=widths[index]+28;}
+ const distance=seg(local,.44,1.05,E.outExpo);g.fillStyle=PAL.orange;g.fillRect(101,825,1718*distance,19);small(g,'MADE TO MOVE.',100,946,PAL.ink,'left',44);
+ circle(g,1786,942,26,PAL.orange);circle(g,1786,942,10,PAL.paper);
+ }else{const part=local-1.40625,zoom=1+E.inExpo(seg(part,.5,.94))*3.5;g.save();g.translate(960,540);g.rotate(-.18+part*.6);g.scale(zoom,zoom);circle(g,0,0,365,PAL.orange);circle(g,0,0,205,PAL.paper);g.fillStyle=PAL.ink;g.fillRect(-720,-56,480,112);g.fillRect(240,-56,480,112);g.restore();orbitLabel(g,'FORM IN MOTION / FORM IN MOTION /',440,local*.5,PAL.ink);}
+}
+function matterGL({rt},local){gfx.pass(MATTER_BG,{local},{to:rt});sculpture.cam.pos=[.6+Math.sin(local*.6)*.8,.3+Math.cos(local*.8)*.3,9.2-local*.3];sculpture.cam.target=[-1.08,0,0];knot.rot=[.25+local*.35,local*.4,-.25+local*.24];orbitRing.rot=[1.1+local*.12,.2,.25];orbitBall.pos=[Math.cos(local*2)*2.7,Math.sin(local*2)*2.4,.6];gfx.blit(sculpture.render({clear:[0,0,0,0]}),{to:rt,blend:'alpha'});}
+function matterDraw(g,local){base(g);small(g,'01 / FORM',102,91,PAL.paper);const slide=E.outExpo(seg(local,0,.55));g.save();g.translate(-120*(1-slide),0);g.globalAlpha=slide;tx(g,'MAKE',100,410,195,PAL.paper,{align:'left'});tx(g,'IT REAL.',100,620,195,PAL.paper,{align:'left'});g.restore();small(g,'MATERIAL STUDIES',102,947,PAL.paper,'left',44);circle(g,1740,907,62,PAL.paper,1.5);tx(g,'3D',1740,907,39,PAL.paper,{font:'Space Grotesk'});cross(g,1810,91,PAL.orange,16);}
+function kinetic(g,local,time){base(g,PAL.orange);const pulse=K.pulse(time,HITS,.12);g.save();g.translate(960,540);g.rotate(-.05+Math.sin(local*.7)*.025);g.scale(1+.018*pulse,1+.018*pulse);const phrases=['MAKE','IT','MOVE'];for(let row=0;row<3;row++){const sign=row%2?1:-1;const entrance=E.outExpo(seg(local,row*.075,.44+row*.075));const shift=(1-entrance)*sign*1600+Math.sin(local*2+row)*40;const yy=(row-1)*303;const typeSize=row===1?230:305;for(let depth=40;depth>0;depth--)tx(g,phrases[row],shift+depth,yy+depth*.625,typeSize,PAL.ink,{max:1720});tx(g,phrases[row],shift,yy,typeSize,row===1?PAL.acid:PAL.paper,{max:1720});}g.restore();small(g,'02 / TYPE',95,85,PAL.ink);small(g,'NEVER STILL.',1825,994,PAL.ink,'right',44);}
+function rhythm(g,local,time){base(g);g.save();g.translate(960,540);g.rotate(-local*.22);tx(g,'PLAY',0,0,103,PAL.ink,{max:290});g.restore();g.fillStyle=PAL.paper;g.fillRect(82,65,301,67);small(g,'03 / RHYTHM',104,100,PAL.ink,'left',44);g.fillStyle=PAL.ink;g.fillRect(1515,923,312,77);small(g,'128 BPM',1788,963,PAL.paper,'right',44);}
+function flowGL({rt},local){gfx.pass(SPACE,{local},{to:rt});const progress=local<1.15?E.inOutCubic(seg(local,-.08,.70)):1+E.inOutCubic(seg(local,1.15,1.82));particles.draw({progress,t:local+2,colors:[PAL.violet,PAL.acid],flow:230*unit,size:1.75,glow:.42,spread:.22,wobble:[2*unit,30*unit],cam:{yaw:.16*Math.sin(local*1.1),pitch:.22*Math.sin(local*.7),dist:1600*unit},shutter:1/120},{to:rt});}
+function flowDraw(g,local){base(g);small(g,'04 / FLOW',102,91,PAL.paper);small(g,'42,000 POSSIBILITIES.',102,949,PAL.paper,'left',44);cross(g,1810,91,PAL.acid,16);for(let index=0;index<18;index++){const angle=index*Math.PI/9+local*.1;g.strokeStyle=PAL.violet;g.lineWidth=1.5;g.beginPath();g.moveTo(960+Math.cos(angle)*465,540+Math.sin(angle)*465);g.lineTo(960+Math.cos(angle)*480,540+Math.sin(angle)*480);g.stroke();}}
+function beyondGL({rt},local){gfx.pass(SPACE,{local:local+4},{to:rt});const entrance=E.outCubic(seg(local,-.1,.7));portal.cam.pos=[Math.sin(local*.5)*.7,.8*(1-entrance)+.22,10.6-entrance*1.7-local*.2];portal.cam.target=[-.85,0,0];turbine.rot=[.38-.28*entrance,.35*Math.cos(local*.8),local*.2];innerRing.rot=[Math.PI/2,.04*Math.sin(local),local*.2];backRing.rot=[Math.PI/2,.18*Math.cos(local*.8),local*.2];const expansion=1+.02*K.pulse(local,[0,.9375,1.875],.16);turbine.scale=[expansion,expansion,expansion];gfx.blit(portal.render({clear:[0,0,0,0]}),{to:rt,blend:'alpha'});}
+function beyondDraw(g,local){base(g);const entrance=E.outExpo(seg(local,.08,.6));small(g,'05 / BEYOND',102,91,PAL.paper);g.save();g.globalAlpha=entrance;g.translate(0,60*(1-entrance));tx(g,'BEYOND',99,350,158,PAL.paper,{align:'left'});tx(g,'THE',99,510,158,PAL.paper,{align:'left'});tx(g,'FRAME.',99,670,158,PAL.paper,{align:'left'});g.restore();small(g,'UNLIMITED.',102,950,PAL.paper,'left',44);small(g,'∞',1792,931,PAL.acid,'right',78);}
+function signature(g,local){base(g,PAL.paper);const entrance=E.outExpo(seg(local,-.06,.5));grid(g,PAL.ink,120,.055,local*5);g.save();g.translate(0,(1-entrance)*180);g.globalAlpha=entrance;tx(g,'FORM',100,335,365,PAL.ink,{align:'left',max:1090});tx(g,'IN MOTION',100,680,310,PAL.ink,{align:'left',max:1210});g.restore();const centerX=1540,centerY=417;g.save();g.translate(centerX,centerY);g.rotate(local*.21);const size=210*(.72+.28*entrance);circle(g,0,0,size,PAL.orange);circle(g,0,0,size*.5,PAL.paper);g.fillStyle=PAL.paper;g.rotate(-.3);g.fillRect(-size-2,-19,size*2+4,38);g.restore();small(g,'MOTION DESIGN / SHOWREEL',103,947,PAL.ink,'left',44);small(g,'MADE TO MOVE.',1820,947,PAL.ink,'right',44);g.fillStyle=PAL.ink;g.fillRect(100,858,1720,2);small(g,'SHOWREEL',104,94,PAL.ink);small(g,'001—007',1820,94,PAL.ink,'right');}
+stage.timeline([
+{id:'ignition',at:T.ignition,draw:ignition,look:flat},
+{id:'matter',at:T.matter,enter:['formAperture',.48],gl:matterGL,draw:matterDraw,look:dark},
+{id:'type',at:T.type,enter:['slice',.24],draw:kinetic,look:flat},
+{id:'rhythm',at:T.rhythm,enter:['zoom',.30],gl:({rt},local)=>gfx.pass(OPTICAL,{local},{to:rt}),draw:rhythm,look:flat},
+{id:'flow',at:T.flow,enter:['dissolve',.30],gl:flowGL,draw:flowDraw,look:{...dark,bloom:.16}},
+{id:'beyond',at:T.beyond,enter:['formAperture',.30],gl:beyondGL,draw:beyondDraw,look:{...dark,bloom:.25}},
+{id:'signature',at:T.signature,enter:['slide',.36,{dir:[-1,0]}],draw:signature,look:flat}
+]);
+stage.camera=time=>({zoom:1+.018*K.pulse(time,HITS,.16),x:.0014*Math.sin(time*.7),y:.001*Math.cos(time),rot:.001*Math.sin(time)});
+stage.look((time,look)=>({ca:(look.ca||0)+.0012*K.pulse(time,HITS,.055),frame:Math.round(time*FPS)}));
+window.renderFrame=time=>stage.render(time);
+window.ready=K.loadFonts(['400 Anton','500 Space Grotesk']).then(()=>{build();return stage.ready();});
+K.play(window.renderFrame,{dur:DUR,fps:FPS,grid:K.grid(CUES.bpm)});
+</script></body></html>

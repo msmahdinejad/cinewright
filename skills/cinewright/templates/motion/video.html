@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- THE FILM IS THIS SPEC. Edit the copy, the theme, the scenes and their times; picture (mg.js) and sound (audio.mjs) are both drawn from it.
+     Scene types: title · chips · stats · quote · list · fact · chart · logo · cta · words — fields per type: references/motion-graphics.md (skill folder).
+     Times in seconds; scenes start on beats (bpm 120 → every 0.5 s). "wipe" = the transition INTO that scene: stripes · circle · slide · flood · blocks · diagonal.
+     Item i of a scene appears at  at + (lead ?? .3) + i * (step ?? beat/2). -->
+<script id="cues" type="application/json">
+{{SPEC}}
+</script>
+
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/mg.js"></script>
+<script>
+'use strict';
+/* A motion-graphics film from data: MG.film() schedules the scenes, camera and wipes; this file only boots it and applies the finishing grade.
+   Need something the kit does not have? Register a scene:  MG.scenes.mine = (g, lt, t, sc, X) => { … 2D drawing; X = { W, H, U (unit = H/1080), V (vertical), T (theme), B (beat) } … };  then  { "type": "mine" }  in the spec. */
+const SPEC = JSON.parse(document.getElementById('cues').textContent); SPEC.lang = SPEC.lang || document.documentElement.lang;   // lang fa/ar/he → right-to-left layout (spec.dir overrides), fa → Persian digits
+const Q = K.params(), W = Q.w || SPEC.w || {{W}}, H = Q.h || SPEC.h || {{H}}, FPS = Q.fps || {{FPS}}, DUR = SPEC.duration, { E } = K;
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav', markers: SPEC.scenes.map((s, i) => ({ t: s.at ?? 0, label: (i + 1) + ' ' + s.type })) };
+
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const scene = K.canvas(W, H), g = scene.getContext('2d'), post = new Post(out), film = MG.film(SPEC, { W, H });
+
+function renderFrame(t) {
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.shadowBlur = 0; g.setLineDash([]);
+  film.draw(g, t);
+  post.render(scene, { frame: K.frameIndex(t, FPS), bloom: film.T.light ? .12 : .22, threshold: .8, ca: .0012, grain: .028, vignette: film.T.light ? .14 : .32, fade: K.seg(t, DUR - .4, DUR - .02, E.inCubic) });
+}
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['700 Space Grotesk', '400 Anton', '600 Fredoka', '700 Playfair Display', '500 Inter', '600 Inter', '700 Inter', '800 Inter', '500 JetBrains Mono', '700 JetBrains Mono', '700 Vazirmatn']).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(SPEC.bpm || 120) });
+</script>
+</body>
+</html>

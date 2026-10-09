@@ -1,0 +1,4 @@
+First compose a 24-second original electronic track (synthesise it yourself): intro, build, drop, outro. Then make an audio-reactive music visualizer for it. The picture must be driven by the track's real analysis (envelopes of kick, bass, hats and lead): a GPU particle field that pulses with the kick, a bass-driven tunnel or terrain, a ring equaliser, light streaks on the hats, a palette that shifts at the drop. The drop must be the most spectacular moment (full-frame flash, shockwave, camera punch). Only a tiny title ("SIGNAL / 24") at the very end. Go all out.
+
+---
+Benchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.

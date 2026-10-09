@@ -1,0 +1,11 @@
+{
+  "bpm": 120, "duration": 20, "mood": "chill", "wipe": "circle",
+  "theme": { "preset": "ocean", "head": "grotesk" },
+  "scenes": [
+    { "type": "title", "at": 0, "kicker": "DID YOU KNOW?", "lines": ["The power", "of walking"], "sub": "Three numbers worth a stroll", "icon": "leaf", "bg": "blobs" },
+    { "type": "fact", "at": 3.5, "icon": "clock", "value": 30, "suffix": " min", "text": "a day lowers the risk of heart disease", "kicker": "FACT 1", "color": "a", "wipe": "circle" },
+    { "type": "chart", "at": 8, "title": "How people feel after a walk", "kind": "ring", "unit": "%", "max": 100, "data": [ { "label": "Happier", "value": 78 }, { "label": "More focused", "value": 64 }, { "label": "Less stressed", "value": 71 } ], "caption": "Share of walkers who report it", "wipe": "stripes", "bg": "grid" },
+    { "type": "fact", "at": 12.5, "icon": "bulb", "value": 3, "suffix": "×", "text": "more creative ideas while walking than sitting", "kicker": "FACT 3", "color": "b", "wipe": "blocks" },
+    { "type": "cta", "at": 16.5, "line": "Take the next step", "handle": "walkmore.org", "button": "Start today", "wipe": "flood", "bg": "blobs" }
+  ]
+}

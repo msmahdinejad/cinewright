@@ -1,6 +1,6 @@
 # Pipelines — the glue patterns that make a film feel like one piece
 
-The atlas families above are *what* to draw. These are *how to wire it together*: patterns discovered while building the Avorythm film (`references/case-studies/avorythm/`) that every serious film needs and that no single library function hides.
+The atlas families above are *what* to draw. These are *how to wire it together*: patterns discovered while building long films with this engine that every serious film needs and that no single library function hides.
 Most are 5–15 lines. The runnable ones render in `atlas.mjs sheet`; the rest are reference code.
 
 ## pipe-global-atmosphere — One foreground layer over every scene
@@ -88,5 +88,5 @@ how: put scene starts AND in-scene events in `<script id="cues">` (`"click": 7.5
 
 ## pipe-direction-theme — Left/right as meaning (bilingual films)
 tags: pipeline direction rtl ltr bilingual persian english left right source target colour twist concept
-use: films about translation, two languages, two parties, before/after — give each side a colour and a direction and let EVERY scene be a negotiation between them (the Avorythm film: violet = source, enters left→right; cyan = target, enters right→left in Persian RTL; the logo is the two locked together)
+use: films about translation, two languages, two parties, before/after — give each side a colour and a direction and let EVERY scene be a negotiation between them (e.g. violet = source, enters left→right; cyan = target, enters right→left; the logo is the two locked together)
 how: decide the two tokens (colour + side + reading direction) in the style bible; apply them to transitions (`dir`), text entrances (`K.words` already reads Persian right→left), sound panning (source voice left, answer right), UI placement (source panel left, result panel right) and the final lock-up. Rules: never mix the two colours in one element until the payoff; one side may appear alone at the start (the "problem").

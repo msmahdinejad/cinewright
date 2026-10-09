@@ -1,0 +1,90 @@
+{
+  "schema": 2,
+  "id": "headline-xhigh/showreel-15s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "showreel-15s",
+  "domain": "motion-design",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-07",
+  "wallSeconds": 1720,
+  "exitCode": 0,
+  "timedOut": false,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 6.82,
+    "audio": {
+      "lufs": -14,
+      "lra": 0.2,
+      "truePeak": -1.7,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0115,
+      "mean": 0.0285,
+      "quietPct": 25,
+      "cuts": 2,
+      "longestStatic": 2.5,
+      "curve": "█▁▁▃██▇▇██▂▂▂▂▂██▃▃▅▇█▄▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 25,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 2,
+      "perMinute": 8
+    }
+  },
+  "session": {
+    "events": 75,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 10,
+      "todo_list": 5,
+      "command_execution": 26,
+      "reasoning": 29
+    },
+    "turns": 1,
+    "inputTokens": 1596262,
+    "outputTokens": 38463,
+    "cachedInputTokens": 1412096,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 15-second code-generated motion design showreel with kinetic typography, procedural layouts, and raymarched 3D forms.  \nAdded an original beat-synced soundtrack and delivered 1920×1080 H.264 video with AAC audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

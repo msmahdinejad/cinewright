@@ -1,0 +1,91 @@
+{
+  "schema": 2,
+  "id": "headline-xhigh/showreel-15s__gpt-6.1-sol__baseline__r1",
+  "kind": "run",
+  "task": "showreel-15s",
+  "domain": "motion-design",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6.1-sol, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6.1-sol",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-07",
+  "wallSeconds": 1518,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 8.7,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 1.4,
+      "truePeak": -0.8,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0218,
+      "mean": 0.0352,
+      "quietPct": 11,
+      "cuts": 6,
+      "longestStatic": 1.5,
+      "curve": "█▂▁▁██▅▄▄█▇▇▇█▆▃▃▃██▃█▄█▄▁▁▁"
+    },
+    "look": {
+      "medianFill": 30,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 5,
+      "perMinute": 20
+    }
+  },
+  "session": {
+    "events": 70,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 6,
+      "todo_list": 6,
+      "command_execution": 40,
+      "reasoning": 13
+    },
+    "turns": 1,
+    "inputTokens": 1836147,
+    "outputTokens": 40258,
+    "cachedInputTokens": 1725824,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n15-second showreel with kinetic typography, glossy procedural 3D, and bold, beat-synced transitions.\nEntirely code-generated with an original electronic soundtrack—1080p, 60fps, H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

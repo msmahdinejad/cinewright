@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "id": "manifesto-typography__claude-code-sonnet-5-5-cinewright",
+  "kind": "measured",
+  "task": "manifesto-typography",
+  "condition": "skill",
+  "label": "Claude Code (Sonnet 5.5) + Cinewright",
+  "agent": "Claude Code, interactive session",
+  "model": "claude-sonnet-5-5",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": null,
+  "note": "Interactive session following the protocol (brief, look-dev, three written review rounds, QC gate); about 45 minutes including three renders. Not blind.",
+  "video": {
+    "ok": true,
+    "duration": 20,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 31.88,
+    "audio": {
+      "lufs": -14,
+      "lra": 4.8,
+      "truePeak": -1.3,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0415,
+      "mean": 0.0556,
+      "quietPct": 0,
+      "cuts": 8,
+      "longestStatic": 0,
+      "curve": "█████▇▃█████▃▃▄██████▄▅▅▄█▄▅▄▅▆██▂▂▆█"
+    },
+    "look": {
+      "medianFill": 35,
+      "emptyPct": 5,
+      "darkPct": 5
+    },
+    "scenes": {
+      "changes": 18,
+      "perMinute": 54
+    }
+  },
+  "session": null,
+  "project": {
+    "briefWritten": true,
+    "briefChars": 4063,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg"
+  }
+}

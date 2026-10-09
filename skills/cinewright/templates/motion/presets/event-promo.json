@@ -1,0 +1,10 @@
+{
+  "bpm": 120, "duration": 15, "mood": "upbeat", "wipe": "diagonal",
+  "theme": { "preset": "studio", "head": "grotesk" },
+  "scenes": [
+    { "type": "title", "at": 0, "kicker": "SAVE THE DATE", "lines": ["Maker", "Summit"], "sub": "Nov 5–7 · Vienna", "icon": "calendar", "badges": ["pen", "code", "mic"], "bg": "dots" },
+    { "type": "list", "at": 3, "kicker": "SPEAKERS", "title": "Meet the makers", "items": [ { "label": "Lena Hart", "value": "Fri 10:00", "icon": "mic", "note": "Designing in the open" }, { "label": "Omar Reyes", "value": "Fri 14:30", "icon": "code", "note": "Tiny tools, big teams" }, { "label": "Ines Duval", "value": "Sat 11:00", "icon": "pen", "note": "Drawing with code" } ], "wipe": "stripes", "bg": "blobs" },
+    { "type": "words", "at": 8, "words": ["3 days.", "40 talks.", "1 city."], "step": 1, "wipe": "circle" },
+    { "type": "cta", "at": 11.5, "line": "Be there in November", "handle": "makersummit.io", "button": "Get tickets", "wipe": "flood", "bg": "blobs" }
+  ]
+}

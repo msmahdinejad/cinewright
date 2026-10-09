@@ -180,3 +180,21 @@ g.save(); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
 city.forEach((c, i) => { const [x, y, z] = proj(c); if (z < 0) return; const ph = (lt * 1.1 + i * .3) % 1; g.strokeStyle = `rgba(64,245,245,${(1 - ph) * .8})`; g.lineWidth = 2 * u * 2; g.beginPath(); g.arc(x, y, (6 + 26 * ph) * u * 2, 0, K.TAU); g.stroke(); K.glow(g, x, y, 14 * u * 2, '#ffffff', 1); });
 g.restore();
 ```
+
+## mg-poster-system — A bold flat-poster system (colour blocks, condensed caps)
+tags: motion graphics poster flat colour blocks theme palette caps display anton bold promo intro social
+use: person / brand intros, promos, menus, event announcements — anything that should feel confident, friendly and designed rather than "techy"
+how: the `motion` template with `theme: { preset: 'poster' }` (cream · tomato · mustard · forest · mint, Anton caps) and a different `bgColor` on every scene or two (`a`/`b`/`c`/`d`); the kit picks readable text colours and never lets an accent equal the background. Three or four colours total, one big idea per scene
+avoid: more than four colours; the same background on every scene (the colour change IS the rhythm); thin light type on a saturated block
+
+## mg-icon-draw-on — Stroke icons that draw themselves
+tags: motion graphics icons draw on stroke line icon animation infographic chips fact
+use: any scene that needs a pictogram (skills, features, facts, menu items): `MG.icon(g, name, x, y, size, color, p)` with p = 0…1, 50 built-in icons (`MG.icons`)
+how: every icon is an SVG path on a 24-unit grid; each sub-path is dashed to its own length so all strokes finish together; `MG.iconDisc` puts it in a popping disc. Draw the icon ~0.25 s after its card appears so the eye gets two beats
+avoid: icons smaller than 5 % of the frame height; mixing stroke and filled icon styles in one film
+
+## mg-wipes — Colour wipes between scenes
+tags: motion graphics transition wipe stripes circle slide flood blocks diagonal cut between scenes
+use: the glue of every motion-graphics film: the scene changes while a coloured shape covers the frame (`wipe` per scene in the spec)
+how: `stripes` (bars sweeping), `circle` (iris out and in), `slide` (two panels), `flood` (a colour fills and clears), `blocks` (a tile grid scaling in), `diagonal` (a slanted band). The cut happens at the exact middle of the wipe; entrances start 0.3 s after it. Vary them, use `flood` before a calm scene and `stripes` before a busy one
+avoid: the same wipe for every cut; wipes longer than 0.6 s (they eat the scene)

@@ -1,0 +1,107 @@
+{
+  "schema": 2,
+  "id": "simple-xhigh/person-intro-15s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "person-intro-15s",
+  "domain": "motion graphics",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0-final",
+  "date": "2026-10-09",
+  "wallSeconds": 1823,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 3,
+  "transportFailures": [
+    {
+      "attempt": 1,
+      "seconds": 805,
+      "error": "stream disconnected before completion: The 'gpt-6-astra' model is not supported when using Codex with a ChatGPT account."
+    },
+    {
+      "attempt": 2,
+      "seconds": 3,
+      "error": "You've hit your usage limit. Try again at 3:48 PM."
+    }
+  ],
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 6.87,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 1.5,
+      "truePeak": -1.4,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0066,
+      "mean": 0.0228,
+      "quietPct": 0,
+      "cuts": 3,
+      "longestStatic": 0,
+      "curve": "▇▂▁▁▁▁██▂▁▁▁█▄▁▁██▂▂▁▂█▆▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 50,
+      "emptyPct": 3,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 187,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 11,
+      "command_execution": 108,
+      "todo_list": 6,
+      "reasoning": 52,
+      "mcp_tool_call": 6
+    },
+    "turns": 1,
+    "inputTokens": 7390660,
+    "outputTokens": 39100,
+    "cachedInputTokens": 7098624,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n15-second 1080p60 intro with bold kinetic typography, a 3D cursor, Maya’s skills, stats, quote, and @mayachen.\nOriginal electronic music and synchronized sound design; verified H.264 video with stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2335,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

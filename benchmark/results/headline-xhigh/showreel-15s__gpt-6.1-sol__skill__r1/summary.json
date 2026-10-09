@@ -1,0 +1,94 @@
+{
+  "schema": 2,
+  "id": "headline-xhigh/showreel-15s__gpt-6.1-sol__skill__r1",
+  "kind": "run",
+  "task": "showreel-15s",
+  "domain": "motion-design",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6.1-sol + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6.1-sol",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 3919,
+  "exitCode": 0,
+  "timedOut": false,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 21.02,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 2.3,
+      "truePeak": -1.2,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0482,
+      "mean": 0.0518,
+      "quietPct": 14,
+      "cuts": 7,
+      "longestStatic": 0,
+      "curve": "████▅▄██▁██▂▃█▁▁███████▂█▂▁▁"
+    },
+    "look": {
+      "medianFill": 30,
+      "emptyPct": 0,
+      "darkPct": 3
+    },
+    "scenes": {
+      "changes": 9,
+      "perMinute": 36
+    }
+  },
+  "session": {
+    "events": 284,
+    "itemTypes": {
+      "error": 2,
+      "reasoning": 65,
+      "agent_message": 20,
+      "command_execution": 150,
+      "todo_list": 8,
+      "mcp_tool_call": 34
+    },
+    "turns": 1,
+    "inputTokens": 13788069,
+    "outputTokens": 58591,
+    "cachedInputTokens": 13265920,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\nA 15-second 1920×1080 motion-design showreel with kinetic type, chrome 3D, particle morphs, generative geometry, UI curves, liquid shaders, a neon tunnel, and a burst finale.  \nBuilt entirely from code with original synthesized audio; final H.264/AAC encode and QC checks passed."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 4273,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

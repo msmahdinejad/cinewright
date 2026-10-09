@@ -96,7 +96,7 @@ use: energetic backgrounds behind a hero element, "brand wall", section dividers
 how: rows of the same phrase scroll in alternating directions at different speeds; one solid row, the rest outline-only.
 ```js scene
 //@ {"peak":1.4,"bg":"#0b1a2b"}
-for (let r = 0; r < 7; r++) Type.marquee(g, 'TRANSLATE LIVE  ✦  SPEAK ANY LANGUAGE  ✦  ', H * (.08 + r * .14), lt + r * .7, { speed: 200 * u * (1 + r * .15), dir: r % 2 ? 1 : -1, size: H * .12, weight: 900, fill: '#ffffff', outline: r === 3 ? null : 'rgba(255,255,255,.35)' });
+for (let r = 0; r < 7; r++) Type.marquee(g, 'MOTION  ✦  DESIGN  ✦  CODE  ✦  ', H * (.08 + r * .14), lt + r * .7, { speed: 200 * u * (1 + r * .15), dir: r % 2 ? 1 : -1, size: H * .12, weight: 900, fill: '#ffffff', outline: r === 3 ? null : 'rgba(255,255,255,.35)' });
 ```
 
 ## weight-breathe — Variable-font weight animation
@@ -110,7 +110,7 @@ Type.weight(g, 'Breathe', W / 2, H / 2, .5 + .5 * Math.sin(lt * 2.4 - 1.57), { f
 
 ## wave-letters — Per-letter sine wave
 tags: typography wave playful flow 2d latin-best cheap
-use: friendly/joyful tone, "flow" words (translate, music, ocean); a bridge between two statements
+use: friendly/joyful tone, "flow" words (music, ocean, motion); a bridge between two statements
 ```js scene
 //@ {"peak":1.2,"bg":"#14284b"}
 Type.wave(g, 'Everything flows', W / 2, H / 2, lt, { amp: H * .045, size: H * .16, speed: 4, fill: '#9fe7ff' });
@@ -118,7 +118,7 @@ Type.wave(g, 'Everything flows', W / 2, H / 2, lt, { amp: H * .045, size: H * .1
 
 ## scramble-decode — Decode / hacker reveal
 tags: typography scramble decode terminal cyber data 2d latin-best cheap
-use: "access granted", loading → result, tech/security tone, translating gibberish into meaning (a perfect Avorythm-style metaphor)
+use: "access granted", loading → result, tech/security tone, turning gibberish into meaning (a perfect noise → signal metaphor)
 how: `K.scramble(str, p, seed, frame)` resolves characters left → right while the rest flicker; mono font + glow.
 pair: sfx-ui-ticks (sound.md), fx-filter-crt
 ```js scene
@@ -157,7 +157,7 @@ how: `Type.ring` places letters (Latin) or words (Persian) along an arc; spin it
 //@ {"peak":1.4,"bg":"#1a1033"}
 const cx = W / 2, cy = H / 2;
 g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 2 * u; g.beginPath(); g.arc(cx, cy, H * .31, 0, K.TAU); g.stroke();
-Type.ring(g, 'OPEN SOURCE • REAL TIME • ZERO LATENCY • ', cx, cy, H * .33, lt * .6, { size: H * .05, weight: 800, fill: '#ffd23f' });
+Type.ring(g, 'FRAME BY FRAME • 100% CODE • NO FOOTAGE • ', cx, cy, H * .33, lt * .6, { size: H * .05, weight: 800, fill: '#ffd23f' });
 K.text(g, 'AI', cx, cy, { size: H * .26, weight: 900, fill: '#fff' });
 ```
 
@@ -169,7 +169,7 @@ how: ease the value yourself (`to * K.E.outExpo(p)`); `pad` reserves width so it
 //@ {"peak":1.6,"bg":"#0f1420"}
 const v = 1284500 * K.E.outExpo(K.prog(lt, 0, 2.2));
 Type.counter(g, v, W / 2, H * .46, { size: H * .26, weight: 800, pad: 7, fill: '#ffffff' });
-K.text(g, 'translated words / day', W / 2, H * .68, { size: H * .05, weight: 500, fill: '#8aa0c8', alpha: K.prog(lt, .6, 1.1) });
+K.text(g, 'frames rendered / day', W / 2, H * .68, { size: H * .05, weight: 500, fill: '#8aa0c8', alpha: K.prog(lt, .6, 1.1) });
 ```
 
 ## marker-highlight — Highlighter sweep
@@ -188,7 +188,7 @@ use: logo/name reveal with energy, "everything comes together" metaphors, end ca
 how: every letter (word for Persian) starts at a random place, rotation and scale and eases home with staggered lag. Fix the `seed` once you like a look.
 ```js scene
 //@ {"peak":1.3,"bg":"#101018"}
-Type.assemble(g, 'AVORYTHM', W / 2, H / 2, K.prog(lt, 0, 1.8), { size: H * .2, weight: 900, seed: 4, fill: '#ffffff' });
+Type.assemble(g, 'MOTION', W / 2, H / 2, K.prog(lt, 0, 1.8), { size: H * .2, weight: 900, seed: 4, fill: '#ffffff' });
 ```
 
 ## neon-sign — Flickering neon tube text
@@ -208,8 +208,8 @@ use: subtitles with presence, voice-over line reveals, lyric/explainer lines
 how: `K.words` enters each word of a line in reading order (right-to-left for Persian) with a stagger; the line stays shaped correctly because only whole words move.
 ```js scene
 //@ {"peak":1.6,"bg":"#0c1020"}
-K.words(g, 'ترجمه‌ی زنده، بدون هیچ مکثی', W / 2, H * .45, lt, { size: H * .1, weight: 800, fill: '#ffffff', each: .12, dur: .6, max: W * .86 });
-K.words(g, 'Real-time translation, no pauses', W / 2, H * .66, lt - .5, { size: H * .06, weight: 500, fill: '#8fb0ff', each: .09, max: W * .86 });
+K.words(g, 'هر فریم یک ایده است', W / 2, H * .45, lt, { size: H * .1, weight: 800, fill: '#ffffff', each: .12, dur: .6, max: W * .86 });
+K.words(g, 'Every frame is an idea', W / 2, H * .66, lt - .5, { size: H * .06, weight: 500, fill: '#8fb0ff', each: .09, max: W * .86 });
 ```
 
 ## type-font-guide — Twelve bundled fonts and what each is for
@@ -232,20 +232,20 @@ how: `K.words` enters the line word by word (right to left) in `K.FONTS.faNastal
 ```js scene
 //@ {"peak":1.8,"bg":"#0d1030","look":{"bloom":0.6}}
 const gr = g.createRadialGradient(W / 2, H * .5, 0, W / 2, H * .5, W * .6); gr.addColorStop(0, '#1d2260'); gr.addColorStop(1, '#0a0c24'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
-K.words(g, 'هر زبان، یک دنیاست', W / 2, H * .46, lt, { size: H * .17, weight: 700, family: K.FONTS.faNastaliq, fill: '#ffe9b8', glow: { color: '#e9b350', blur: 26 * u * 2 }, each: .2, dur: .9, max: W * .8 });
-K.text(g, 'Every language is a world', W / 2, H * .72, { size: H * .05, weight: 500, family: K.FONTS.serif, fill: '#cfd3ff', alpha: K.prog(lt, 1.2, 1.8) });
+K.words(g, 'هر فریم، یک دنیاست', W / 2, H * .46, lt, { size: H * .17, weight: 700, family: K.FONTS.faNastaliq, fill: '#ffe9b8', glow: { color: '#e9b350', blur: 26 * u * 2 }, each: .2, dur: .9, max: W * .8 });
+K.text(g, 'Every frame is a world', W / 2, H * .72, { size: H * .05, weight: 500, family: K.FONTS.serif, fill: '#cfd3ff', alpha: K.prog(lt, 1.2, 1.8) });
 ```
 
 ## type-karaoke-captions — Word-by-word highlighted captions (Persian-safe)
-tags: typography captions subtitles karaoke highlight words dubbing lyrics speech persian-ok rtl 2d cheap
-use: subtitles that are part of the design — dubbing/translation products, lyric videos, spoken explainers. The active word lights up, the others wait, a pill glides from word to word; the line is readable the whole time
+tags: typography captions subtitles karaoke highlight words lyrics speech persian-ok rtl 2d cheap
+use: subtitles that are part of the design — captioned products, lyric videos, spoken explainers. The active word lights up, the others wait, a pill glides from word to word; the line is readable the whole time
 how: lay the line out once with `K.lay` (word centres and widths, RTL-aware: the first Persian word is the rightmost), find the active word from the clock, draw spoken words bright, future words dim, the active word dark on a pill that eases to its box and pops with `K.wobble`. Words, never letters, so Persian stays joined. For real speech, feed `per` from your transcript timings instead of a constant.
 pair: ui-glass-panels (the card behind the line), sfx-ui-tick (one tick per word), bg-gradient-mesh
 avoid: highlighting per letter in Persian; changing the line while a word is active; text under 4 % of frame height or without a card/scrim on busy footage
 ```js scene
 //@ {"peak":2.0,"bg":"#0b0d1a"}
 const size = H * .075, T0 = .25, per = .4, pad = size * .22, dark = '#0b0d1a', white = '#ffffff';
-[['Hear every voice in your language', .4, 0], ['هر صدا را به زبان خودت بشنو', .62, .12]].forEach(([str, fy, off]) => {
+[['Make every frame move', .4, 0], ['هر فریم را به حرکت درآور', .62, .12]].forEach(([str, fy, off]) => {
   const L = K.lay(g, str, W / 2, { size, weight: 700, max: W * .86 }), y = H * fy, n = L.words.length, t = lt - T0 - off, idx = Math.min(n - 1, Math.floor(t / per)), cur = L.words[Math.max(0, idx)], prev = L.words[Math.max(0, idx - 1)];
   const q = idx <= 0 ? 1 : K.E.outCubic(K.prog(t - idx * per, 0, .16));                                  // glide progress of the pill from the previous word to this one
   if (idx >= 0) { const px = K.lerp(prev.x, cur.x, q), pw = K.lerp(prev.w, cur.w, q) + pad * 2; K.rr(g, px - pw / 2, y - size * .66, pw, size * 1.32, size * .3); g.fillStyle = K.gradient(g, px - pw / 2, 0, px + pw / 2, 0, [[0, '#8a63ff'], [1, '#40f5f5']]); g.fill(); }
@@ -270,3 +270,15 @@ K.text(g, str, cx, cy, { size, family: fam, weight: 700, fill: 'rgba(0,0,0,0)', 
 g.globalAlpha = fill; K.text(g, str, cx, cy, { size, family: fam, weight: 700, fill: '#ffffff', glow: { color: '#40f5f5', blur: size * .12 } }); g.globalAlpha = 1;
 if (p > 0 && p < 1) { K.glow(g, edge, cy, size * .5, '#40f5f5', .9); K.glow(g, edge, cy, size * .18, '#ffffff', 1); }
 ```
+
+## mg-mask-reveal — Lines that slide up out of a mask
+tags: motion graphics type text reveal mask slide up headline title lines kinetic
+use: titles, names, quotes, sub-lines — the default entrance for any line of text in a designed film (`MG.mask`)
+how: clip a box around the line and slide the text up from below it with an `outExpo` curve (0.6–0.8 s), staggering lines by 0.12 s; the accent underline draws itself right after the last line
+avoid: fading text in place (it reads as a slideshow); sliding more than ~1.2 × the font size
+
+## mg-counter-stats — Numbers that count up inside cards
+tags: motion graphics stats numbers counter count up cards infographic kpi
+use: "8+ years · 120 projects · 14 awards", prices, percentages — numbers are the strongest thing a simple film can show (`stats` scene, `MG.stat`)
+how: ease the value with `outExpo` over ~1.4 s from the moment its card lands, set the suffix at half the size, tick sound while it counts and a chime when it lands (audio.mjs does this from the spec)
+avoid: numbers typed as text; counting longer than 1.8 s

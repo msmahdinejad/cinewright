@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/manifesto-typography__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "manifesto-typography",
+  "domain": "typography",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 2354,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 20,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 8.96,
+    "audio": {
+      "lufs": -14.4,
+      "lra": 1.3,
+      "truePeak": -1.5,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0515,
+      "mean": 0.0724,
+      "quietPct": 0,
+      "cuts": 23,
+      "longestStatic": 0,
+      "curve": "▅█████▂██▄███▇▅████▇▄█▆████▅██▇███▆▃▅"
+    },
+    "look": {
+      "medianFill": 43,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 24,
+      "perMinute": 72
+    }
+  },
+  "session": {
+    "events": 161,
+    "itemTypes": {
+      "error": 2,
+      "reasoning": 44,
+      "agent_message": 13,
+      "todo_list": 7,
+      "command_execution": 68,
+      "mcp_tool_call": 16
+    },
+    "turns": 1,
+    "inputTokens": 4695182,
+    "outputTokens": 35301,
+    "cachedInputTokens": 4525056,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\n20-second 1080p60 typography film with seven treatments, saturated colour floods, and a 3D flight through the letters.\nOriginal 174 BPM drum-and-bass, word-synced synth stabs, and one silent beat before the final line; verified H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2974,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pocketwise</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- ONE timeline for picture AND sound (audio.mjs reads it). 120 BPM → a beat is 0.5 s; every scene starts on a beat. coin: 5 coins leave each of the 3 flatmates, `step` apart, `gap` between flatmates, `flight` seconds in the air. -->
+<script id="cues" type="application/json">
+{ "bpm": 120, "duration": 20,
+  "t": { "pile": 0, "phone": 3, "type": 3.5, "digits": 4.1, "join": 4.9, "split": 5.9, "toast": 6.1, "settle": 7, "coins": 8.2, "burst": 11.3, "summary": 12.8, "count": 13.2, "end": 16.3, "drop": 17.0 },
+  "coin": { "per": 5, "step": 0.16, "flight": 0.85, "gap": 0.45 },
+  "hits": [0.15, 0.45, 3, 7, 11.3, 12.8, 16.3, 17.0] }
+</script>
+
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/gfx.js"></script><script src="lib/fx.js"></script><script src="lib/trans.js"></script>
+<script src="lib/stage.js"></script><script src="lib/scene3d.js"></script><script src="lib/parts.js"></script><script src="lib/type.js"></script><script src="lib/cine.js"></script><script src="lib/ui.js"></script>
+<script>
+'use strict';
+/* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   POCKETWISE — "Settle up". A 20 s explainer film for a fictional shared-expenses app, five scenes, five engines:
+   1 pile     2D: falling receipts in parallax + chat bubbles + a slammed headline, handheld camera
+   2 phone    GPU: a real 3D phone (Scene3D) whose screen is a live 2D app UI (canvas → texture), orbit camera, big type beside it
+   3 settle   GPU: four plates and gold coins arcing between them (Scene3D, floor reflection, DOF), balances counting to 0.00, confetti burst
+   4 summary  2D UI on a shader gradient: monthly total (odometer), line chart, donut, members "even"
+   5 end      2D mark + coin drop, wordmark, tagline, CTA; dust drifts (Parts.Emitter)
+   ═════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+const CUES = JSON.parse(document.getElementById('cues').textContent), T = CUES.t, HITS = CUES.hits, COIN = CUES.coin;
+const Q = K.params(), W = Q.w || 1920, H = Q.h || 1080, FPS = Q.fps || 30, DUR = CUES.duration;
+const u = H / 1080;
+const PAL = { ink: '#0d0f24', ink2: '#171a3c', paper: '#f4efe6', violet: '#7a5cff', aqua: '#2fe0e8', amber: '#ffb84d', coral: '#ff6b6b', green: '#37d67a' };
+const FONT = { head: { family: K.FONTS.grotesk, weight: 800 }, ui: { family: K.FONTS.sans, weight: 600 }, mono: { family: K.FONTS.mono, weight: 500 } };
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: 'Pocketwise', audio: 'audio.wav', markers: Object.entries(T).map(([label, t]) => ({ t, label })) };
+const { E, seg, prog, clamp, lerp } = K;
+const eur = (n, d = 2) => '€' + K.fmtNum(Math.abs(n), { decimals: d });
+
+/* ═══════════ ENGINE ═══════════ */
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx), S = new Stage(post, gfx, { fps: FPS });
+const P3 = new Scene3D(gfx, { W, H }), Q3 = new Scene3D(gfx, { W, H });          // phone world · settle world
+let EMI, phoneCv, phoneTex;
+const R = K.rng(20261009);
+
+/* ═══════════ SHARED 2D HELPERS ═══════════ */
+function backdrop(g, lt, a = PAL.ink2, b = PAL.ink) {
+  g.fillStyle = K.gradient(g, 0, 0, W, H, [[0, a], [1, b]]); g.fillRect(0, 0, W, H);
+  K.glow(g, W * (.18 + .03 * Math.sin(lt * .6)), H * .2, 900 * u, PAL.violet, .22); K.glow(g, W * .86, H * (.82 + .02 * Math.cos(lt * .5)), 1000 * u, PAL.aqua, .13);
+}
+const dotsGrid = (g, lt, a = .06) => { g.save(); g.fillStyle = `rgba(255,255,255,${a})`; const s = 64 * u, ox = (lt * 12 * u) % s; for (let x = -s + ox; x < W + s; x += s) for (let y = 0; y < H; y += s) { g.beginPath(); g.arc(x, y, 1.6 * u, 0, 6.3); g.fill(); } g.restore(); };
+const avatars = [['Ana', PAL.violet], ['Ben', PAL.aqua], ['Cy', PAL.amber], ['Dee', PAL.coral]];
+const vs = () => W / H < 1.4 ? .6 : 1;
+
+/* ═══════════ 1 · PILE ═══════════ */
+const ITEMS = ['MILK 1L', 'PASTA x3', 'WIFI MAY', 'CLEANING', 'ELECTRIC', 'PIZZA x2', 'COFFEE', 'TOWELS', 'BIN BAGS', 'SOAP', 'RENT SHARE', 'FRUIT'];
+const RECEIPTS = Array.from({ length: 18 }, (_, i) => ({ x: R(), y0: -.9 + R() * 1.6, spd: 230 + R() * 330, w: 150 + R() * 150, rot: (R() - .5) * 1.1, spin: (R() - .5) * .8, depth: R(), seed: i, lines: 4 + Math.floor(R() * 4) }));
+function receipt(g, r, lt) {
+  const sc = .55 + .6 * r.depth, w = r.w * u * sc, h = w * (1.25 + r.lines * .17), x = r.x * W, y = r.y0 * H + lt * r.spd * u * (.5 + r.depth * .8), a = r.rot + r.spin * lt * .6;
+  g.save(); g.translate(x, y); g.rotate(a); g.globalAlpha *= .5 + .5 * r.depth; g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 30 * u; g.shadowOffsetY = 14 * u;
+  g.beginPath(); g.moveTo(-w / 2, -h / 2); g.lineTo(w / 2, -h / 2); g.lineTo(w / 2, h / 2); const n = 9; for (let k = 0; k <= n; k++) g.lineTo(w / 2 - (k + .5) * w / n, h / 2 + (k % 2 ? -1 : 1) * 7 * u * sc); g.lineTo(-w / 2, h / 2); g.closePath(); g.fillStyle = PAL.paper; g.fill(); g.shadowBlur = 0; g.shadowOffsetY = 0; g.shadowColor = 'transparent';
+  K.text(g, ITEMS[(r.seed * 5) % ITEMS.length].split(' ')[0] + ' CO.', 0, -h / 2 + h * .09, { ...FONT.mono, weight: 700, size: w * .105, fill: '#2a2740' });
+  for (let k = 0; k < r.lines; k++) { const yy = -h / 2 + h * .2 + k * h * .12; K.text(g, ITEMS[(r.seed * 3 + k * 7) % ITEMS.length], -w * .4, yy, { ...FONT.mono, size: w * .075, fill: '#5b5876', align: 'left' }); K.text(g, (4 + K.hash(r.seed * 31 + k) * 38).toFixed(2), w * .4, yy, { ...FONT.mono, size: w * .075, fill: '#5b5876', align: 'right' }); }
+  g.fillStyle = '#2a2740'; g.fillRect(-w * .42, h * .3, w * .84, 2 * u); K.text(g, 'TOTAL ' + (22 + K.hash(r.seed * 7) * 90).toFixed(2), 0, h * .38, { ...FONT.mono, weight: 700, size: w * .095, fill: '#171433' });
+  g.restore();
+}
+function bubble(g, text, x, y, lt, at, side, col = PAL.paper, ink = '#1a1838') {
+  const p = E.outBack(prog(lt, at, at + .42)); if (p <= 0) return; const size = 38 * u, m = K.measure(g, text, { ...FONT.ui, size }), w = m.w + 64 * u, h = size * 2.1;
+  g.save(); g.translate(x, y + (1 - p) * 40 * u); g.scale(p, p); g.rotate(Math.sin(lt * 1.7 + at * 5) * .012 * side); g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 36 * u; g.shadowOffsetY = 14 * u;
+  K.rr(g, -w / 2, -h / 2, w, h, h * .42); g.fillStyle = col; g.fill(); g.shadowBlur = 0; g.shadowOffsetY = 0; g.shadowColor = 'transparent'; g.beginPath(); g.moveTo(side * (w / 2 - 70 * u), h / 2 - 2); g.lineTo(side * (w / 2 - 28 * u), h / 2 + 34 * u); g.lineTo(side * (w / 2 - 130 * u), h / 2 - 2); g.fill();
+  K.text(g, text, 0, 0, { ...FONT.ui, size, fill: ink }); g.restore();
+}
+function sPile(g, lt, t) {
+  backdrop(g, lt, '#241a55', PAL.ink); dotsGrid(g, lt, .05);
+  RECEIPTS.slice().sort((a, b) => a.depth - b.depth).forEach(r => receipt(g, r, lt + 1));
+  g.fillStyle = 'rgba(13,15,36,.16)'; g.fillRect(0, 0, W, H);
+  const hs = 200 * u;
+  K.slam(g, lt - .12, W / 2, H * .37, () => K.text(g, 'Who paid', 0, 0, { ...FONT.head, size: hs, fill: PAL.paper, shadow: { color: 'rgba(122,92,255,.9)', blur: 60 * u }, ink: true }), { from: 2.6 });
+  K.slam(g, lt - .42, W / 2, H * .60, () => K.text(g, 'for what?', 0, 0, { ...FONT.head, size: hs, fill: PAL.amber, shadow: { color: 'rgba(255,184,77,.55)', blur: 60 * u }, ink: true }), { from: 2.6 });
+  bubble(g, 'did anyone pay the internet?', W * .22, H * .12, lt, .7, -1); bubble(g, 'you owe me €23.40', W * .79, H * .88, lt, 1.15, 1, PAL.violet, '#fff');
+  bubble(g, 'who has the receipt??', W * .24, H * .84, lt, 1.6, -1, PAL.aqua, '#0a2230'); bubble(g, 'rent is due Friday', W * .8, H * .13, lt, 2.05, 1);
+  const bp = E.outBack(prog(lt, .5, .95)), cnt = Math.round(3 + 34 * prog(lt, .6, 2.9)); if (bp > 0) { const bx = W * .93, by = H * .06; g.save(); g.translate(bx, by); g.scale(bp, bp); g.fillStyle = PAL.coral; g.beginPath(); g.arc(0, 0, 40 * u, 0, 6.3); g.fill(); K.text(g, String(cnt), 0, 2 * u, { ...FONT.ui, weight: 800, size: 40 * u, fill: '#fff' }); g.restore(); }
+}
+
+/* ═══════════ 2 · PHONE ═══════════ */
+function drawPhoneUI(g, t) {
+  const DW = 360, DH = 720;
+  g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, phoneCv.width, phoneCv.height); g.scale(phoneCv.width / DW, phoneCv.height / DH);
+  g.fillStyle = K.gradient(g, 0, 0, DW, DH, [[0, '#1d1650'], [1, '#0d0f24']]); g.fillRect(0, 0, DW, DH); K.glow(g, 300, 90, 220, PAL.violet, .35); K.glow(g, 40, 650, 200, PAL.aqua, .16);
+  K.text(g, '9:41', 34, 26, { ...FONT.ui, weight: 700, size: 14, fill: '#fff', align: 'left' }); g.fillStyle = '#fff'; K.rr(g, 300, 20, 26, 12, 3.5); g.fill(); g.fillRect(327, 23, 2.5, 6);
+  UI.icon(g, 'arrow', 34, 74, 9, '#fff', 2.4); K.text(g, 'Add a bill', 58, 74, { ...FONT.head, size: 24, fill: '#fff', align: 'left' });
+  // what for
+  const typed = K.typed('Pizza night', prog(t, T.type, T.type + .75));
+  g.save(); K.rr(g, 24, 108, 312, 68, 18); g.fillStyle = 'rgba(255,255,255,.07)'; g.fill(); g.restore(); K.text(g, 'WHAT FOR', 42, 128, { ...FONT.ui, size: 10.5, fill: '#9aa0c8', align: 'left', spacing: 1.4 });
+  K.text(g, typed, 42, 154, { ...FONT.ui, weight: 700, size: 22, fill: '#fff', align: 'left' }); if (t < T.digits + .2 && Math.floor(t * 3) % 2 === 0) { const w = K.measure(g, typed, { ...FONT.ui, weight: 700, size: 22 }).w; g.fillStyle = PAL.aqua; g.fillRect(44 + w, 142, 2, 24); }
+  // amount
+  const ap = E.outExpo(prog(t, T.digits, T.digits + 1.0));
+  K.text(g, '€', 62, 246, { ...FONT.head, size: 50, fill: PAL.amber }); Type.counter(g, 84 * ap, 206, 246, { size: 84, weight: 800, decimals: 2, fill: '#fff', family: K.FONTS.grotesk, sep: false });
+  // paid by + split between
+  const sp = E.outBack(prog(t, T.join - .4, T.join + .1)); g.save(); g.globalAlpha *= clamp(sp); UI.pill(g, 106, 318, 'Paid by Ana', { color: PAL.violet, size: 13.5 }); g.restore();
+  K.text(g, 'SPLIT BETWEEN', 36, 360, { ...FONT.ui, size: 10.5, fill: '#9aa0c8', align: 'left', spacing: 1.4 });
+  avatars.forEach(([n, c], i) => { const at = T.join + i * .22, p = E.outBack(prog(t, at, at + .4)), x = 70 + i * 74, y = 412; g.save(); g.translate(x, y); g.scale(.4 + .6 * p, .4 + .6 * p); g.globalAlpha *= clamp(p * 2);
+    if (p > .9) { g.strokeStyle = PAL.aqua; g.lineWidth = 3; g.beginPath(); g.arc(0, 0, 31, 0, 6.3); g.stroke(); } UI.avatar(g, 0, 0, 26, n, c); K.text(g, n, 0, 42, { ...FONT.ui, size: 12.5, fill: '#cfd3f0' }); g.restore(); });
+  // segmented control
+  const sx = 24, sw = 312, sh = 46, sy = 478, sel = E.inOutCubic(prog(t, T.join + 1.0, T.join + 1.35)); K.rr(g, sx, sy, sw, sh, 23); g.fillStyle = 'rgba(255,255,255,.07)'; g.fill();
+  const segw = sw / 3, px = sx + 4 + lerp(segw, 0, sel); K.rr(g, px, sy + 4, segw - 8, sh - 8, 19); g.fillStyle = K.gradient(g, px, 0, px + segw, 0, [[0, '#4a2fd6'], [1, '#7a5cff']]); g.fill();
+  ['Equally', 'By share', 'By item'].forEach((s, i) => K.text(g, s, sx + segw * (i + .5), sy + sh / 2, { ...FONT.ui, weight: 700, size: 14, fill: i === 0 && sel > .5 ? '#fff' : i === 1 && sel <= .5 ? '#fff' : '#aab0d8' }));
+  const ep = E.outExpo(prog(t, T.join + 1.3, T.join + 1.8)); g.save(); g.globalAlpha *= ep; K.text(g, '€21.00 each', 180, 566 - (1 - ep) * 10, { ...FONT.head, size: 26, fill: PAL.amber }); g.restore();
+  // button
+  const bt = t - T.split, press = bt > -.1 && bt < .18 ? 1 : 0, done = bt > .2; const bw = 312, bh = 58, bx = 24, by = 616;
+  g.save(); g.translate(bx + bw / 2, by + bh / 2); g.scale(1 - .05 * press, 1 - .05 * press); K.rr(g, -bw / 2, -bh / 2, bw, bh, 29); g.fillStyle = done ? PAL.green : K.gradient(g, -bw / 2, 0, bw / 2, 0, [[0, '#4a2fd6'], [1, '#7a5cff']]); g.shadowColor = done ? 'rgba(55,214,122,.6)' : 'rgba(122,92,255,.6)'; g.shadowBlur = 24; g.fill(); g.shadowBlur = 0;
+  if (done) UI.icon(g, 'check', -52, 0, 11, '#fff', 3.2); K.text(g, done ? 'Split!' : 'Split it', done ? -10 : 0, 1, { ...FONT.ui, weight: 800, size: 20, fill: '#fff', align: done ? 'left' : 'center' }); g.restore();
+  if (bt > -.15 && bt < .7) { const rp = prog(bt, -.05, .6); g.strokeStyle = `rgba(255,255,255,${.7 * (1 - rp)})`; g.lineWidth = 3; g.beginPath(); g.arc(bx + bw * .6, by + bh / 2, 8 + 60 * E.outCubic(rp), 0, 6.3); g.stroke(); }
+  UI.toast(g, 30, 14, 300, t - T.toast, { title: '€21.00 each', body: 'Ben, Cy and Dee were notified', icon: 'check', color: PAL.green, life: 1.6 });
+  g.restore();
+}
+function buildPhone() {
+  phoneCv = K.canvas(720, 1440); drawPhoneUI(phoneCv.getContext('2d'), T.phone); phoneTex = gfx.up(phoneCv);
+  P3.env = Env.softbox({ colors: ['#0b0c16', '#ffffff', '#ffc9a0', '#8fa8ff'] }); P3.sky = { amt: .14, rough: .4 }; P3.floor({ y: -2.75, color: '#0b0c16', reflect: .5, fade: .03 }); P3.cam.fov = 28;
+  P3.body = P3.mesh(Geo.box(2.35, 4.75, .24), Mat.pbr({ base: '#0b0c10', metal: .75, rough: .2 }));
+  P3.screen = P3.mesh(Geo.plane(2.15, 4.55), Mat.emissive('#ffffff', .62, { map: phoneTex }), { pos: [0, 0, .125] });
+}
+const sPhone = {
+  gl: ({ rt }, lt, t) => {
+    fx.bg('gradient', { c: ['#0d0f24', '#2b1f78', '#10183f', '#0d0f24'], speed: .18, amt: .6 }, { to: rt });
+    drawPhoneUI(phoneCv.getContext('2d'), t); phoneTex = gfx.up(phoneCv, phoneTex);
+    const a = -.55 + .75 * E.outCubic(prog(lt, -.2, 3.2)), r = 11.9 - 2.0 * E.inOutCubic(prog(lt, 0, 3.8)), px = 1.55 * vs();
+    P3.body.rot = P3.screen.rot = [.06 * Math.sin(lt * .9), a * .55, 0]; P3.body.pos = [px, -.1, 0]; P3.screen.pos = [px + Math.sin(a * .55) * .125, -.1, Math.cos(a * .55) * .125];
+    P3.cam.pos = [Math.sin(lt * .5) * 1.2 + .8, .4, r]; P3.cam.target = [1.1 * vs(), 0, 0];
+    gfx.blit(P3.render({ clear: [0, 0, 0, 0], dof: { focus: r, range: 4.5, blur: 5 } }), { to: rt, blend: 'alpha' });
+    EMI.draw({ t, cam: { yaw: .1 } }, { to: rt });
+  },
+  draw: (g, lt, t) => {
+    const hs = 150 * u, x = W * .27; g.save(); g.shadowColor = 'rgba(122,92,255,.7)'; g.shadowBlur = 50 * u;
+    K.words(g, 'Add it.', x, H * .37, lt - .15, { ...FONT.head, size: hs, fill: PAL.paper, dur: .6, each: .08 });
+    K.words(g, 'Split it.', x, H * .56, lt - .55, { ...FONT.head, size: hs, fill: PAL.amber, dur: .6, each: .08 }); g.restore();
+    const p = E.outExpo(prog(lt, 1.5, 2.2)); if (p > 0) { g.save(); g.globalAlpha *= p; K.text(g, 'No spreadsheets.', x, H * .69 + (1 - p) * 20 * u, { ...FONT.ui, weight: 600, size: 44 * u, fill: 'rgba(244,239,230,.9)' }); K.text(g, 'No awkward texts.', x, H * .69 + 62 * u + (1 - p) * 20 * u, { ...FONT.ui, weight: 600, size: 44 * u, fill: 'rgba(244,239,230,.9)' }); g.restore(); }
+  }
+};
+
+/* ═══════════ 3 · SETTLE ═══════════ */
+const PLATES = [{ n: 'Ana', c: PAL.violet, pos: [0, 0, -2.3] }, { n: 'Ben', c: PAL.aqua, pos: [-3.3, 0, .9] }, { n: 'Cy', c: PAL.amber, pos: [0, 0, 2.0] }, { n: 'Dee', c: PAL.coral, pos: [3.3, 0, .9] }];
+const coinTimes = (d, k) => { const dep = T.coins + d * COIN.gap + k * COIN.step; return [dep, dep + COIN.flight]; };
+function balanceAt(i, t) {                       // balance of plate i at time t (coins leave the debtors, land on Ana)
+  if (i === 0) { let n = 0; for (let d = 0; d < 3; d++) for (let k = 0; k < COIN.per; k++) if (t >= coinTimes(d, k)[1]) n++; return 63 - n * 4.2; }
+  let n = 0; for (let k = 0; k < COIN.per; k++) if (t >= coinTimes(i - 1, k)[0]) n++; return -21 + n * 4.2;
+}
+function buildSettle() {
+  Q3.env = Env.softbox({ colors: ['#0a0b18', '#fff2e0', PAL.aqua, PAL.violet] }); Q3.sky = { amt: .18, rough: .5 }; Q3.floor({ y: -.12, color: '#0d1030', reflect: .55, fade: .025 }); Q3.fog = { color: '#0a0b1c', density: .012 }; Q3.cam.fov = 30;
+  Q3.plates = PLATES.map(p => Q3.mesh(Geo.cylinder(p.n === 'Ana' ? 1.25 : 1.0, p.n === 'Ana' ? 1.32 : 1.07, .22, 72), Mat.plastic({ base: p.c, rough: .22, coat: .9 }), { pos: [p.pos[0], p.pos[1], p.pos[2]] }));
+  Q3.rings = PLATES.map(p => Q3.mesh(Geo.torus(p.n === 'Ana' ? 1.42 : 1.16, .035, 96, 10), Mat.emissive(PAL.green, 2.0), { pos: [p.pos[0], .13, p.pos[2]], visible: false }));
+  Q3.coins = Array.from({ length: 3 * COIN.per }, () => Q3.mesh(Geo.cylinder(.3, .3, .075, 48), Mat.gold({ rough: .16 })));
+}
+const plateTop = i => [PLATES[i].pos[0], .15, PLATES[i].pos[2]];
+const LANDS = []; for (let d = 0; d < 3; d++) for (let k = 0; k < COIN.per; k++) LANDS.push(coinTimes(d, k)[1]);
+const rise3 = (lt, i) => E.outBack(prog(lt, -.05 + i * .08, .5 + i * .08));
+const sSettle = {
+  gl: ({ rt }, lt, t) => {
+    fx.bg('bokeh', { c: ['#080a1c', '#2b2f8f', '#7a5cff', '#2fe0e8'], speed: .3, amt: .8 }, { to: rt });
+    Q3.plates.forEach((m, i) => { const base = Math.max(.001, rise3(lt, i)), bump = i === 0 ? 1 + .07 * K.pulse(t, LANDS, .1, 1) : 1; m.scale = [base * bump, base, base * bump]; });
+    for (let d = 0; d < 3; d++) for (let k = 0; k < COIN.per; k++) {                       // one arc per coin, tumbling about X
+      const m = Q3.coins[d * COIN.per + k], [t0, t1] = coinTimes(d, k), p = prog(t, t0, t1), from = plateTop(d + 1), to = plateTop(0);
+      if (t < t0 - .25) { m.visible = false; continue; } m.visible = p < 1;
+      const e = E.inOutCubic(p), lift = Math.sin(Math.PI * p) * (2.6 + k * .12), wob = (k - 2) * .12 * Math.sin(Math.PI * p), s = E.outBack(prog(t, t0 - .25, t0));
+      m.pos = [lerp(from[0], to[0], e) + wob, lerp(from[1] + .35, to[1] + .35, e) + lift, lerp(from[2], to[2], e)]; m.scale = [s, s, s]; m.rot = [p * 9 + k, p * 3, .5 * Math.sin(p * 6)];
+    }
+    Q3.rings.forEach(m => { m.visible = t >= T.burst - .05; const s = 1 + .5 * (1 - E.outCubic(prog(t, T.burst, T.burst + .7))); m.scale = [s, 1, s]; });
+    const push = E.inOutCubic(prog(lt, 0, 5.2)), dist = 10.8 - 1.8 * push + .9 * K.pulse(t, [T.burst], .25, 1), orb = Math.sin(lt * .4) * 1.4;
+    Q3.cam.pos = [orb, 4.6 - 1.1 * push, dist]; Q3.cam.target = [0, .1, -.1];
+    gfx.blit(Q3.render({ clear: [0, 0, 0, 0], dof: { focus: dist * .98, range: 6, blur: 4 } }), { to: rt, blend: 'alpha' });
+    EMI.draw({ t, cam: { yaw: .05 * Math.sin(lt * .5) } }, { to: rt });
+  },
+  draw: (g, lt, t) => {
+    PLATES.forEach((pl, i) => {
+      const pr = rise3(lt, i); if (pr <= 0) return; const [sx, sy0] = Q3.toScreen([pl.pos[0], .1, pl.pos[2]]), sy = sy0 + (i === 0 ? -235 : 128) * u, bal = balanceAt(i, t), zero = Math.abs(bal) < .05, settled = t > T.burst - .1;
+      const col = zero || settled ? PAL.green : bal > 0 ? PAL.aqua : PAL.coral, label = (bal > .05 ? '+' : bal < -.05 ? '−' : '') + eur(zero ? 0 : bal);
+      g.save(); g.translate(sx, sy); g.scale(pr, pr); g.globalAlpha *= clamp(pr * 2);
+      UI.avatar(g, 0, 0, 36 * u, pl.n, pl.c); K.text(g, pl.n, 0, 60 * u, { ...FONT.ui, weight: 700, size: 30 * u, fill: '#e8e9fb' });
+      K.text(g, label, 0, 122 * u, { ...FONT.head, size: 72 * u * (i === 0 ? 1 + .12 * K.pulse(t, LANDS, .09, 1) : 1), fill: col, shadow: { color: 'rgba(0,0,0,.5)', blur: 20 * u } });
+      if (settled) { const cp = E.outBack(prog(t, T.burst, T.burst + .45)); g.save(); g.translate(34 * u, -34 * u); g.scale(cp, cp); g.fillStyle = PAL.green; g.beginPath(); g.arc(0, 0, 18 * u, 0, 6.3); g.fill(); UI.icon(g, 'check', 0, 1 * u, 10 * u, '#06240f', 3.2 * u); g.restore(); }
+      g.restore(); });
+    const hp = prog(t, T.burst, T.burst + .5); if (hp > 0) { g.save(); const s = 1 + (1 - E.outExpo(hp)) * .6; g.globalAlpha *= clamp(hp * 3); g.translate(W / 2, H * .085); g.scale(s, s); g.shadowColor = 'rgba(55,214,122,.8)'; g.shadowBlur = 50 * u; K.text(g, 'Everyone’s even.', 0, 0, { ...FONT.head, size: 112 * u, fill: PAL.paper }); g.restore(); }
+    const tp = E.outExpo(prog(lt, .0, .6)); if (tp > 0 && t < T.coins + 1.5) { g.save(); g.globalAlpha *= tp * (1 - prog(t, T.coins + .8, T.coins + 1.5)); K.text(g, 'Settle up', W / 2, H * .085 + (1 - tp) * 20 * u, { ...FONT.head, size: 104 * u, fill: PAL.paper, shadow: { color: 'rgba(122,92,255,.8)', blur: 50 * u } }); g.restore(); }
+  }
+};
+
+/* ═══════════ 4 · SUMMARY ═══════════ */
+const BILLS = [['Pizza night', 84], ['Internet', 39.9], ['Groceries', 126.4], ['Rent', 900], ['Cleaning', 45], ['Electricity', 61.2], ['Movie night', 32.5]];
+function ticker(g, y, lt, k) {                       // recent bills scrolling past: something is always moving under the numbers
+  const cw = 360 * k, total = cw * BILLS.length, off = (lt * 150 * k) % total; g.save(); g.globalAlpha *= .9 * clamp(prog(lt, .8, 1.4));
+  for (let r = -1; r < 2; r++) BILLS.forEach(([n, v], i) => { const x = -off + r * total + i * cw + 90 * k; if (x < -cw || x > W + cw) return; K.rr(g, x, y - 34 * k, cw - 28 * k, 68 * k, 34 * k); g.fillStyle = 'rgba(255,255,255,.07)'; g.fill(); K.text(g, n, x + 30 * k, y, { ...FONT.ui, size: 27 * k, fill: '#cfd3f0', align: 'left' }); K.text(g, eur(v), x + cw - 60 * k, y, { ...FONT.ui, weight: 700, size: 27 * k, fill: PAL.amber, align: 'right' }); });
+  g.restore();
+}
+const sSummary = {
+  gl: ({ rt }, lt, t) => { fx.bg('blobs', { c: ['#0d0f24', '#2a1f8a', '#143a7a', '#7a5cff'], speed: .35, amt: .75 }, { to: rt }); EMI.draw({ t, cam: { yaw: .08 } }, { to: rt }); },
+  draw: (g, lt, t) => {
+    const k = u, cw = 1640 * k, ch = 700 * k, cx = (W - cw) / 2, cy = H * .5 - ch / 2 + 14 * k, p = E.outExpo(prog(lt, -.05, .7));
+    g.save(); g.translate(0, (1 - p) * 70 * k + Math.sin(lt * 1.3) * 5 * k); g.globalAlpha *= clamp(p * 2);
+    K.words(g, 'May, in one glance', W / 2, H * .092, lt - .05, { ...FONT.head, size: 92 * k, fill: PAL.paper, dur: .6, each: .08 });
+    UI.card(g, cx, cy, cw, ch, { radius: 44 * k, fill: 'rgba(20,23,58,.88)' });
+    K.text(g, 'TOTAL SPENT', cx + 70 * k, cy + 78 * k, { ...FONT.ui, size: 26 * k, fill: '#9aa0c8', align: 'left', spacing: 2 });
+    const cp = E.outExpo(prog(t, T.count, T.count + 1.5)); K.text(g, '€', cx + 70 * k, cy + 190 * k, { ...FONT.head, size: 104 * k, fill: PAL.amber, align: 'left' });
+    Type.counter(g, 1284.6 * cp, cx + 450 * k, cy + 190 * k, { size: 128 * k, weight: 800, decimals: 2, fill: '#fff', family: K.FONTS.grotesk });
+    const cpill = E.outBack(prog(lt, 1.5, 2.0)); if (cpill > 0) { g.save(); g.translate(cx + 250 * k, cy + 292 * k); g.scale(cpill, cpill); UI.pill(g, 0, 0, '↓ 8% vs April', { color: PAL.green, size: 26 * k }); g.restore(); }
+    UI.lineChart(g, cx + 70 * k, cy + 345 * k, 780 * k, 260 * k, [38, 52, 41, 66, 58, 79, 70, 96], seg(lt, .4, 2.2, E.inOutCubic), { color: PAL.aqua, labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'], size: 22 * k });
+    const dx = cx + 1130 * k, dy = cy + 240 * k, dp = seg(lt, .5, 2.2, E.outCubic);
+    UI.donut(g, dx, dy, 124 * k, [{ v: 52, color: PAL.violet }, { v: 24, color: PAL.aqua }, { v: 16, color: PAL.amber }, { v: 8, color: PAL.coral }], dp);
+    K.text(g, '4 people', dx, dy - 12 * k, { ...FONT.ui, weight: 700, size: 32 * k, fill: '#fff' }); K.text(g, 'all even', dx, dy + 28 * k, { ...FONT.ui, size: 26 * k, fill: PAL.green });
+    [['Rent', PAL.violet, '52%'], ['Food', PAL.aqua, '24%'], ['Bills', PAL.amber, '16%'], ['Fun', PAL.coral, '8%']].forEach(([n, c, v], i) => { const lp = E.outExpo(prog(lt, .9 + i * .12, 1.5 + i * .12)); g.save(); g.globalAlpha *= lp; g.translate((1 - lp) * 30 * k, 0); const yy = cy + 135 * k + i * 62 * k, xx = cx + 1330 * k; g.fillStyle = c; g.beginPath(); g.arc(xx, yy, 12 * k, 0, 6.3); g.fill(); K.text(g, n, xx + 30 * k, yy, { ...FONT.ui, size: 32 * k, fill: '#e6e8ff', align: 'left' }); K.text(g, v, xx + 250 * k, yy, { ...FONT.ui, weight: 700, size: 32 * k, fill: '#fff', align: 'right' }); g.restore(); });
+    avatars.forEach(([n, c], i) => { const mp = E.outBack(prog(lt, 1.6 + i * .12, 2.1 + i * .12)); g.save(); g.translate(cx + 960 * k + i * 170 * k, cy + 540 * k); g.scale(mp, mp); UI.avatar(g, 0, 0, 42 * k, n, c); K.text(g, 'even', 0, 76 * k, { ...FONT.ui, weight: 700, size: 28 * k, fill: PAL.green }); g.restore(); });
+    ticker(g, cy + ch + 70 * k, lt, k);
+    g.restore();
+  }
+};
+
+/* ═══════════ 5 · END ═══════════ */
+function pocketMark(g, x, y, s, lt) {               // a pocket (rounded outline with a notch) + a coin dropping in
+  const dp = prog(lt, .0, .75), cd = E.outCubic(prog(lt, .7, 1.3));
+  g.save(); g.translate(x, y); g.lineWidth = s * .1; g.lineCap = 'round'; g.lineJoin = 'round';
+  g.strokeStyle = PAL.violet; g.shadowColor = 'rgba(122,92,255,.8)'; g.shadowBlur = 36 * u; g.beginPath(); g.moveTo(-s * .62, -s * .15); g.lineTo(-s * .62, s * .1); g.quadraticCurveTo(-s * .62, s * .6, 0, s * .6); g.quadraticCurveTo(s * .62, s * .6, s * .62, s * .1); g.lineTo(s * .62, -s * .15);
+  g.setLineDash([s * 4, s * 4]); g.lineDashOffset = s * 4 * (1 - dp); g.stroke(); g.setLineDash([]); g.shadowBlur = 0;
+  g.save(); g.globalAlpha *= clamp(dp * 2); g.strokeStyle = PAL.aqua; g.beginPath(); g.moveTo(-s * .42, -s * .15); g.lineTo(s * .42, -s * .15); g.stroke(); g.restore();
+  const cy = lerp(-s * 1.3, -s * .02, cd), cs = E.outBack(prog(lt, .55, .85)); if (cs > 0) { g.save(); g.translate(0, cy); g.scale(cs, cs); const gr = g.createRadialGradient(-s * .1, -s * .1, s * .05, 0, 0, s * .3); gr.addColorStop(0, '#ffe29a'); gr.addColorStop(1, PAL.amber); g.fillStyle = gr; g.shadowColor = 'rgba(255,184,77,.9)'; g.shadowBlur = 40 * u; g.beginPath(); g.arc(0, 0, s * .26, 0, 6.3); g.fill(); g.shadowBlur = 0; g.strokeStyle = 'rgba(120,70,0,.55)'; g.lineWidth = s * .03; g.beginPath(); g.arc(0, 0, s * .17, 0, 6.3); g.stroke(); g.restore(); }
+  g.restore();
+}
+const sEnd = {
+  gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: ['#1d1560', '#0d0f24', '#122060', '#0d0f24'], speed: .15, amt: .75 }, { to: rt }); EMI.draw({ t, cam: { yaw: .05 } }, { to: rt }); },
+  draw: (g, lt, t) => {
+    const s = 200 * u; pocketMark(g, W / 2, H * .31, s, lt);
+    const wp = E.outExpo(prog(lt, .95, 1.6)); g.save(); g.globalAlpha *= clamp(wp * 1.6); K.text(g, 'Pocketwise', W / 2, H * .58 + (1 - wp) * 30 * u, { ...FONT.head, size: 180 * u, fill: (c, b) => { const gr = c.createLinearGradient(b.x0, 0, b.x1, 0), q = ((lt - 1.5) * .75) % 1.8 - .35, st = v => Math.max(0, Math.min(1, v)); gr.addColorStop(0, PAL.paper); gr.addColorStop(st(q - .14), PAL.paper); gr.addColorStop(st(q), '#ffd98a'); gr.addColorStop(st(q + .14), PAL.paper); gr.addColorStop(1, PAL.paper); return gr; }, shadow: { color: 'rgba(122,92,255,.55)', blur: 50 * u }, ink: true }); g.restore();
+    K.words(g, 'Split the bills. Keep the friends.', W / 2, H * .73, lt - 1.35, { ...FONT.ui, weight: 600, size: 56 * u, fill: PAL.amber, dur: .55, each: .05 });
+    const bp = E.outBack(prog(lt, 1.85, 2.3)); if (bp > 0) { g.save(); g.translate(W / 2, H * .86); g.scale(bp, bp); UI.button(g, -240 * u, -44 * u, 480 * u, 88 * u, 'Get Pocketwise', { size: 36 * u, hover: .5 + .5 * Math.sin(lt * 4) }); g.restore(); }
+  }
+};
+
+/* ═══════════ BUILD + TIMELINE ═══════════ */
+function buildParticles() {
+  EMI = new Parts.Emitter(gfx, { count: 30000 });
+  EMI.stream({ t0: 0, t1: DUR, n: 9000, spawn: { box: [W * 1.2, H * 1.2, 900] }, speed: [8, 30], life: [5, 9], dir: [0, 1, 0], flow: 30, size: [.9, 2.6], colors: ['#8fa8ff', '#ffffff', '#c9b8ff'], loop: true, glow: .25, drag: .5 });
+  EMI.burst({ t0: T.burst, pos: [0, -H * .05, 0], n: 5200, speed: [260 * u, 1500 * u], drag: 2.1, gravity: [0, -520 * u, 0], life: [1.4, 2.8], size: [3.6, 9], colors: [PAL.amber, PAL.aqua, PAL.violet, PAL.paper], glow: .16, flow: 40 });
+  EMI.burst({ t0: T.burst + .12, pos: [0, -H * .05, 0], n: 2600, speed: [120 * u, 900 * u], drag: 1.7, gravity: [0, 200 * u, 0], life: [1.2, 2.4], size: [2.4, 5.5], colors: ['#fff2c4', PAL.green], angle: .9, dir: [0, 1, 0], glow: .3, sprite: 3 });
+}
+S.timeline([
+  { id: 'pile', at: T.pile, look: { bloom: .4, threshold: .74, grain: .035, vignette: .35 }, draw: sPile },
+  { id: 'phone', at: T.phone, enter: ['whip', .4, { dir: [1, 0] }], look: { bloom: .45, threshold: .72, grain: .03, vignette: .3 }, gl: sPhone.gl, draw: sPhone.draw },
+  { id: 'settle', at: T.settle, enter: ['zoomBlurCut', .5], look: { bloom: .38, threshold: .78, streak: .08, grain: .03, vignette: .3 }, gl: sSettle.gl, draw: sSettle.draw },
+  { id: 'summary', at: T.summary, enter: ['liquid', .7, { color: [.48, .36, 1] }], look: { bloom: .4, threshold: .74, grain: .03, vignette: .3 }, gl: sSummary.gl, draw: sSummary.draw },
+  { id: 'end', at: T.end, enter: ['dissolve', .9], look: { bloom: .55, threshold: .7, streak: .06, grain: .03, vignette: .35 }, gl: sEnd.gl, draw: sEnd.draw },
+]);
+S.camera = t => {
+  const idx = t < T.phone ? 0 : t < T.settle ? 1 : t < T.summary ? 2 : t < T.end ? 3 : 4, t0 = [T.pile, T.phone, T.settle, T.summary, T.end][idx], lt = Math.max(0, t - t0);
+  const hh = Cine.handheld(t, { amp: idx === 0 ? .006 : .0025, speed: 1.1, roll: idx === 0 ? .004 : .0015 }), pn = Cine.punch(t, HITS, { amp: .018, decay: .22 });
+  return Cine.mix(hh, pn, { zoom: 1 + [.07, .02, .0, .035, .045][idx] * lt / 4 });
+};
+S.look((t, base) => ({ ca: (base.ca ?? .0015) + .004 * K.pulse(t, HITS, .12) }));
+
+window.ready = Promise.all([K.loadFonts(['800 Space Grotesk', '700 Space Grotesk', '500 Inter', '600 Inter', '700 Inter', '800 Inter', '500 JetBrains Mono', '700 JetBrains Mono']), S.ready()]).then(() => { buildParticles(); buildPhone(); buildSettle(); return true; });
+function renderFrame(t) { S.render(t, { bloom: .45 }); }
+window.renderFrame = renderFrame;
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

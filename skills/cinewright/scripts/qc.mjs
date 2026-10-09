@@ -23,6 +23,8 @@ const positional = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && args[
 const FFMPEG = process.env.FFMPEG || 'ffmpeg', FFPROBE = process.env.FFPROBE || 'ffprobe';
 const ROOT = process.cwd();
 const results = [];
+/** A film may be deliberately still or sparse — but then brief.md must SAY so ("Restraint: why") — otherwise the two hard floors below (static time, frame fill) fail instead of warn. */
+const restrained = () => { try { return /^[\s>*#-]*\**(?:restraint|calm film|meditative)\**\s*[:：]/im.test(fs.readFileSync(path.join(process.cwd(), 'brief.md'), 'utf8')); } catch { return false; } };
 const note = (level, msg) => { results.push([level, msg]); console.log(`${{ PASS: '✔ PASS', WARN: '! WARN', FAIL: '✘ FAIL', INFO: '  info' }[level]}  ${msg}`); };
 
 const run = (bin, a, o = {}) => spawnSync(bin, a, { encoding: 'utf8', maxBuffer: 1 << 28, ...o });
@@ -165,7 +167,9 @@ function qcEnergy(file) {
   console.log('  ' + W.map(x => '▁▂▃▄▅▆▇█'[Math.min(7, Math.floor(x / .04 * 8))]).join(''));
   note('INFO', `median ${med.toFixed(4)} · mean ${mean.toFixed(4)} · quiet ${(quietPct * 100).toFixed(0)}% of the time · ${cuts.length} hard cut(s)/flash(es)${cuts.length ? ' at ' + cuts.slice(0, 12).map(t => t.toFixed(1)).join(', ') + ' s' : ''}`);
   longRuns.length ? note('WARN', `almost nothing changes for ≥ 1.5 s at: ${longRuns.map(([a, b]) => `${a.toFixed(1)}–${b.toFixed(1)}s`).join(', ')} — static holds read as slides; add camera drift, secondary motion, particles, light sweeps or cut sooner (intentional slow reveals are fine: say so)`) : note('PASS', 'no static holds ≥ 1.5 s');
-  quietPct > .45 ? note('WARN', `${(quietPct * 100).toFixed(0)}% of the film is near-static — compare with references/gallery: stronger pieces keep ≥ 3 things moving at different speeds in every shot`) : note('PASS', 'pacing: enough of the film is in motion');
+  if (quietPct > .5) note(restrained() ? 'WARN' : 'FAIL', `${(quietPct * 100).toFixed(0)}% of the film is near-static — a slideshow. Stronger pieces keep ≥ 3 things moving at different speeds in every shot (camera drift, parallax, particles, light sweeps, secondary motion). If stillness IS the concept (a calm / meditative / slow-reveal brief), add a line "Restraint: <why>" to brief.md and this becomes a warning`);
+  else if (quietPct > .35) note('WARN', `${(quietPct * 100).toFixed(0)}% of the film is near-static — compare with references/gallery: stronger pieces keep ≥ 3 things moving at different speeds in every shot`);
+  else note('PASS', 'pacing: enough of the film is in motion');
 }
 
 /* ───────────────────────── look: is the frame FILLED? (the "thin lines on empty black" detector) ───────────────────────── */
@@ -191,7 +195,8 @@ function qcLook(file) {
   const runs = []; let st = -1; cov.forEach((c, i) => { if (c < .08) { if (st < 0) st = i; } else { if (st >= 0 && i - st >= 3) runs.push([st / 2, i / 2]); st = -1; } }); if (st >= 0 && cov.length - st >= 3) runs.push([st / 2, cov.length / 2]);
   if (runs.length) note('INFO', `nearly empty for ≥ 1.5 s at: ${runs.map(([x, y]) => `${x.toFixed(1)}–${y.toFixed(1)}s`).join(', ')} — fix exactly these seconds`);
   let bad = false;
-  if (medCov < .15) { bad = true; note('WARN', `frames are mostly empty background (median fill ${pct(medCov)}%) — scale the hero up (≥ 40% of the frame height), put a real background behind it (shader / gradient mesh / pattern) instead of flat black, use bigger type. If the restraint is the concept, say so in brief.md`); }
+  if (medCov < .15) { bad = true; note(restrained() ? 'WARN' : 'FAIL', `frames are mostly empty background (median fill ${pct(medCov)}%, floor 15%) — scale the hero up (≥ 40% of the frame height), put a real background behind it (shader / gradient mesh / pattern) instead of flat black, use bigger type, light the object instead of outlining it. If the restraint IS the concept, add a line "Restraint: <why>" to brief.md and this becomes a warning`); }
+  else if (medCov < .25) { bad = true; note('WARN', `median fill ${pct(medCov)}% is under the boldness floor (25%; reference films sit at 27–53%) — bigger hero, a real background layer, more colour`); }
   if (empty >= .35) { bad = true; note('WARN', `${pct(empty)}% of the film has almost nothing in frame — fill the quiet stretches (bigger elements, a second layer, particles, light) or cut them`); }
   if (dark >= .6 && medCov < .25) { bad = true; note('WARN', `${pct(dark)}% of the film is dark AND sparse — it will read as "a few lines on black"; raise the hero's scale and add colour/light`); }
   if (!bad) note('PASS', `frames are filled (median fill ${pct(medCov)}%)`);
@@ -228,6 +233,8 @@ async function qcCraft() {
     bad.length ? note('FAIL', `video.html uses non-deterministic APIs (frames would differ between runs) at line ${bad.slice(0, 5).join(', ')} — use K.hash / K.rng / K.noise and closed-form motion`) : note('PASS', 'video.html has no Math.random / Date.now / timers (frames are reproducible)');
     const trans = new Set([...code.matchAll(/enter:\s*\[\s*['"](\w+)['"]/g)].map(m => m[1])), nScenes = (code.match(/\bat:\s*T\.\w+/g) || []).length;
     if (nScenes >= 4 || trans.size) trans.size >= 4 ? note('PASS', `${trans.size} different transitions: ${[...trans].join(', ')}`) : note('WARN', `${trans.size} different transition(s)${trans.size ? ' (' + [...trans].join(', ') + ')' : ''} — vary them (≥ 4: whip, zoomBlurCut, glitch, iris, liquid, burn … see gallery/transitions.jpg); match cuts beat generic fades`);
+    const engines = [/\bScene3D\b|\bGeo\.\w+\(/.test(code) && '3D renderer', /\bParts\b|\bnew Parts\b|\bEmitter\b/.test(code) && 'GPU particles', /\bgl\s*:|\bgl\s*\(|\bfx\.bg\s*\(|\bgfx\.pass\s*\(/.test(code) && 'GPU shaders'].filter(Boolean);
+    /\bMG\.film\s*\(/.test(code) ? note('PASS', 'motion-graphics kit (flat 2D by design: type, colour, wipes, icons, counters, sound from one spec)') : engines.length ? note('PASS', `GPU engines in use besides 2D canvas: ${engines.join(', ')}`) : note('WARN', 'video.html draws everything with 2D canvas — the 3D renderer, particles and shader backgrounds are what make a film look expensive. A hero object (a product, ring, bottle, logo, planet) should be a Scene3D mesh with an environment, a floor and depth of field, not an outline: node tools/atlas.mjs show product-ring-macro · product-pedestal · text3d-chrome. Skip this only if the style system deliberately restricts it, and say so in brief.md');
     if (/K\.FONTS|font[:=]/.test(code) && !/loadFonts\s*\(/.test(code)) note('WARN', 'video.html draws text but never calls K.loadFonts([...]) — it will render in a fallback font');
     if (brief && /persian|farsi|فارسی|rtl/i.test(brief) && !/[؀-ۿ]/.test(code) && !/[؀-ۿ]/.test(audio || '')) note('WARN', 'the brief mentions Persian/RTL but video.html contains no Persian text — is the text in another file, or missing?');
   }
@@ -236,7 +243,7 @@ async function qcCraft() {
   let reviews = []; try { reviews = fs.readdirSync(path.join(ROOT, 'qc')).filter(n => /^review-\d+\.md$/i.test(n)); } catch { /* no qc dir */ }
   const rich = reviews.filter(n => { const t = rd('qc/' + n) || ''; return t.length >= 450 && (t.match(/^\s*(?:\d+[.)]|[-*])\s+/gm) || []).length >= 3 && /\d+(?:\.\d+)?\s*(?:s\b|sec|–|-\d)/.test(t); });   // a real fix list: ≥ 3 findings, with times, enough words
   if (reviews.length < 3) note('WARN', `${reviews.length} review round(s) in qc/ — studio mode asks for three (A motion · B craft · C sound), each a written fix list after LOOKING at frames; a first render is a skeleton, not a film`);
-  else if (rich.length < 3) note('WARN', `${reviews.length} review files, but only ${rich.length} are substantive — a real fix list has ≥ 3 findings, each naming the time/scene, the cause and the exact change (≥ ~450 characters); see references/case-studies/avorythm/qc/review-*.md`);
+  else if (rich.length < 3) note('WARN', `${reviews.length} review files, but only ${rich.length} are substantive — a real fix list has ≥ 3 findings, each naming the time/scene, the cause and the exact change (≥ ~450 characters); see references/review-example.md`);
   else note('PASS', `${reviews.length} written review rounds with real fix lists (qc/review-*.md)`);
 }
 

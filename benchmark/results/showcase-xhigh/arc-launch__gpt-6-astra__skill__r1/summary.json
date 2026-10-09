@@ -1,0 +1,94 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/arc-launch__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "arc-launch",
+  "domain": "product",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 2426,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 30,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 46.4,
+    "audio": {
+      "lufs": -14,
+      "lra": 5.4,
+      "truePeak": -1.3,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0027,
+      "mean": 0.0059,
+      "quietPct": 64,
+      "cuts": 0,
+      "longestStatic": 3.5,
+      "curve": "▂▃▂▂▆▁▁▁▁▁▁▇▂▂▂▁▁▁▁▁▁▁▃▁▁▁▁▁▁▃▃▁▁▁▁▁▁▃▁▁▁▁▁▁▅▂▂▂▂▅▁▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 13,
+      "emptyPct": 0,
+      "darkPct": 5
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 150,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 11,
+      "command_execution": 80,
+      "todo_list": 5,
+      "reasoning": 49
+    },
+    "turns": 1,
+    "inputTokens": 5385020,
+    "outputTokens": 35147,
+    "cachedInputTokens": 5080320,
+    "imageViews": 1,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`  \nBuilt a 30-second procedural ARC titanium smart-ring launch film with macro metal grain, exploded components, battery, HRV/sleep, water-resistance, and hero lock-up scenes.  \nRendered entirely from code at 1920×1080/30fps with original synthesized foley, riser, sub, chimes, and resolving chord in H.264/AAC."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 1755,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

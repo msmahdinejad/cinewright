@@ -1,0 +1,94 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/music-visualizer__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "music-visualizer",
+  "domain": "music",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-08",
+  "wallSeconds": 4530,
+  "exitCode": 1,
+  "timedOut": true,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 24,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 84.72,
+    "audio": {
+      "lufs": -14.3,
+      "lra": 4.6,
+      "truePeak": -0.9,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0723,
+      "mean": 0.0588,
+      "quietPct": 16,
+      "cuts": 7,
+      "longestStatic": 3.5,
+      "curve": "▁▁▁▁▁▁▁████████████████▂▁▁▁▁▁▅██████████████"
+    },
+    "look": {
+      "medianFill": 22,
+      "emptyPct": 23,
+      "darkPct": 23
+    },
+    "scenes": {
+      "changes": 6,
+      "perMinute": 15
+    }
+  },
+  "session": {
+    "events": 162,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 8,
+      "command_execution": 98,
+      "todo_list": 3,
+      "reasoning": 48
+    },
+    "turns": 0,
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "cachedInputTokens": 0,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "Final media validation passes technically, but look-QC flags two sparse stretches. I’m making the accelerator occupy more of the frame during ignition and post-drop flight, then I’ll rerender `final.mp4` once more."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2967,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

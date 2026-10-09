@@ -1,101 +1,141 @@
 #!/usr/bin/env node
-// report.mjs — turn benchmark/results/**/summary.json into docs/benchmark.md (+ thumbnails under docs/assets/benchmark/).
+// report.mjs — turn benchmark/results/**/summary.json into docs/benchmark.md (+ contact sheets under docs/assets/benchmark/), the slim JSON the website reads, and the README table.
 //   node benchmark/report.mjs            write the report
-//   node benchmark/report.mjs --check    exit 1 if docs/benchmark.md is stale (CI)
-// Nothing here is hand-typed: every number in the report comes from a summary.json produced by run.mjs or measure.mjs.
+//   node benchmark/report.mjs --check    exit 1 if a generated file is stale (CI)
+// Nothing here is hand-typed: every number comes from a summary.json produced by run.mjs or measure.mjs. Each agent is compared with ITSELF (with vs without the skill), never with another agent.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'), RES = path.join(ROOT, 'benchmark', 'results'), DOCS = path.join(ROOT, 'docs');
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'), RES = path.join(ROOT, 'benchmark', 'results');
 const check = process.argv.includes('--check');
-const SUITE = JSON.parse(fs.readFileSync(path.join(ROOT, 'benchmark', 'suite', 'suite.json'), 'utf8'));
+const readJson = f => JSON.parse(fs.readFileSync(f, 'utf8'));
+const SUITES = [path.join(ROOT, 'benchmark', 'suite', 'suite.json'), path.join(ROOT, 'benchmark', 'suite', 'showcase.json'), path.join(ROOT, 'benchmark', 'suite', 'simple.json')].filter(fs.existsSync).map(readJson);
+const TASKS = SUITES.flatMap(s => s.tasks), taskOf = id => TASKS.find(t => t.id === id);
+const SHOWREEL = 'showreel-15s';
 
 // collect
 const rows = [];
-(function walk(d) { if (!fs.existsSync(d)) return; for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (e.name === 'summary.json') { const s = JSON.parse(fs.readFileSync(p, 'utf8')); s._dir = path.dirname(p); rows.push(s); } } })(RES);
-rows.sort((a, b) => (a.task + a.condition + a.date).localeCompare(b.task + b.condition + b.date));
+(function walk(d) { if (!fs.existsSync(d)) return; for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (e.name === 'summary.json') { const s = readJson(p); s._dir = path.dirname(p); rows.push(s); } } })(RES);
+const pairKey = r => r.kind === 'run' ? `${r.agentFamily || 'agent'}-${r.model || 'default'}` : (/claude/i.test(r.agent + r.label) ? 'claude' : slug(r.agent + '-' + (r.model || '')));
+const slug = s => String(s).replace(/[^a-zA-Z0-9.]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+rows.sort((a, b) => (a.task + pairKey(a) + a.condition + a.id).localeCompare(b.task + pairKey(b) + b.condition + b.id));
+for (const r of rows) r._pair = pairKey(r);
 
-const stale = []; const outputs = new Map();
-const slug = s => s.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
-function emit(file, content) { outputs.set(file, content); }
-function copyAsset(row, name) {
-  if (!row.files?.[name]) return null; const dst = path.join('docs', 'assets', 'benchmark', slug(row.id), row.files[name]), src = path.join(row._dir, row.files[name]);
-  outputs.set(dst, fs.readFileSync(src)); return dst.replace(/\\/g, '/').replace(/^docs\//, '');
-}
+const outputs = new Map(), stale = [];
 const f1 = x => x == null ? '–' : (Math.round(x * 10) / 10).toString();
-const taskOf = id => SUITE.tasks.find(t => t.id === id);
 const mins = s => s == null ? '–' : Math.round(s / 60) + ' min';
-const tok = s => s?.session ? ((s.session.inputTokens + s.session.outputTokens) / 1000).toFixed(0) + 'k' : '–';
+const tokK = r => r?.session ? Math.round((r.session.inputTokens + r.session.outputTokens) / 1000) : null;
+const tokS = r => { const k = tokK(r); return k == null ? '–' : k >= 1000 ? (k / 1000).toFixed(1) + 'M' : k + 'k'; };
+const label = r => r.label + (r.rep && r.rep > 1 ? ' #' + r.rep : '');
+function copySheet(row) {
+  if (!row.files?.sheet) return null; const dst = path.join('docs', 'assets', 'benchmark', slug(row.id), row.files.sheet), src = path.join(row._dir, row.files.sheet);
+  if (!fs.existsSync(src)) return null; outputs.set(dst, fs.readFileSync(src)); return dst.replace(/\\/g, '/').replace(/^docs\//, '');
+}
+const modelName = r => r.model || (r.kind === 'measured' ? '' : 'default model');
+const effortName = r => r.effort ? ` · ${r.effort} reasoning` : '';
+const who = r => `${r.kind === 'run' ? '**runner**' : 'measured after the fact (interactive session)'} · ${r.agent || '?'}${r.model ? ' · ' + r.model : ''}${effortName(r)} · skill ${r.skill}${r.integrity?.contaminated ? ' · ⚠ contaminated' : ''}${r.timedOut ? ' · timed out' : ''}${r.attempts > 1 ? ` · ${r.attempts} attempts (transport errors)` : ''}`;
+function line(r) {
+  const v = r.video || {}, e = v.energy || {}, a = v.audio, p = r.project;
+  return `| ${label(r)} | ${v.ok ? v.duration.toFixed(1) + ' s · ' + v.width + '×' + v.height : '✘ ' + (v.error || 'no video')} | ${v.ok ? f1(v.look?.medianFill) : '–'} | ${v.ok ? f1(e.quietPct) : '–'} | ${v.ok ? f1(e.longestStatic) + ' s' : '–'} | ${a ? `${f1(a.lufs)} / ${f1(a.lra)}` : v.ok ? '**no audio**' : '–'} | ${p?.craft ? `${p.craft.failures}/${p.craft.warnings}` : '–'} | ${p ? `${p.briefWritten ? 'yes' : 'no'} · ${p.reviewRounds}` : '–'} | ${mins(r.wallSeconds)} · ${tokS(r)} |`;
+}
+const HEAD = `| run | film | frame fill % ↑ | static % ↓ | longest static | LUFS / LRA | craft fail/warn | brief · reviews | wall · tokens |\n|---|---|---:|---:|---:|---|---|---|---|\n`;
 
-const byTask = new Map(); for (const r of rows) { if (!byTask.has(r.task)) byTask.set(r.task, []); byTask.get(r.task).push(r); }
-
-let md = `# Benchmark: the same prompt, with and without the skill
+let md = `# Benchmark: each agent against itself
 
 <!-- GENERATED by benchmark/report.mjs from benchmark/results/**/summary.json — do not edit by hand. -->
 
-Claims about creative tools are cheap, so this repository ships the means to **measure** them: a runner that gives a coding agent (Codex by default) the *same prompt* in a fresh folder with and without the skill, and a set of objective metrics computed from the finished MP4. See [\`benchmark/README.md\`](../benchmark/README.md) to run it yourself — \`node benchmark/run.mjs --suite quick\`.
+Claims about creative tools are cheap, so this repository ships the means to **measure** them: a runner that gives a coding agent (the Codex CLI by default) the *same prompt* in a fresh folder with and without the skill, and objective metrics computed from the finished MP4. Every agent is compared with **itself** — Codex with Codex + Cinewright, Claude with Claude + Cinewright — never with another agent. See [\`benchmark/README.md\`](../benchmark/README.md) to run it yourself.
 
-**How to read the numbers.** They detect the classic failure of agent-made video — *a slideshow with no sound design* — they do not judge beauty. For beauty there is a blind A/B rating tool (\`node benchmark/rate.mjs\`); post your ratings in an issue.
+**How to read the numbers.** They detect the classic failures of agent-made video — a slideshow, thin lines on empty black, a flat soundtrack — they do not judge beauty. For beauty, watch the films on the [website](https://msmahdinejad.github.io/cinewright/#results) (with sound) and use the blind rating tool (\`node benchmark/rate.mjs\`).
 
 | metric | meaning | better |
 |---|---|---|
-| quiet % | share of the film where almost nothing changes frame-to-frame (\`qc.mjs energy\`) | lower |
 | frame fill % | median share of each frame that is not background (\`qc.mjs look\`): thin lines on empty black score under 10, full-bleed posters 30–55 | higher |
+| static % | share of the film where almost nothing changes frame-to-frame (\`qc.mjs energy\`) | lower |
 | longest static | the longest stretch with almost no change, seconds | lower |
-| scene changes | substantial picture changes (ffmpeg scene score > 0.25) | context |
-| LUFS / LRA | loudness (social target ≈ −14) and loudness range (dynamics; < 2 LU is flat) | −14 / higher |
-| craft | \`qc.mjs craft\` failures/warnings on the project (only for projects made with the skill's structure) | 0 / 0 |
+| LUFS / LRA | loudness (social target ≈ −14) and loudness range (mix dynamics; under 1 LU is flat) | −14 / higher |
+| craft | \`qc.mjs craft\` failures/warnings on the project (only projects with the skill's structure) | 0 / 0 |
 | brief · reviews | a written brief.md and the number of \`qc/review-N.md\` rounds found in the project | yes · 3 |
 | wall · tokens | agent wall-clock time and input+output tokens (Codex JSONL) | – |
 
 `;
-const runRows = rows.filter(r => r.kind === 'run'), nRun = runRows.length;
-md += nRun
-  ? `> **${nRun} agent run(s)** recorded below under *measured by the runner*; every other row is an earlier output measured after the fact (clearly labelled).\n\n`
-  : `> **No automated head-to-head runs have been committed yet.** The rows below are earlier outputs that were measured after the fact (labelled, with their conditions). Run \`node benchmark/run.mjs --suite quick\` and open a PR with \`benchmark/results/<run-id>/\` to add yours — raw summaries and contact sheets only, never the video.\n\n`;
 
-for (const [taskId, list] of byTask) {
-  const t = taskOf(taskId), title = t ? `${t.title} — \`${taskId}\`` : `\`${taskId}\``;
-  md += `## ${title}\n\n`;
-  if (t) md += `*Domain: ${t.domain} · ${t.aspect} · target ${t.duration} s · ${t.lang === 'fa' ? 'Persian' : 'English'} prompt*\n\n`;
-  md += `| run | how it was produced | length | quiet % | frame fill % | longest static | scene changes | LUFS / LRA | craft | brief · reviews | wall · tokens |
-|---|---|---:|---:|---:|---:|---:|---|---|---|---|
-`;
-  for (const r of list) {
-    const v = r.video || {}, e = v.energy || {}, a = v.audio, p = r.project, how = `${r.kind === 'run' ? '**runner**' : 'measured after the fact'} · ${r.agent || '?'}${r.model ? ' · ' + r.model : ''} · skill ${r.skill}${r.integrity?.contaminated ? ' · ⚠ contaminated' : ''}${r.timedOut ? ' · timed out' : ''}`;
-    md += `| ${r.label}${r.rep ? ' #' + r.rep : ''} | ${how} | ${v.ok ? v.duration.toFixed(1) + ' s' : '✘ ' + (v.error || 'no video')} | ${v.ok ? f1(e.quietPct) : '–'} | ${v.ok ? f1(v.look?.medianFill) : '–'} | ${v.ok ? f1(e.longestStatic) + ' s' : '–'} | ${v.ok ? v.scenes?.changes ?? '–' : '–'} | ${a ? `${f1(a.lufs)} / ${f1(a.lra)}` : v.ok ? '**no audio**' : '–'} | ${p?.craft ? `${p.craft.failures}/${p.craft.warnings}` : '–'} | ${p ? `${p.briefWritten ? 'yes' : 'no'} · ${p.reviewRounds}` : '–'} | ${mins(r.wallSeconds)} · ${tok(r)} |\n`;
+// ── pair block: a with/without table, the reading, contact sheets, notes ───────────────────────
+const pairBlock = (base, skill) => {
+  let o = `${HEAD}${[base, skill].filter(Boolean).map(line).join('\n')}\n\n`;
+  if (base?.video?.ok && skill?.video?.ok) {
+    const d = (a, b) => a == null || b == null ? null : b - a, fb = d(base.video.look?.medianFill, skill.video.look?.medianFill), qb = d(base.video.energy?.quietPct, skill.video.energy?.quietPct), lb = d(base.video.audio?.lra, skill.video.audio?.lra);
+    const parts = [fb != null ? `frame fill ${fb >= 0 ? '+' : ''}${f1(fb)} pts` : '', qb != null ? `static time ${qb >= 0 ? '+' : ''}${f1(qb)} pts` : '', lb != null ? `loudness range ${lb >= 0 ? '+' : ''}${f1(lb)} LU` : '', tokK(base) && tokK(skill) ? `${(tokK(skill) / tokK(base)).toFixed(1)}× the tokens` : '', base.wallSeconds && skill.wallSeconds ? `${(skill.wallSeconds / base.wallSeconds).toFixed(1)}× the time` : ''].filter(Boolean);
+    o += `*Reading (skill minus no-skill):* ${parts.join(' · ')}.${fb != null && fb < 0 ? ' **The skill film is thinner on this metric.**' : ''}${qb != null && qb > 0 ? ' **The skill film has more static time.**' : ''}\n\n`;
   }
-  md += '\n';
-  const thumbs = list.map(r => [r, copyAsset(r, 'sheet'), copyAsset(r, 'preview')]).filter(x => x[1] || x[2]);
-  if (thumbs.length) {
-    md += `<details open><summary>Contact sheets and previews</summary>\n\n`;
-    for (const [r, sheetPath, prev] of thumbs) md += `**${r.label}${r.rep ? ' #' + r.rep : ''}**${prev ? `\n\n![${r.label} preview](${prev})` : ''}${sheetPath ? `\n\n![${r.label} contact sheet](${sheetPath})` : ''}\n\n`;
-    md += `</details>\n\n`;
-  }
-  const notes = list.filter(r => r.note).map(r => `- **${r.label}${r.rep ? ' #' + r.rep : ''}:** ${r.note}`); if (notes.length) md += notes.join('\n') + '\n\n';
-}
+  for (const r of [base, skill].filter(Boolean)) { const s = copySheet(r); if (s) o += `<details><summary>${label(r)} — contact sheet</summary>\n\n![${label(r)} contact sheet](${s})\n\n</details>\n\n`; }
+  const notes = [base, skill].filter(r => r?.note).map(r => `- **${label(r)}:** ${r.note}`); if (notes.length) o += notes.join('\n') + '\n\n';
+  return o;
+};
+const agentTitle = first => first.kind === 'run' ? `Codex · ${modelName(first)}${effortName(first)}` : 'Claude Code · Sonnet 5.5 (interactive)';
+const pairsOf = list => { const keys = [...new Set(list.map(r => r._pair))]; keys.sort((a, b) => order(a) - order(b) || a.localeCompare(b)); return keys.map(k => { const l = list.filter(r => r._pair === k); return { key: k, base: l.find(r => r.condition === 'baseline'), skill: l.find(r => r.condition !== 'baseline') }; }); };
 
-// head-to-head summary over runner results
-const pairs = []; for (const [taskId, list] of byTask) { const b = list.filter(r => r.kind === 'run' && r.condition === 'baseline' && r.video?.ok), s = list.filter(r => r.kind === 'run' && r.condition !== 'baseline' && r.video?.ok); if (b.length && s.length) pairs.push([taskId, avg(b, r => r.video.energy?.quietPct), avg(s, r => r.video.energy?.quietPct), avg(b, r => r.video.audio?.lra), avg(s, r => r.video.audio?.lra)]); }
-function avg(l, f) { const v = l.map(f).filter(x => typeof x === 'number'); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; }
+// ── headline: the showreel prompt, per agent ──────────────────────────────────────────────────
+const head = rows.filter(r => r.task === SHOWREEL), pairs = [...new Set(head.map(r => r._pair))];
+const order = k => k.startsWith('codex-gpt-6-astra') ? 0 : k.startsWith('codex-gpt-6.1-sol') ? 1 : k.startsWith('codex') ? 2 : 3; pairs.sort((a, b) => order(a) - order(b) || a.localeCompare(b));
+const prompt = taskOf(SHOWREEL)?.prompt || '';
 if (pairs.length) {
-  md += `## Head-to-head summary (runner results only)\n\n| task | quiet % — no skill | quiet % — with skill | LRA — no skill | LRA — with skill |\n|---|---:|---:|---:|---:|\n${pairs.map(p => `| \`${p[0]}\` | ${f1(p[1])} | ${f1(p[2])} | ${f1(p[3])} | ${f1(p[4])} |`).join('\n')}\n\n`;
+  md += `## Headline: the showreel prompt, with and without the skill\n\n> \`$cinewright ${prompt}\`\n>\n> The baseline gets exactly the same text without \`$cinewright\` (and the skill is disabled). Same footer for both: *deliver ./final.mp4 with sound*. Codex: \`codex exec\`, reasoning effort **xhigh**, unattended. Claude: an interactive session (not blind — see the note).\n\n`;
+  for (const p of pairsOf(head)) md += `### ${agentTitle(p.skill || p.base)}\n\n${pairBlock(p.base, p.skill)}`;
 }
-const notesFile = path.join(ROOT, 'benchmark', 'notes.md'); if (fs.existsSync(notesFile)) md += fs.readFileSync(notesFile, 'utf8').trim() + String.fromCharCode(10, 10);   // hand-written findings that sit next to the generated tables
-md += `## Caveats (read before quoting any number)\n\n- Agents are stochastic: one run per cell is an anecdote. Use \`--reps 3\` or more before drawing conclusions, and report the spread.\n- The metrics measure *motion and sound hygiene*, not taste. A film can score perfectly and still be ugly — that is what the blind rating tool is for.\n- Rows made by different agents or models are **not** comparable; the *how it was produced* column says which is which.\n- "Contaminated" means a no-skill run nevertheless read the skill; such runs should be discarded.\n- The runner disables any globally installed copy of the skill for baseline runs (\`skills.config\` in Codex) and installs the version under test into the run's own project folder, so a stale install on your machine cannot leak into the comparison.\n`;
-emit('docs/benchmark.md', md);
 
-// compact table for the README (between the BENCH markers) and slim JSON for the website
-const assetPath = (r, name) => r.files?.[name] ? `assets/benchmark/${slug(r.id)}/${r.files[name]}` : null;
-const slim = r => ({ id: r.id, task: r.task, taskTitle: taskOf(r.task)?.title || r.task, label: r.label, kind: r.kind, agent: r.agent, model: r.model, skill: r.skill, condition: r.condition, ok: !!r.video?.ok, length: r.video?.duration ?? null, quietPct: r.video?.energy?.quietPct ?? null, fill: r.video?.look?.medianFill ?? null, longestStatic: r.video?.energy?.longestStatic ?? null, lufs: r.video?.audio?.lufs ?? null, lra: r.video?.audio?.lra ?? null, brief: r.project?.briefWritten ?? null, reviews: r.project?.reviewRounds ?? null, wallSeconds: r.wallSeconds ?? null, sheet: assetPath(r, 'sheet'), preview: assetPath(r, 'preview'), note: r.note || '' });
-emit('docs/assets/benchmark/summary.json', JSON.stringify(rows.map(slim), null, 1) + '\n');
-const tableRows = rows.map(r => `| \`${r.task}\` | ${r.label} (${r.kind === 'run' ? 'runner' : 'measured after the fact'}) | ${r.video?.ok ? r.video.duration.toFixed(0) + ' s' : '✘'} | ${r.video?.ok ? f1(r.video.energy?.quietPct) : '–'} | ${r.video?.audio ? f1(r.video.audio.lra) : '–'} |`).join('\n');
+// ── strong prompts: every pair we ran, shown without selection; films with only a skill run are listed below ──
+const rest = rows.filter(r => r.task !== SHOWREEL), restTasks = [...new Set(rest.map(r => r.task))];
+const SIMPLE_IDS = new Set((readJson(path.join(ROOT, 'benchmark', 'suite', 'simple.json')).tasks || []).map(t => t.id));
+const full = [], single = [], pending = [];
+for (const t of restTasks) { const l = rest.filter(r => r.task === t); for (const p of pairsOf(l)) (p.base && p.skill ? full : p.skill ? single : pending).push({ t, ...p }); }
+const PLAN_ORDER = (() => { try { return (readJson(path.join(ROOT, 'docs', 'assets', 'data', 'media.plan.json')).tasks || []).map(t => t.id); } catch { return []; } })(), planRank = id => { const k = PLAN_ORDER.indexOf(id); return k < 0 ? 99 : k; };   // the website's order of prompts
+const fullSimple = full.filter(f => SIMPLE_IDS.has(f.t)).sort((x, y) => planRank(x.t) - planRank(y.t)), fullStrong = full.filter(f => !SIMPLE_IDS.has(f.t));
+if (fullSimple.length) {
+  md += `## Everyday motion graphics, with and without the skill\n\nThe jobs people ask for most — introduce a person, a channel intro, a vertical social promo, an animated infographic ([\`benchmark/suite/simple.json\`](../benchmark/suite/simple.json)). Plain-language prompts, no 3D spectacle: the question is how much better an agent makes *ordinary* motion graphics with the skill. **Every complete pair we ran is listed.**\n\n`;
+  for (const f of fullSimple) md += `### ${taskOf(f.t)?.title || f.t} — ${agentTitle(f.skill)}\n\n> ${(taskOf(f.t)?.prompt || '').replace(/\n/g, ' ')}\n\n${pairBlock(f.base, f.skill)}`;
+}
+if (fullStrong.length) {
+  md += `## Strong prompts, with and without the skill\n\nArt-directed prompts that ask for spectacle on purpose ([\`benchmark/suite/showcase.json\`](../benchmark/suite/showcase.json)). **Every complete pair we ran is listed — nothing is selected.** Where the skill lost, the table says so (and the development log below says what we changed because of it).\n\n`;
+  for (const f of fullStrong) md += `### ${taskOf(f.t)?.title || f.t} — ${agentTitle(f.skill)}\n\n> ${(taskOf(f.t)?.prompt || '').replace(/\n/g, ' ').slice(0, 420)}${(taskOf(f.t)?.prompt || '').length > 420 ? ' …' : ''}\n\n${pairBlock(f.base, f.skill)}`;
+}
+if (pending.length) {
+  md += `## Baselines still waiting for their with-skill run\n\nThese prompts have a no-skill result but the with-skill run is not finished yet, so there is no pair to compare (see the development log for why). They will be added when the runs complete.\n\n${HEAD}${pending.map(f => line({ ...f.base, label: `${taskOf(f.t)?.title || f.t} — ${f.base.label}` })).join('\n')}\n\n`;
+}
+if (single.length) {
+  md += `## Films made with the skill only\n\nThese prompts were run once with the skill (they are the films on the website's *Made with it* wall); there is no no-skill twin to compare. The prompts are in [\`benchmark/suite/showcase.json\`](../benchmark/suite/showcase.json).\n\n${HEAD}${single.map(f => line({ ...(f.skill || f.base), label: `${taskOf(f.t)?.title || f.t} — ${(f.skill || f.base).label}` })).join('\n')}\n\n`;
+}
+
+const notesFile = path.join(ROOT, 'benchmark', 'notes.md'); if (fs.existsSync(notesFile)) md += fs.readFileSync(notesFile, 'utf8').trim() + '\n\n';
+
+// ── archived runs: earlier skill builds and first attempts, kept so nothing is hidden ──────────────
+const arch = [];
+(function walk(d) { if (!fs.existsSync(d)) return; for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (e.name === 'summary.json') { const s = readJson(p); s._dir = path.dirname(p); arch.push(s); } } })(path.join(ROOT, 'benchmark', 'archive'));
+if (arch.length) {
+  arch.sort((a, b) => (a._dir).localeCompare(b._dir));
+  md += `### Archived runs (earlier skill builds and first attempts)\n\nKept so nothing is hidden; they are *not* part of the tables above. Folder: [\`benchmark/archive/\`](../benchmark/archive/).\n\n${HEAD}${arch.map(r => line({ ...r, label: (taskOf(r.task)?.title || r.task) + ' — ' + r.label + ' [skill ' + r.skill + ', ' + path.basename(path.dirname(r._dir)) + ']' })).join('\n')}\n\n`;
+}
+md += `## Caveats (read before quoting any number)\n\n- Agents are stochastic: one run per cell is an anecdote. Use \`--reps 3\` or more before drawing conclusions, and report the spread.\n- The metrics measure *motion and sound hygiene*, not taste. A film can score perfectly and still be ugly — that is what your eyes are for.\n- Rows made by different agents or models are **not** comparable with each other; compare each agent with itself.\n- "Contaminated" means a no-skill run nevertheless read the skill; such runs should be discarded.\n- The runner disables any globally installed copy of the skill for baseline runs (\`skills.config\` in Codex) and installs the version under test into the run's own project folder, so a stale install on your machine cannot leak into the comparison.\n- A dropped connection is not a result: the runner retries transport failures (up to twice) in a fresh folder and records them.\n`;
+outputs.set('docs/benchmark.md', md);
+
+// ── slim JSON for the website, README table ───────────────────────────────────────────────────
+const slim = r => ({ id: r.id, task: r.task, taskTitle: taskOf(r.task)?.title || r.task, label: r.label, kind: r.kind, agent: r.agent, model: r.model, effort: r.effort || null, skill: r.skill, condition: r.condition, pair: r._pair, ok: !!r.video?.ok, length: r.video?.duration ?? null, fill: r.video?.look?.medianFill ?? null, quietPct: r.video?.energy?.quietPct ?? null, longestStatic: r.video?.energy?.longestStatic ?? null, lufs: r.video?.audio?.lufs ?? null, lra: r.video?.audio?.lra ?? null, scenes: r.video?.scenes?.changes ?? null, brief: r.project?.briefWritten ?? null, reviews: r.project?.reviewRounds ?? null, craft: r.project?.craft ? `${r.project.craft.failures}/${r.project.craft.warnings}` : null, wallSeconds: r.wallSeconds ?? null, tokens: tokK(r), note: r.note || '' });
+outputs.set('docs/assets/benchmark/summary.json', JSON.stringify(rows.map(slim), null, 1) + '\n');
+
+// README cells: frame fill % · static % · loudness range; the better cell of a pair (on balance of the three numbers) is bold, a tie leaves both plain
+const cell = r => r?.video?.ok ? `${f1(r.video.look?.medianFill)}% · ${f1(r.video.energy?.quietPct)}% · ${f1(r.video.audio?.lra)}` : '–';
+const mv = r => r?.video?.ok ? [r.video.look?.medianFill ?? null, r.video.energy?.quietPct ?? null, r.video.audio?.lra ?? null] : null;
+const balance = (b, s) => { const x = mv(b), y = mv(s); if (!x || !y) return 0; const sg = (a, c, hi) => a == null || c == null || a === c ? 0 : ((c > a) === hi ? 1 : -1); return sg(x[0], y[0], true) + sg(x[1], y[1], false) + sg(x[2], y[2], true); };
+const cellPair = (b, s) => { const k = balance(b, s); return [k < 0 ? `**${cell(b)}**` : cell(b), k > 0 ? `**${cell(s)}**` : cell(s)]; };
+const tr = pairs.map(k => { const list = head.filter(r => r._pair === k), b = list.find(r => r.condition === 'baseline'), s = list.find(r => r.condition !== 'baseline'), first = s || b, nm = first.kind === 'run' ? `Codex · ${modelName(first)} · ${first.effort || ''}`.replace(/ · $/, '') : 'Claude Code · Sonnet 5.5';
+  const c = r => r?.video?.ok ? `${f1(r.video.look?.medianFill)}% · ${f1(r.video.energy?.quietPct)}% · ${f1(r.video.audio?.lra)}` : '–'; const [cb, cs] = cellPair(b, s); return `| ${nm} | ${cb} | ${cs} |`; }).join('\n');
+const trRow = f => { const [cb, cs] = cellPair(f.base, f.skill); return `| ${taskOf(f.t)?.title || f.t} | ${cb} | ${cs} |`; }, trSimple = fullSimple.filter(f => f.key.startsWith('codex-gpt-6-astra')).map(trRow).join('\n'), tr2 = fullStrong.filter(f => f.key.startsWith('codex-gpt-6-astra')).map(trRow).join('\n');
 const compact = rows.length
-  ? `**Measured so far** (${nRun ? nRun + ' runner result(s) + ' : ''}${rows.length - nRun} earlier output(s) measured after the fact — every row says how it was made; details and caveats in [docs/benchmark.md](docs/benchmark.md)):\n\n| task | how it was made | length | quiet % ↓ | loudness range (LU) |\n|---|---|---:|---:|---:|\n${tableRows}\n\n*quiet % = share of the film where almost nothing changes (lower is better).*`
-  : '*No results committed yet — run `node benchmark/run.mjs --suite quick`.*';
+  ? `${trSimple ? `**Everyday motion graphics, Codex · gpt-6-astra · xhigh** — every complete pair we ran, not a selection (each cell = frame fill % ↑ · static % ↓ · loudness range LU ↑; **bold** = the better cell on balance; one run per cell — [details & caveats](docs/benchmark.md)):\n\n| prompt | without Cinewright | with Cinewright |\n|---|---|---|\n${trSimple}\n\n` : ''}**The résumé showreel prompt, each agent against itself:**\n\n| agent | without Cinewright | with Cinewright |\n|---|---|---|\n${tr}\n\n${tr2 ? `**Strong cinematic prompts, Codex · gpt-6-astra · xhigh** — also every complete pair, including the ones the skill did not win:\n\n| prompt | without Cinewright | with Cinewright |\n|---|---|---|\n${tr2}\n\n` : ''}*The numbers check motion and sound hygiene, not beauty — [watch the films with sound](https://msmahdinejad.github.io/cinewright/#results).*`
+  : '*No results committed yet — run `node benchmark/run.mjs --suite headline`.*';
 const readmeCur = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
-emit('README.md', readmeCur.replace(/<!-- BENCH:START -->[\s\S]*?<!-- BENCH:END -->/, () => `<!-- BENCH:START -->\n${compact}\n<!-- BENCH:END -->`));
+outputs.set('README.md', readmeCur.replace(/<!-- BENCH:START -->[\s\S]*?<!-- BENCH:END -->/, () => `<!-- BENCH:START -->\n${compact}\n<!-- BENCH:END -->`));
 
 for (const [file, content] of outputs) {
   const abs = path.join(ROOT, file), cur = fs.existsSync(abs) ? fs.readFileSync(abs) : null, buf = Buffer.isBuffer(content) ? content : Buffer.from(content);
@@ -103,4 +143,4 @@ for (const [file, content] of outputs) {
   fs.mkdirSync(path.dirname(abs), { recursive: true }); fs.writeFileSync(abs, buf);
 }
 if (check) { if (stale.length) { console.error('✘ benchmark report is out of date — run: node benchmark/report.mjs\n  ' + stale.slice(0, 10).join('\n  ')); process.exit(1); } console.log('✔ benchmark report is up to date'); }
-else console.log(`✔ docs/benchmark.md — ${rows.length} result(s) in ${byTask.size} task(s)`);
+else console.log(`✔ docs/benchmark.md — ${rows.length} result(s); headline pairs: ${pairs.join(', ') || 'none'}`);

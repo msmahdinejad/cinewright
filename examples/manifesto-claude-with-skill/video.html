@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>We build it — kinetic manifesto</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- ONE timeline for picture AND sound. 174 BPM → beat 0.3448 s, bar 1.379 s. 58 beats = 20 s. Seven typographic treatments; the last beat before the finale is silence. -->
+<script id="cues" type="application/json">
+{ "bpm": 174, "duration": 20,
+  "t": { "wedont": 0, "inspire": 2.069, "build": 4.138, "frame": 8.276, "line": 11.034, "until": 13.793, "hush": 16.552, "move": 16.897 },
+  "hits": [0, 0.6897, 1.3793, 2.069, 4.138, 8.276, 11.034, 13.793, 16.897] }
+</script>
+
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/gfx.js"></script><script src="lib/fx.js"></script><script src="lib/trans.js"></script>
+<script src="lib/stage.js"></script><script src="lib/scene3d.js"></script><script src="lib/parts.js"></script><script src="lib/type.js"></script><script src="lib/cine.js"></script><script src="lib/ui.js"></script><script src="lib/geometry.js"></script>
+<script>
+'use strict';
+/* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   "WE BUILD IT" — a 20 s kinetic manifesto. Type is the only hero. One treatment per line, each a different engine:
+   1 wedont   WE / DON'T / WAIT — three slams on three kicks, an inverted flash on every hit        (2D · K.slam)
+   2 inspire  INSPIRATION. decodes out of noise, then a strike-through wipes it away                (2D · K.scramble)
+   3 build    WE · BUILD · IT. as 3D plastic / chrome words at three depths; the camera flies between them     (Scene3D · Geo.text · DOF)
+   4 frame    FRAME BY FRAME. stepped "on fours" echo stack, film strips, a live frame counter       (2D · Type.stack)
+   5 line     LINE BY LINE. drawn as outlines, line after line, under a scanner                       (2D · Type.outline)
+   6 until    UNTIL THE THING YOU IMAGINED — a serif word glitches in, riser, the picture shakes       (2D · Type.glitch)
+   7 move     (one beat of silence) → STARTS TO MOVE. 24 000 particles gather into the line, then it moves  (Parts.Morph)
+   Palette: ink · bone · electric blue · signal orange. Faces: Anton (impact), Playfair Display (the one human word), JetBrains Mono (labels).
+   ═════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+const CUES = JSON.parse(document.getElementById('cues').textContent), T = CUES.t, HITS = CUES.hits, BEAT = 60 / CUES.bpm;
+const Q = K.params(), W = Q.w || 1920, H = Q.h || 1080, FPS = Q.fps || 30, DUR = CUES.duration, u = H / 1080, minDim = Math.min(W, H * 1.35);
+const PAL = { ink: '#0a0a0f', bone: '#f4f1ea', blue: '#3050ff', orange: '#ff5a2a' };
+const DISP = K.FONTS.display, SERIF = K.FONTS.serif, MONO = K.FONTS.mono;
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: 'We build it', audio: 'audio.wav', markers: Object.entries(T).map(([label, t]) => ({ t, label })) };
+const { E, seg, clamp } = K;
+
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx), S = new Stage(post, gfx, { fps: FPS });
+const A = new Scene3D(gfx, { W, H }); let MOR;
+
+/* the studio behind the 3D words: blue falling to ink, a warm pool on the floor */
+const BG3 = gfx.prog(`
+//#use math,noise,color
+void main(){ vec2 p = aspectUv(vUv, uRes); float t = uT * .2; vec3 ink = vec3(.039,.039,.059), blue = vec3(.188,.314,1.), org = vec3(1.,.353,.165);
+  vec3 col = mix(ink, blue, smoothstep(1.2, -.2, p.y + .25 + .08 * sin(p.x * 2. + t)) * .85); col += org * smoothstep(.9, .0, length(p - vec2(.55, -.55))) * .35; col *= .85 + .3 * fbm(p * 2. + t); o = vec4(col, 1.); }`);
+
+function build() {
+  A.env = Env.studio({ colors: ['#0a0a0f', '#fff4e6', '#3050ff', '#ff5a2a'] }); A.sky = { amt: .2, rough: .5 }; A.cam.fov = 38; A.floor({ y: -2.35, color: '#0a0a0f', reflect: .5, fade: .025 });
+  const txt = (s, mat, pos) => A.mesh(Geo.text(s, { height: 2.9, depth: .95, blur: 3, curve: .35, fontOpts: { family: DISP, weight: 400 } }), mat, { pos });
+  A.we = txt('WE', Mat.plastic({ base: PAL.orange, rough: .2, coat: .9 }), [-5.4, 0, 3.5]);
+  A.bld = txt('BUILD', Mat.plastic({ base: PAL.blue, rough: .18, coat: .95, rim: '#9fb3ff', rimAmt: .5 }), [-1.2, 0, -2.5]);
+  A.it = txt('IT.', Mat.plastic({ base: PAL.orange, rough: .2, coat: .9, rim: '#ffd0b8', rimAmt: .45 }), [3.4, 0, -9.5]);
+  const N = 40000; MOR = new Parts.Morph(gfx, { count: N });
+  const c = K.canvas(1800, 1000), g = c.getContext('2d'); K.text(g, 'STARTS TO', 900, 270, { size: 330, weight: 400, family: DISP, fill: PAL.bone }); K.text(g, 'MOVE.', 900, 700, { size: 560, weight: 400, family: DISP, fill: PAL.orange });
+  MOR.shapes([Parts.cloud(N, { w: W * 1.3, h: H * 1.1 }), Parts.image(c, { height: H * .82, step: 3 })]);
+}
+const pad4 = n => String(Math.floor(n)).padStart(4, '0');
+
+S.timeline([
+  /* 1 · WE / DON'T / WAIT — a slam on each kick; the frame flips to its negative on the hit */
+  { id: 'wedont', at: T.wedont, bg: null, look: { bloom: .1, threshold: .9, grain: .05, ca: .002, vignette: .12 },
+    draw: (g, lt) => { g.fillStyle = PAL.ink; g.fillRect(0, 0, W, H);
+      const lines = [['WE', PAL.bone, 0], ['DON’T', PAL.blue, 2], ['WAIT', PAL.orange, 4]], sz = H * .36, x = W * .06;
+      lines.forEach(([s, col, beat], i) => { const p = lt - beat * BEAT; if (p < 0) return; const y = H * (.19 + i * .31), w = K.measure(g, s, { size: sz, weight: 400, family: DISP }).w, bx = x + w + W * .03, e = E.outExpo(K.prog(p, .06, .45));
+        g.fillStyle = col; g.fillRect(bx, y - H * .035, (W * .95 - bx) * e, H * .07); K.slam(g, p, x, y, () => K.text(g, s, 0, 0, { size: sz, weight: 400, family: DISP, fill: col, align: 'left', ink: true }), { from: 1.5, d: .1 }); });
+      const inv = [0, 2, 4].some(b => lt - b * BEAT >= 0 && lt - b * BEAT < .07); if (inv) { g.globalCompositeOperation = 'difference'; g.fillStyle = '#fff'; g.fillRect(0, 0, W, H); g.globalCompositeOperation = 'source-over'; }
+      K.text(g, `00:0${Math.floor(lt)}:${String(Math.floor((lt % 1) * 30)).padStart(2, '0')}`, W * .93, H * .06, { size: H * .028, weight: 600, family: MONO, fill: 'rgba(244,241,234,.7)', align: 'right', spacing: 3 }); } },
+  /* 2 · FOR INSPIRATION. — decodes from noise on a blue flood, then a strike-through wipes it away */
+  { id: 'inspire', at: T.inspire, enter: ['flash', .12], bg: null, look: { bloom: .15, threshold: .85, grain: .05, ca: .0035, vignette: .12 },
+    draw: (g, lt) => { g.fillStyle = PAL.blue; g.fillRect(0, 0, W, H); const p = K.prog(lt, .08, 1.15), str = K.scramble('INSPIRATION.', p, 5, Math.floor(lt * 30));
+      K.text(g, 'FOR', W * .5, H * .26, { size: H * .16, weight: 400, family: DISP, fill: PAL.bone, spacing: H * .02 });
+      K.text(g, str, W * .5, H * .56, { size: H * .34, weight: 400, family: DISP, fill: PAL.bone, max: W * .93 });
+      const s = E.inOutCubic(K.prog(lt, 1.2, 1.55)); g.fillStyle = PAL.orange; g.fillRect(W * .035, H * .56 - H * .018, (W * .93) * s, H * .036);
+      K.text(g, 'WAITING FOR IT', W * .035, H * .93, { size: H * .026, weight: 600, family: MONO, fill: 'rgba(244,241,234,.75)', align: 'left', spacing: 4 }); } },
+  /* 3 · WE BUILD IT. — three 3D words at three depths; the camera threads between them */
+  { id: 'build', at: T.build, enter: ['whip', .25, { dir: [1, 0] }], look: { bloom: .5, threshold: .75, grain: .04, ca: .003, vignette: .25 },
+    gl: ({ rt }, lt, t) => { gfx.pass(BG3, {}, { to: rt }); const u1 = clamp(lt / (T.frame - T.build)), keys = [[0, [-7, .5, 12.5], [-5.4, .1, 3.5]], [.3, [-1, 2.3, 11], [-1.2, .1, -2.5]], [.62, [7.6, 1.6, 4.5], [3.4, .1, -9.5]], [1, [5.2, .8, -2], [3.4, .1, -9.5]]];
+      const k = keys.findIndex((a, i) => u1 >= a[0] && (i === keys.length - 1 || u1 < keys[i + 1][0])), a = keys[Math.min(k, keys.length - 2)], b = keys[Math.min(k, keys.length - 2) + 1], q = E.inOutSine(clamp((u1 - a[0]) / (b[0] - a[0])));
+      A.cam.pos = a[1].map((v, i) => v + (b[1][i] - v) * q); A.cam.target = a[2].map((v, i) => v + (b[2][i] - v) * q); A.cam.up = [Math.sin(lt * .8) * .06, 1, 0];
+      const pop = E.outBack(seg(lt, -.05, .5)); A.we.scale = [pop, pop, pop]; A.bld.scale = [pop, pop, pop]; A.it.scale = [pop, pop, pop]; A.we.rot = [0, Math.sin(lt * 1.3) * .12, 0]; A.bld.rot = [0, Math.sin(lt * 1.1 + 1) * .1, 0]; A.it.rot = [0, Math.sin(lt * 1.2 + 2) * .12, 0];
+      const d = Math.hypot(...A.cam.pos.map((v, i) => v - A.cam.target[i])); gfx.blit(A.render({ clear: [0, 0, 0, 0], dof: { focus: d * .8, range: 4.5, blur: 8 } }), { to: rt, blend: 'alpha' }); },
+    draw: (g, lt) => { K.text(g, '02 / BUILD', W * .93, H * .06, { size: H * .026, weight: 600, family: MONO, fill: 'rgba(244,241,234,.8)', align: 'right', spacing: 4 }); } },
+  /* 4 · FRAME BY FRAME. — "on fours": the echo stack steps instead of gliding; film strips scroll; a frame counter runs */
+  { id: 'frame', at: T.frame, enter: ['slice', .3], bg: null, look: { bloom: .1, threshold: .9, grain: .05, ca: .002, vignette: .1 },
+    draw: (g, lt, t) => { g.fillStyle = PAL.bone; g.fillRect(0, 0, W, H); const stepT = Math.floor(lt * 7.5) / 7.5, fw = W * .075, fh = H * .1;
+      for (let row = 0; row < 2; row++) { const y = row ? H * .86 : H * .04, off = (stepT * W * (row ? .35 : -.35)) % (fw * 1.3); g.fillStyle = PAL.ink; g.fillRect(0, y, W, fh * 1.25); for (let i = -2; i < 17; i++) { const x = i * fw * 1.3 + off; g.fillStyle = PAL.bone; g.fillRect(x, y + fh * .12, fw, fh); K.text(g, pad4(t * 30 + i * 3 + row * 40), x + fw / 2, y + fh * .62, { size: fh * .32, weight: 600, family: MONO, fill: PAL.ink }); } }
+      Type.stack(g, 'FRAME', W * .5, H * .43 + Math.sin(stepT * 6) * H * .012, { n: 3, size: H * .18, family: DISP, weight: 400, fill: PAL.ink, outline: PAL.ink, gap: .78, strokeW: 4 * u });
+      K.text(g, 'BY', W * .1, H * .75, { size: H * .1, weight: 400, family: DISP, fill: PAL.orange, align: 'left' }); K.text(g, 'FRAME.', W * .56, H * .75, { size: H * .22, weight: 400, family: DISP, fill: PAL.orange, ink: true });
+      K.text(g, `F ${pad4(t * 30)}`, W * .04, H * .27, { size: H * .035, weight: 700, family: MONO, fill: PAL.ink, align: 'left', spacing: 4 }); } },
+  /* 5 · LINE BY LINE. — outlines write themselves, line after line, under a scanner */
+  { id: 'line', at: T.line, enter: ['dots', .3], bg: null, look: { bloom: .45, threshold: .7, grain: .05, ca: .003, vignette: .25 },
+    draw: (g, lt) => { g.fillStyle = PAL.ink; g.fillRect(0, 0, W, H); g.strokeStyle = 'rgba(48,80,255,.35)'; g.lineWidth = 2 * u; for (let y = 0; y < H; y += H / 14) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+      const rows = [['LINE', PAL.bone, 0], ['BY', PAL.orange, .55], ['LINE.', PAL.bone, 1.05]];
+      rows.forEach(([s, col, d], i) => { const sz = i === 1 ? H * .2 : H * .36, y = H * (.2 + i * .3); Type.outline(g, s, W * .5, y, K.prog(lt, d, d + .9), { size: sz, weight: 400, family: DISP, stroke: col, strokeW: 5 * u, fill: col, glow: col }); });
+      const sy = (lt / (T.until - T.line)) * H * 1.3 - H * .15; const gr = g.createLinearGradient(0, sy - H * .1, 0, sy + H * .02); gr.addColorStop(0, 'rgba(48,80,255,0)'); gr.addColorStop(1, 'rgba(120,150,255,.55)'); g.fillStyle = gr; g.fillRect(0, sy - H * .1, W, H * .12);
+      g.fillStyle = PAL.blue; g.fillRect(0, sy + H * .02, W, 4 * u); K.text(g, `L ${String(Math.min(99, Math.floor(lt * 14))).padStart(2, '0')}`, W * .93, H * .06, { size: H * .03, weight: 700, family: MONO, fill: PAL.bone, align: 'right', spacing: 4 }); } },
+  /* 6 · UNTIL THE THING YOU IMAGINED — words land on the beat, the one serif word glitches in, the picture shakes harder as the riser climbs */
+  { id: 'until', at: T.until, enter: ['glitch', .3], bg: null, look: { bloom: .2, threshold: .85, grain: .055, ca: .004, vignette: .15 },
+    draw: (g, lt, t) => { g.fillStyle = PAL.orange; g.fillRect(0, 0, W, H); const build = clamp(lt / (T.hush - T.until)), sh = K.shake(lt, 14 * u * build * build, 38, 3); g.save(); g.translate(sh[0], sh[1]);
+      [['UNTIL THE', .06, .17, 0], ['THING YOU', .06, .43, 2]].forEach(([s, fx0, fy, b], i) => { const p = lt - b * BEAT; if (p < 0) return; K.slam(g, p, W * fx0, H * fy, () => K.text(g, s, 0, 0, { size: H * .27, weight: 400, family: DISP, fill: PAL.ink, align: 'left', ink: true }), { from: 1.35, d: .09 }); });
+      const pw = lt - 1.45; if (pw > 0) { const fs = H * .3 * (1 + .25 * build); K.text(g, 'imagined', W * .5, H * .79, { size: fs, weight: 700, family: SERIF, fill: PAL.bone, max: W * .92 }); Type.glitch(g, 'imagined', W * .5, H * .79, .8 * Math.exp(-pw * 2.2) + .18 * build, lt * 30, { size: Math.min(fs, W * .92 / 4.1), weight: 700, family: SERIF, fill: 'rgba(0,0,0,0)', colors: ['#0a0a0f', '#3050ff'] }); }
+      g.restore(); K.text(g, `${String(Math.floor(60 + 38 * build)).padStart(2, '0')}%`, W * .93, H * .06, { size: H * .03, weight: 700, family: MONO, fill: PAL.ink, align: 'right', spacing: 4 }); } },
+  /* a beat of nothing */
+  { id: 'hush', at: T.hush, bg: null, look: { bloom: 0, grain: .03, vignette: .2 }, draw: (g, lt) => { g.fillStyle = PAL.ink; g.fillRect(0, 0, W, H); g.fillStyle = PAL.bone; g.globalAlpha = .5 + .5 * Math.sin(lt * 40); g.fillRect(W * .5 - 3 * u, H * .5 - H * .05, 6 * u, H * .1); g.globalAlpha = 1; } },
+  /* 7 · STARTS TO MOVE. — 24 000 particles gather into the line; then the last word moves */
+  { id: 'move', at: T.move, enter: ['flash', .1], look: { bloom: .9, threshold: .55, grain: .05, ca: .004, vignette: .25 },
+    gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: [PAL.ink, '#101a5c', PAL.blue, PAL.ink], speed: .5, amt: .55 }, { to: rt });
+      MOR.draw({ progress: E.inOutCubic(seg(lt, .05, 1.3)), t, colors: [PAL.bone, PAL.orange], flow: 320 * u, size: 2.7 * u, glow: .16, spread: .5, cam: { yaw: .18 * Math.sin(lt * .8), pitch: .03, dist: 1500 } }, { to: rt }); },
+    draw: (g, lt) => { const q = seg(lt, 1.25, 1.85); if (q > 0 && q < 1) { g.strokeStyle = PAL.orange; g.globalAlpha = (1 - q) * .9; g.lineWidth = (16 * (1 - q) + 2) * u; g.beginPath(); g.arc(W * .5, H * .66, minDim * (.12 + .85 * E.outCubic(q)), 0, K.TAU); g.stroke(); g.globalAlpha = 1; }
+      const m = lt - 1.9; if (m > 0) { const x = Math.min(1, m / .9); for (let k = 7; k >= 0; k--) { const e = E.inCubic(clamp(x - k * .035)); K.text(g, 'MOVE.', W * .5 + e * W * .52, H * .7, { size: H * .52, weight: 400, family: DISP, fill: k ? 'rgba(0,0,0,0)' : PAL.orange, stroke: PAL.orange, strokeW: k ? 3 * u : 0, alpha: k ? .5 * (1 - k / 8) : 1 }); } } } },
+]);
+S.camera = t => Cine.mix({ zoom: 1 }, Cine.punch(t, HITS, { amp: .022, decay: .18 }), Cine.shake(t, HITS, { amp: .006, decay: .14 }), Cine.handheld(t, { amp: .002 }));
+S.look((t, base) => { const fadeIn = 1 - seg(t, 0, .06), fadeOut = seg(t, DUR - .4, DUR - .02, E.inCubic), p = K.pulse(t, HITS, .07); return { ca: (base.ca ?? .002) + .005 * p, fade: Math.max(fadeIn, fadeOut), fadeColor: [.039, .039, .059], flash: [.03 * p, .03 * p, .03 * p] }; });
+
+function renderFrame(t) { S.render(t); }
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['400 Anton', '700 Playfair Display', '600 JetBrains Mono', '700 JetBrains Mono']).then(() => { build(); return S.ready(); }).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

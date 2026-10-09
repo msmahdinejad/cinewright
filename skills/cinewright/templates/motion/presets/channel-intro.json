@@ -1,0 +1,9 @@
+{
+  "bpm": 120, "duration": 8, "mood": "tech", "wipe": "circle",
+  "theme": { "preset": "night", "head": "grotesk" },
+  "scenes": [
+    { "type": "words", "at": 0, "words": ["Unbox.", "Test.", "Repeat."], "step": 0.5 },
+    { "type": "logo", "at": 1.5, "mark": "pulse", "name": "Tech Pulse", "tag": "Gadgets, tested.", "wipe": "flood", "bg": "blobs" },
+    { "type": "cta", "at": 6.5, "handle": "@techpulse", "button": "Subscribe", "wipe": "stripes", "bg": "blobs" }
+  ]
+}

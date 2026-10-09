@@ -1,0 +1,96 @@
+{
+  "schema": 2,
+  "id": "simple-xhigh/infographic-20s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "infographic-20s",
+  "domain": "explainer",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0-final",
+  "date": "2026-10-09",
+  "wallSeconds": 1444,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 20,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 8.7,
+    "audio": {
+      "lufs": -14.2,
+      "lra": 2.2,
+      "truePeak": -1.3,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0102,
+      "mean": 0.02,
+      "quietPct": 8,
+      "cuts": 4,
+      "longestStatic": 0,
+      "curve": "█▅▂▁█▇▂▂▂▁▂▁▅█▆▃▃▂▂▂▃▅█▇▂▃▂▂▂▃▃██▄▂▁▁"
+    },
+    "look": {
+      "medianFill": 26,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 2,
+      "perMinute": 6
+    }
+  },
+  "session": {
+    "events": 181,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 9,
+      "command_execution": 102,
+      "web_search": 6,
+      "todo_list": 7,
+      "reasoning": 40,
+      "mcp_tool_call": 12
+    },
+    "turns": 1,
+    "inputTokens": 6997545,
+    "outputTokens": 28261,
+    "cachedInputTokens": 6721920,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\n20-second, 1080p animated infographic with custom moon, brain and clock illustrations, counting numbers and bold kinetic typography.\nOriginal upbeat synthesized music and synchronized sound design; verified H.264 video + AAC stereo audio."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2014,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

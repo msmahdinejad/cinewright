@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // scaffold.mjs — create a self-contained video project from a template.
 //
-//   node <skill>/scripts/scaffold.mjs <project-dir> [--template basic] [--w 1920 --h 1080 --fps 60 --dur 12] [--lang en|fa] [--title "My video"] [--examples] [--force]
+//   node <skill>/scripts/scaffold.mjs <project-dir> [--template basic] [--preset <name>] [--w 1920 --h 1080 --fps 60 --dur 12] [--lang en|fa] [--title "My video"] [--examples] [--force]
+//   (templates with presets — `motion` — start from a complete example film described as data: --preset person-intro | channel-intro | social-promo | infographic | event-promo)
 //
 // Result (everything the project needs lives inside it, so it can be zipped, shared and re-rendered years later):
 //   video.html   scenes + renderFrame(t) + <script id="cues"> timeline      audio.mjs   soundtrack synthesised from the same cues
@@ -23,7 +24,9 @@ const target = path.resolve(dir);
 if (fs.existsSync(target) && fs.readdirSync(target).length && !opt.force) { console.error(`${target} is not empty. Pick another folder or pass --force (existing files with the same name are overwritten).`); process.exit(1); }
 
 let defaults = {}; try { defaults = JSON.parse(fs.readFileSync(path.join(tdir, 'template.json'), 'utf8')); } catch { /* no defaults file */ }
-const tokens = { W: opt.w || defaults.w || 1920, H: opt.h || defaults.h || 1080, FPS: opt.fps || defaults.fps || 60, DUR: opt.dur || defaults.dur || 12, LANG: opt.lang || 'en', TITLE: opt.title || path.basename(target), HUE: 262 };
+let preset = null; const pdir = path.join(tdir, 'presets');          // templates with presets (motion) start from a complete example film described as data
+if (fs.existsSync(pdir)) { const name = opt.preset || defaults.preset, pf = path.join(pdir, name + '.json'); if (!fs.existsSync(pf)) { console.error(`unknown preset "${name}". available: ${fs.readdirSync(pdir).map(x => x.replace(/\.json$/, '')).join(', ')}`); process.exit(1); } preset = JSON.parse(fs.readFileSync(pf, 'utf8')); if (opt.dur) preset.duration = +opt.dur; }
+const tokens = { W: opt.w || preset?.w || defaults.w || 1920, H: opt.h || preset?.h || defaults.h || 1080, FPS: opt.fps || preset?.fps || defaults.fps || 60, DUR: opt.dur || preset?.duration || defaults.dur || 12, LANG: opt.lang || 'en', TITLE: opt.title || path.basename(target), HUE: 262, SPEC: preset ? JSON.stringify(preset, null, 1) : '' };
 const fill = s => s.replace(/\{\{(\w+)\}\}/g, (m, k) => (k in tokens ? tokens[k] : m));
 const isText = f => /\.(html|mjs|js|md|json|css|txt)$/i.test(f);
 function copy(from, to, transform) {
@@ -60,5 +63,5 @@ next (run inside the project folder):
 
 creative engine (also from inside the project):
   node tools/inspire.mjs --brief "…"     # three creative directions for a brief
-  node tools/atlas.mjs search <words>    # 230+ tested techniques; show <id> · sheet <ids> to SEE them     (skill folder: ${SKILL})
+  node tools/atlas.mjs search <words>    # 250+ tested techniques; show <id> · sheet <ids> to SEE them     (skill folder: ${SKILL})
   API on one page: ${path.join(SKILL, 'references', 'engine.md')}    process: ${path.join(SKILL, 'references', 'protocol.md')}`);

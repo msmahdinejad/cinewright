@@ -1,0 +1,11 @@
+{
+  "bpm": 120, "duration": 15, "mood": "upbeat", "wipe": "stripes",
+  "theme": { "preset": "poster" },
+  "scenes": [
+    { "type": "title", "at": 0, "kicker": "HELLO, I'M", "lines": ["Alex", "Morgan"], "sub": "Brand & product designer · Berlin", "avatar": "AM", "badges": ["pen", "bolt", "star"], "bg": "flat" },
+    { "type": "chips", "at": 3, "title": "What I do", "items": [ { "label": "Brand identity", "icon": "pen", "note": "logos · systems" }, { "label": "Product design", "icon": "layers", "note": "apps · web" }, { "label": "Motion", "icon": "play", "note": "intros · UI" } ], "wipe": "circle", "bgColor": "c" },
+    { "type": "stats", "at": 6, "title": "In numbers", "items": [ { "value": 8, "suffix": "+", "label": "years of craft", "icon": "clock" }, { "value": 120, "label": "projects shipped", "icon": "briefcase" }, { "value": 14, "label": "design awards", "icon": "trophy" } ], "wipe": "slide", "bgColor": "d" },
+    { "type": "quote", "at": 9, "text": "Good design feels invisible — until it's missing.", "who": "Alex Morgan", "role": "Brand & product designer", "wipe": "stripes", "bgColor": "a" },
+    { "type": "cta", "at": 11.5, "line": "Let's make something great", "handle": "@alexmorgan", "sub": "alexmorgan.design", "button": "Say hello", "wipe": "flood", "bgColor": "b" }
+  ]
+}

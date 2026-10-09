@@ -1,0 +1,92 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/music-visualizer__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "music-visualizer",
+  "domain": "music",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-07",
+  "wallSeconds": 1072,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 24,
+    "width": 960,
+    "height": 540,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 43.01,
+    "audio": {
+      "lufs": -8.5,
+      "lra": 4.6,
+      "truePeak": 1.7,
+      "silentShare": 0.036
+    },
+    "energy": {
+      "median": 0.0578,
+      "mean": 0.0573,
+      "quietPct": 0,
+      "cuts": 1,
+      "longestStatic": 0,
+      "curve": "▆███████████████████████████████████████████"
+    },
+    "look": {
+      "medianFill": 37,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 1,
+      "perMinute": 2.5
+    }
+  },
+  "session": {
+    "events": 90,
+    "itemTypes": {
+      "error": 1,
+      "reasoning": 32,
+      "agent_message": 11,
+      "todo_list": 5,
+      "command_execution": 34,
+      "file_change": 4
+    },
+    "turns": 1,
+    "inputTokens": 1767556,
+    "outputTokens": 17479,
+    "cachedInputTokens": 1692672,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\nSynthesized a 24-second electronic track with intro, build, drop, and outro, analyzed via real kick/bass/hats/lead envelopes.  \nBuilt an audio-reactive particle/tunnel visualizer with ring EQ, hat streaks, palette-shifting drop, full-frame flash, shockwave, camera punch, and end title."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

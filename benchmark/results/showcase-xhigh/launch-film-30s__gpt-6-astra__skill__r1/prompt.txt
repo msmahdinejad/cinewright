@@ -1,0 +1,4 @@
+$cinewright Make a 30-second launch film for ARC, a fictional titanium smart ring (the product does not exist, so invent everything). Aim for keynote-level craft: a hero object built from code (procedural 3D, no assets) with believable metal and light, slow macro camera moves, one "inside the ring" exploded moment, three crisp spec call-outs (9-day battery · sleep & HRV · 50 m water resistant) and a final lockup with the name and a tagline you write. Build tension, reveal, pay off. Original score plus foley-style sound design (clicks, air, a deep sub hit on the reveal). Go all out.
+
+---
+Benchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.

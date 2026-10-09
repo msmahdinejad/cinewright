@@ -32,7 +32,7 @@ const N = +(Q.q.get('n') || 70000);
 const SHAPES = LANG === 'fa'
   ? [{ text: 'سلام', dir: -1 }, { text: 'hello', dir: 1 }, { mark: true }]           // dir: which way the shape "writes" (Persian right→left)
   : [{ text: 'hello', dir: 1 }, { text: 'سلام', dir: -1 }, { mark: true }];
-const CAPTION = LANG === 'fa' ? 'هر صدایی، به زبان خودت' : 'every voice, in your language';
+const CAPTION = LANG === 'fa' ? 'هر فریم، با کد ساخته می‌شود' : 'every frame, made from code';
 const COL_A = [0.26, 0.10, 1.0], COL_B = [0.10, 0.92, 0.95];                           // linear-ish RGB 0..1 (violet → cyan)
 window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: '{{TITLE}}', audio: 'audio.wav',
                  markers: Object.entries(CUES.t).map(([label, t]) => ({ t, label })) };

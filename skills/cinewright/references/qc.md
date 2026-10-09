@@ -76,7 +76,8 @@ Use numbers instead: `qc.mjs palette` on stills (dominant colours, luminance), `
 
 ## 8. Motion energy (v2) — the slideshow detector
 `node tools/qc.mjs energy out/video.mp4` (also run by `check`) measures the mean frame-to-frame difference at 15 fps and prints a sparkline per half-second, the share of near-static time, the number of hard cuts/flashes and the longest static hold.
-Calibration: the dynamic reference films sit at ~5–15 % near-static; a slideshow-style render is 50–60 %. **WARN** = a stretch ≥ 1.5 s with almost no change → add camera drift/push, parallax particles, a secondary mover, or cut earlier; **PASS "pacing"** = enough of the film is in motion.
+Calibration: the dynamic reference films sit at ~5–15 % near-static; a slideshow-style render is 50–60 %. **WARN** = a stretch ≥ 1.5 s with almost no change, or more than 35 % of the film near-static → add camera drift/push, parallax particles, a secondary mover, or cut earlier; **FAIL** = more than 50 % near-static (a slideshow) — unless `brief.md` carries a line `Restraint: <why>` because stillness IS the concept (a calm, meditative, slow-reveal film), which downgrades it to a WARN; **PASS "pacing"** = enough of the film is in motion.
+`node tools/qc.mjs look` is the twin gate for the picture: median **frame fill** under 15 % (thin lines on empty black) is a **FAIL** (again downgraded by a `Restraint:` line), under 25 % — the boldness floor — a WARN. Both are measured on the *final* encode: run `qc check` on the finished file, not only on the draft (a draft at another size or before the last fixes can read very differently).
 Use it after every polish round; it is the objective counterpart of the 10 review questions in `protocol.md`. It cannot judge beauty, only whether things move.
 
 ## 9. Looking at the right things (v2)

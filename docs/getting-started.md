@@ -85,6 +85,7 @@ You do not need an agent to use the engine:
 
 ```bash
 node skills/cinewright/scripts/scaffold.mjs my-film --template showreel   # or: cinema · explainer · music · particles · shader · basic
+node skills/cinewright/scripts/scaffold.mjs my-intro --template motion --preset person-intro   # a whole film from a JSON spec (also: channel-intro · social-promo · infographic · event-promo)
 cd my-film
 node audio.mjs                       # synthesise the soundtrack from the cue timeline
 node tools/render.mjs sheet          # contact sheet → qc/sheet.png (look at it!)

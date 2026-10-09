@@ -1,0 +1,9 @@
+{
+  "w": 1080, "h": 1920, "bpm": 120, "duration": 12, "mood": "upbeat", "wipe": "stripes",
+  "theme": { "preset": "poster" },
+  "scenes": [
+    { "type": "title", "at": 0, "kicker": "NEW THIS SUMMER", "lines": ["Sweet", "Treats"], "sub": "Sunny Bakery", "icon": "gift", "badges": ["star", "heart", "bolt"], "bgColor": "a" },
+    { "type": "list", "at": 2.5, "kicker": "THE MENU", "title": "Fresh today", "items": [ { "label": "Peach tart", "value": "€3.80", "icon": "star", "note": "almond cream" }, { "label": "Lemon cake", "value": "€4.20", "icon": "sun", "note": "zesty glaze" }, { "label": "Berry scone", "value": "€2.90", "icon": "heart", "note": "warm, with jam" } ], "wipe": "circle", "bgColor": "b" },
+    { "type": "cta", "at": 8.5, "line": "Open daily 8–18", "handle": "Baker Street 12", "button": "Come say hi", "wipe": "slide", "bgColor": "c" }
+  ]
+}

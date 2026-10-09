@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/calm-landscape__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "calm-landscape",
+  "domain": "generative",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 1691,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 25.04,
+    "audio": {
+      "lufs": -13.8,
+      "lra": 1.2,
+      "truePeak": -2.6,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0018,
+      "mean": 0.0021,
+      "quietPct": 93,
+      "cuts": 0,
+      "longestStatic": 13,
+      "curve": "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂"
+    },
+    "look": {
+      "medianFill": 51,
+      "emptyPct": 3,
+      "darkPct": 3
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 184,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 16,
+      "command_execution": 90,
+      "reasoning": 52,
+      "todo_list": 5,
+      "mcp_tool_call": 16
+    },
+    "turns": 1,
+    "inputTokens": 5546487,
+    "outputTokens": 41437,
+    "cachedInputTokens": 5264384,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 15-second procedural dusk landscape with layered mountain ridges, drifting mist, aurora ribbons, a rising moon, river glint, and glowing fireflies.\nAdded an original ambient score with pads, soft plucks, sparse bells, wind texture, and a gentle loopable resolve."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 3020,
+    "reviewRounds": 0,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 3
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/last-signal-trailer__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "last-signal-trailer",
+  "domain": "cinematic",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.2.0",
+  "date": "2026-10-07",
+  "wallSeconds": 4021,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 25,
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 29.14,
+    "audio": {
+      "lufs": -16.4,
+      "lra": 9.2,
+      "truePeak": -1.5,
+      "silentShare": 0.04
+    },
+    "energy": {
+      "median": 0.0024,
+      "mean": 0.0074,
+      "quietPct": 54,
+      "cuts": 0,
+      "longestStatic": 3.5,
+      "curve": "▁▁▁▁▁▁▁▅▃▄▄▄▄▄▅▁▁▁▁▁▁▁▁▂▁▅▆▃▁▁▁▅▅▅▂▁▁▁▁▁▁▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 8,
+      "emptyPct": 50,
+      "darkPct": 96
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 235,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 9,
+      "command_execution": 140,
+      "todo_list": 5,
+      "reasoning": 48,
+      "mcp_tool_call": 18
+    },
+    "turns": 1,
+    "inputTokens": 9408705,
+    "outputTokens": 44664,
+    "cachedInputTokens": 9063296,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 25-second procedural “LAST SIGNAL” teaser with a station, corridor flythrough, CRT transmission, particle silhouette, countdown, and planet-sized ring reveal.  \nAll visuals and sound are generated from code, delivered as 1920×1080 H.264 video with AAC audio."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2312,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

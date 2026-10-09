@@ -8,7 +8,7 @@
   const head = track.querySelector('.head'), fill = track.querySelector('.fill');
   const ro = { t: $('#ro-t'), t2: $('#ro-t2'), f: $('#ro-f'), s: $('#ro-s') };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const FILMS = { showreel: { poster: 'assets/anim/showreel.webp', strip: 'assets/img/strip-showreel.jpg' }, cinema: { poster: 'assets/anim/cinema.webp', strip: 'assets/img/strip-cinema.jpg' } };
+  const FILMS = { showreel: { poster: 'assets/img/live-showreel.jpg', strip: 'assets/img/strip-showreel.jpg' }, cinema: { poster: 'assets/img/live-cinema.jpg', strip: 'assets/img/strip-cinema.jpg' } };
   const FPS = 30;
   const canLive = (() => { try { const g = document.createElement('canvas').getContext('webgl2'); return !!(g && g.getExtension('EXT_color_buffer_float')); } catch { return false; } })();
   if (!canLive) { stage.classList.add('nolive'); start.hidden = true; pp.disabled = snd.disabled = true; pp.style.opacity = snd.style.opacity = .4; return; }

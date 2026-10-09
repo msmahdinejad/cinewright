@@ -1,0 +1,9 @@
+# Review 1 — motion & camera (looked at: the 24-frame contact sheet 0.3 → 14.7 s and two full-size stills at 5.2 s and 12.8 s)
+
+The skeleton plays end to end with no console errors; the story reads (title → speakers → date → call to action), every cut is on a beat and gets a different wipe, and the palette (night · violet · lime · pink) holds across scenes. Ranked by visual impact:
+
+1. **Speakers (3.5–8.5 s): the three rows are small and the bottom 40 % of the frame is empty.** Cause: row height was capped at 200 px and the block started at 33 % of the height. Change: the cap is 235 px, the block starts at 34 % and may use 62 % of the height; the row labels grow with the row (size = row × .36), so the names read from across a room.
+2. **Call to action (11.5–15 s): "Be in the room" is lost above a big empty area.** Cause: the closing line was 110 px high and sat at 30 % of the height. Change: 135 px, at 26 %, so the line, the pill and the button form one centred stack; the handle pill keeps pulsing (secondary motion) so the final hold is never static.
+3. **Date moment (8.5–11.5 s): the floods are right but each word enters from the same direction.** Accepted: one word per second on the beat is the point; the alternating tilt of the entrance (±4.6°) and the changing flood colour give enough variation. Checked the 8.44 s frame — a plain violet flood is the wipe's midpoint, not a bug.
+4. **Title (0–3.5 s): the avatar disc shows a calendar icon, good, but the kicker "SAVE THE DATE" is the smallest text on screen.** Accepted: it is a kicker; it appears first (0.15 s) and the eye finds it before the title slides up.
+5. **Energy:** the near-static share is measured after the last fix (`qc energy`); floaters, the pulsing pill and the 1.2 % punch on cuts keep every second moving.

@@ -1,13 +1,13 @@
 {
   "name": "cinewright",
   "owner": { "name": "Mohammad Saleh Mahdinejad" },
-  "metadata": { "description": "cinewright — the agent skill for videos made entirely from code", "version": "2.1.0" },
+  "metadata": { "description": "cinewright — the agent skill for videos made entirely from code", "version": "2.2.0" },
   "plugins": [
     {
       "name": "cinewright",
       "source": "./",
-      "description": "Make cinema-grade videos entirely from code: GPU film engine, 239-technique atlas, synthesised music, Persian/RTL.",
-      "version": "2.1.0",
+      "description": "Make cinema-grade videos entirely from code: GPU film engine, 251-technique atlas, synthesised music, Persian/RTL.",
+      "version": "2.2.0",
       "category": "creative",
       "tags": ["video", "motion-graphics", "webgl", "persian"],
       "strict": false,

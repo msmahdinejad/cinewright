@@ -73,7 +73,7 @@ pair: particles-dissolve, particles-morph-word
 
 ## meta-translation-language — Language, translation, dubbing
 tags: idea metaphor translation language dubbing speech voice persian subtitles global babel
-use: subjects about speaking across languages (Avorythm-like products, learning apps, subtitles, dubbing, travel)
+use: subjects about speaking across languages (translation tools, learning apps, subtitles, dubbing, travel)
 how: **prism** (white waveform → glass prism → coloured waveforms per language) · **alphabet storm** (letters of many scripts fall and snap into one sentence; Persian assembles right-to-left) · **mouth-to-text** (waveform bars → words, `ui-waveform-voice`) · **world of speakers** (globe/nodes with names in several scripts, signals travelling, `ui-network-graph`) · **echo with a twist** (a word repeats and each echo changes script and colour) · **bridge** (two cliffs, a bridge drawn by `gfx-stroke-draw`, words walk across) · **live subtitles in the street** (3D city, signs switch language as the camera passes). Sound: the dull babble (`voice-babble`) becomes clear and bright at the moment of translation.
 pair: ui-waveform-voice, words-on-beat, ui-network-graph, text3d-chrome (Persian), gfx-girih-reveal
 
@@ -91,7 +91,7 @@ pair: gfx-flow-field, particles-mesh-surface, look-ascii (the machine's view)
 
 ## meta-open-source-community — Open source and community
 tags: idea metaphor open source community contributors github code share collaboration commons
-use: open-source tools (Avorythm is one): value = many hands, transparency, freedom
+use: open-source tools: value = many hands, transparency, freedom
 how: code typing (`ui-code-typing`) whose lines are claimed by avatars from many places; a constellation where each star is a contributor and the stars connect (`ui-network-graph`); a glass box (transparent product: you can see the gears, `glass-gems` + `wire-hologram`); a key being handed on; "fork" as a shape splitting into two shapes that both continue.
 pair: ui-code-typing, ui-network-graph, wire-hologram
 

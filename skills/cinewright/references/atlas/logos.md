@@ -116,3 +116,9 @@ const p = lt - .25, s = H * .5 * K.spring(p, { f: 2.2, z: .3 }), rot = Math.sin(
 g.save(); g.translate(W / 2, H / 2); g.rotate(rot); g.shadowColor = 'rgba(0,0,0,.35)'; g.shadowBlur = 40 * u * 2; g.shadowOffsetY = 16 * u * 2; if (p > 0) g.drawImage(c.logo, -s / 2, -s / 2, s, s); g.restore();
 const cols = ['#ffd23f', '#27f0ff', '#ffffff', '#7dff9b', '#7a5cff']; K.confetti(g, p, W * .1, H * 1.02, { n: 90, life: 2.4, speed: 1500 * u * 2, gravity: 1700 * u * 2, colors: cols, size: 20 * u * 2, angle: -1.15, spread: .9, seed: 1 }); K.confetti(g, p, W * .9, H * 1.02, { n: 90, life: 2.4, speed: 1500 * u * 2, gravity: 1700 * u * 2, colors: cols, size: 20 * u * 2, angle: -2.0, spread: .9, seed: 2 });
 ```
+
+## mg-logo-build — A mark that builds itself and a name that pops letter by letter
+tags: motion graphics logo intro channel sting brand mark build letters tagline shine
+use: channel / brand intros of 5–8 s (`logo` scene): the mark assembles with an overshoot, three rings pulse out, the name pops letter by letter, a tagline slides up, a shine crosses it
+how: pair with a 3-word `words` hook before it and a short `cta` after it; sound: riser into the hit, impact on the first letter, chime on the tagline (audio.mjs)
+avoid: a logo that is only text; more than one shine

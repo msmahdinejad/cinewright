@@ -156,3 +156,9 @@ how: `s.babble(t0, t1, {f0, style, pan, gain, seed})` generates syllable-like fo
 ```js audio
 s.babble(.2, 3.6, { f0: 115, style: 'dull', pan: -.4, gain: 1, seed: 1 }); s.babble(4.0, 7.4, { f0: 190, style: 'bright', pan: .4, gain: 1, seed: 2 }); s.pad(0, lib.chord('A3', 'min7'), 8, { vel: .18, send: .5 });
 ```
+
+## mg-score-from-spec — Music mood and sound design from the same spec
+tags: motion graphics sound music mood score whoosh pop tick chime sync spec audio
+use: scoring a motion-graphics film without hand-placing a single sound: `mood` (upbeat · chill · tech · cinematic) chooses chords, groove, bass and keys; every scene start gets a whoosh + thud, every item a pop (same time formula as the picture), counters tick, the logo hits, the CTA sparkles
+how: edit the spec and re-run `node audio.mjs`; if a moment needs more, add events at the bottom of audio.mjs with `s.pop`, `s.impact`, `s.chime`, `s.riser` at times read from the spec
+avoid: music louder than the pops; leaving the default mood when the subject is calm (use `chill` or `cinematic`)

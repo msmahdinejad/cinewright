@@ -13,7 +13,7 @@ avoid: fewer than 30 000 points for text (letters turn grainy); leaving the word
 ```js gl
 //@ {"peak":1.0,"look":{"bloom":0.9}}
 const M = store.M ||= (() => { const N = 50000, M = new Parts.Morph(gfx, { count: N });
-  M.shapes([Parts.cloud(N, { w: W * 1.2, h: H }), Parts.text('AVORYTHM', { height: H * .2, n: N }), Parts.text('آووریتم', { height: H * .24, n: N }), Parts.mesh(Geo.torusKnot(), { scale: H * .2, n: N })]); return M; })();
+  M.shapes([Parts.cloud(N, { w: W * 1.2, h: H }), Parts.text('MOTION', { height: H * .2, n: N }), Parts.text('FRAME', { height: H * .24, n: N }), Parts.mesh(Geo.torusKnot(), { scale: H * .2, n: N })]); return M; })();
 fx.bg('nebula', { c: ['#010108', '#0e0a30', '#2a1a78', '#5a4ad0'], speed: .6, amt: .2 }, { to: rt });
 M.draw({ progress: lt, t: lt, colors: ['#7a5cff', '#27f0ff'], flow: 220 * u, size: 1.7, glow: .14, cam: { yaw: lt > 2 ? (lt - 2) * .8 : 0 } }, { to: rt });
 ```

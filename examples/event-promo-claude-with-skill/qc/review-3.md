@@ -1,0 +1,10 @@
+# Review 3 — sound & finish (looked at: the band table, spectrogram and waveform of `qc audio`, the energy curve of `qc energy`, and the final contact sheet)
+
+Loudness is −13.9 LUFS with a −1.4 dBFS true peak and a 2.3 LU range; the first score already had the right shape (build → groove → hits on the date → resolve). Findings, ranked:
+
+1. **The date moment (8.5–11.5 s) is the loudest part of the film but the thinnest on top.** Measured: −10.6 dB overall against −12 dB around it, but presence/air only −25.9 / −19.2 dB while the call to action reads −16.8 / −15.8. Cause: the three words are an impact + pop each, nothing bright. Change: every word also gets a clap, an open hat on the off-beat and a short sparkle cluster (each its own seed); the 0.6 s riser into the first word is new. Result: +1 dB of presence, +0.7 dB of air — a modest gain, kept because it moves with the spec (retime a word and its hits follow).
+2. **Cuts (3.5, 8.5, 11.5 s).** Each cut already has a whoosh that starts 0.3 s before the wipe and an impact on it; the wipes are different shapes (circle, flood, stripes), so every cut sounds and looks different. No change.
+3. **Speakers (3.5–8.5 s).** One swipe and one pop per row, the pops climb in pitch (1100 → 1260 Hz) in landing order; the row shine (light sweep) is silent on purpose.
+4. **End (11.5–15 s).** Sparkle at 11.8 s, pop + chime on "Be in the room", a second pop on the button, then a resolved chord that rings under the last image; the film fades over 0.5 s after ≈ 1.8 s of hold. The last second is deliberately lower (−19 dB) — it is the tail, not a gap.
+5. **Pacing:** `qc energy` — quiet 11 % of the time, no static hold ≥ 1.5 s, the 5 flashes it reports (3.3, 8.3, 9.5, 10.5, 11.5 s) are the wipe midpoints and the colour floods of the date, all intended. Frame fill median 45 %; the 3 % "empty" frames are the wipe midpoints.
+6. **Final checks:** `render.mjs verify` (determinism), a full 1080p render with motion blur, `qc check` (video, pacing, fill, audio, craft) before shipping.

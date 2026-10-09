@@ -1,8 +1,8 @@
 {
   "name": "cinewright",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
-  "description": "An agent skill (Codex, Claude Code, …) for making cinema-grade videos entirely from code: deterministic WebGL/canvas frames, synthesised music, a 239-technique atlas, Persian/RTL support.",
+  "description": "An agent skill (Codex, Claude Code, …) for making cinema-grade videos entirely from code: deterministic WebGL/canvas frames, synthesised music, a 251-technique atlas, Persian/RTL support.",
   "type": "module",
   "license": "MIT",
   "author": "Mohammad Saleh Mahdinejad",

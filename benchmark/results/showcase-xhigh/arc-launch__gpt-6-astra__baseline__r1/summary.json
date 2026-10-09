@@ -1,0 +1,92 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/arc-launch__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "arc-launch",
+  "domain": "product",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-07",
+  "wallSeconds": 2289,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 30,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 17.87,
+    "audio": {
+      "lufs": -16,
+      "lra": 6.2,
+      "truePeak": -1.4,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0041,
+      "mean": 0.0088,
+      "quietPct": 32,
+      "cuts": 0,
+      "longestStatic": 3,
+      "curve": "█▁▅██▆▄▃▂▁▁▂▁▂▂▁▁▁▁▁▁▁▂▁▁▁▁▁▁▂▁▁▁▁▁▁▁▃▃▂▂▂▂▂▄▁▂▂▂▂▁▁▁▁▁▃"
+    },
+    "look": {
+      "medianFill": 11,
+      "emptyPct": 7,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 120,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 6,
+      "todo_list": 5,
+      "command_execution": 58,
+      "reasoning": 36,
+      "mcp_tool_call": 10
+    },
+    "turns": 1,
+    "inputTokens": 2592550,
+    "outputTokens": 39527,
+    "cachedInputTokens": 2433536,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n30-second, code-built launch film: brushed titanium, colored reflections, exploded components, animated features, and ARC lock-up.\nOriginal synthesized foley, sub-bass, riser, and resolving chord; delivered in 1080p/30 fps with H.264 video and stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

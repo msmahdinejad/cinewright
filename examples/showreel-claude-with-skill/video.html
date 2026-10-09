@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claude — Motion Reel 2026</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- ONE timeline for picture AND sound (audio.mjs reads it). 128 BPM → beat = 0.46875 s, bar = 1.875 s. 15 s = 32 beats; every cut is on a beat, the pacing curve is 4·4·3·3·4·3·3·3·5 beats. -->
+<script id="cues" type="application/json">
+{ "bpm": 128, "duration": 15,
+  "t": { "slam": 0, "form": 1.875, "type": 3.75, "lock": 4.78, "pattern": 5.15625, "ui": 6.5625, "click": 7.55, "fluid": 8.4375, "speed": 9.84375, "silence": 11.13, "burst": 11.25, "end": 12.65625 },
+  "hits": [0, 0.46875, 0.9375, 1.40625, 1.875, 3.75, 4.78, 5.15625, 6.5625, 7.55, 8.4375, 9.84375, 11.25, 12.65625] }
+</script>
+
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/gfx.js"></script><script src="lib/fx.js"></script><script src="lib/trans.js"></script>
+<script src="lib/stage.js"></script><script src="lib/scene3d.js"></script><script src="lib/parts.js"></script><script src="lib/type.js"></script><script src="lib/cine.js"></script><script src="lib/ui.js"></script><script src="lib/geometry.js"></script>
+<script>
+'use strict';
+/* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   CLAUDE — MOTION REEL 2026 (15 s). One idea: "a reel is a stack of disciplines — prove each in two seconds, tie them with one palette, one display face and a player-style HUD".
+   Eight chapters, nine shots, nine different engines:
+   1 slam     four words on four colour floods, each word animated differently      (2D · K.slam, per-letter drop/bounce, echo slide)
+   2 form     chrome torus-knot + glass ring orbiting in a violet studio, outline word behind (Scene3D · Mat.chrome/glass · DOF · layered 2D)
+   3 type     50 000 particles: noise cloud → the word, shock ring on the lock       (Parts.Morph)
+   4 pattern  an exact star pattern grows in poster colours; the black disc floods into the next shot (match cut)    (G.pattern)
+   5 ui       dark dashboard: counters, chart, toggles, a real cursor click, a toast  (UI · Type.counter)
+   6 fluid    raymarched liquid metal in a lavender studio                            (custom GLSL)
+   7 speed    ring tunnel at speed, echo type, zoom blur                              (Scene3D instancing)
+   8 burst    sparks + confetti + the slammed line (the hero moment, 75 %)            (Parts.Emitter · K.confetti)
+   9 end      name · role · stamp, long calm hold                                     (2D)
+   HUD: player-style chrome (title, timecode, chapter, progress) so the film reads as a reel. Palette: ink · violet · pink · lime · bone. Faces: Anton + Space Grotesk + JetBrains Mono.
+   ═════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════ 0. CONFIG ═══════════ */
+const CUES = JSON.parse(document.getElementById('cues').textContent), T = CUES.t, HITS = CUES.hits, BEAT = 60 / CUES.bpm;
+const Q = K.params(), W = Q.w || 1920, H = Q.h || 1080, FPS = Q.fps || 30, DUR = CUES.duration;
+const u = H / 1080, vertical = H > W * 1.1, minDim = Math.min(W, H * 1.35), vs = vertical ? .7 : 1;
+const PAL = { ink: '#0a0614', violet: '#6a35ff', pink: '#ff3f8e', lime: '#c6ff3a', bone: '#f5f1ff' };
+const DISP = K.FONTS.display, SANS = K.FONTS.grotesk, MONO = K.FONTS.mono;
+const COPY = { name: 'CLAUDE', role: 'MOTION DESIGNER', line: 'built entirely from code', words: ['I', 'MAKE', 'THINGS', 'MOVE'], bang: 'AND SOUND', kpi: [[450, 'frames rendered'], [9, 'disciplines'], [100, '% from code']], toast: 'Exported · 4K · 60 fps' };
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: 'Claude — Motion Reel 2026', audio: 'audio.wav', markers: Object.entries(T).filter(([k]) => !['lock', 'click', 'silence'].includes(k)).map(([label, t]) => ({ t, label })) };
+const { E, seg, clamp } = K;
+
+/* ═══════════ 1. ENGINE ═══════════ */
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx), S = new Stage(post, gfx, { fps: FPS });
+const A = new Scene3D(gfx, { W, H }), TUN = new Scene3D(gfx, { W, H });
+let MOR, EMI, GIRIH; const OUTLINE = K.canvas(W, H);
+Object.assign(UI.theme, { bg: PAL.ink, panel: '#15102b', panel2: '#1d1640', line: 'rgba(245,241,255,.13)', ink: PAL.bone, muted: '#a69cdc', accent: PAL.lime, accent2: PAL.pink });   // a DARK theme for the UI shot
+
+/* custom GLSL #1 — the studio behind the chrome: ink → violet, a pink pool bottom-left, a lime kick top-right */
+const FORMBG = gfx.prog(`
+//#use math,noise,color
+void main(){ vec2 p = aspectUv(vUv, uRes); float t = uT * .25; vec3 ink = vec3(.039, .024, .078), vio = vec3(.416, .208, 1.), pink = vec3(1., .247, .557);
+  float n = fbm(p * 1.3 + vec2(t, -t * .7)); vec3 col = mix(ink, vio, smoothstep(1.3, 0., length(p - vec2(.25 * sin(t * 2.), .1))) * .8);
+  col += pink * smoothstep(.55, 0., length(p - vec2(-.55 + .2 * cos(t * 1.7), -.38))) * .6; col += vec3(.78, 1., .23) * smoothstep(.3, 0., length(p - vec2(.75, .4))) * .3;
+  col *= .78 + .45 * n; o = vec4(col, 1.); }`);
+/* custom GLSL #2 — raymarched liquid-metal blobs; the "studio" is made of the palette (white key, pink + violet bands, a lime kicker) on a lavender floor */
+const BLOBS = gfx.prog(`
+//#use math,noise,color,sdf
+float map(vec3 p){ float t = uT * .9, d = 1e3; for (int i = 0; i < 5; i++) { float fi = float(i); vec3 c = vec3(sin(t * (.7 + fi * .21) + fi * 2.1) * 1.25, cos(t * (.5 + fi * .17) + fi * 1.3) * .75, sin(t * .4 + fi) * .6); d = opSmoothUnion(d, sdSphere(p - c, .55 + .1 * sin(t + fi)), .6); } return d; }
+vec3 nrm(vec3 p){ vec2 e = vec2(.002, 0.); return normalize(vec3(map(p + e.xyy) - map(p - e.xyy), map(p + e.yxy) - map(p - e.yxy), map(p + e.yyx) - map(p - e.yyx))); }
+vec3 env(vec3 d){ float k = max(dot(d, normalize(vec3(-.5, .8, .4))), 0.); vec3 c = mix(vec3(.16, .09, .38), vec3(.96, .94, 1.), d.y * .5 + .5);
+  c += vec3(1., .97, .95) * pow(k, 5.) * 2.2; c += vec3(1., .25, .55) * pow(max(sin(d.x * 5. + 1.) * .5 + .5, 0.), 8.) * 1.2 * smoothstep(-.3, .5, d.y);
+  c += vec3(.42, .21, 1.) * pow(max(dot(d, normalize(vec3(.8, .1, -.4))), 0.), 10.) * 2.2; c += vec3(.78, 1., .23) * pow(max(dot(d, normalize(vec3(-.3, -.6, .5))), 0.), 12.) * 1.5; return c; }
+void main(){ vec2 p = aspectUv(vUv, uRes); vec3 ro = vec3(0., 0., 4.), rd = normalize(vec3(p, -1.8)); float t = 0.; bool hit = false;
+  for (int i = 0; i < 64; i++) { float d = map(ro + rd * t); if (d < .002) { hit = true; break; } t += d; if (t > 9.) break; }
+  vec3 col = mix(vec3(.96, .94, 1.), vec3(.84, .79, .98), length(p)); if (hit) { vec3 pos = ro + rd * t, n = nrm(pos), r = reflect(rd, n); float fres = pow(1. - max(dot(n, -rd), 0.), 4.); col = aces(env(r) * (.6 + .5 * fres)); } o = vec4(col, 1.); }`);
+
+/* ═══════════ 2. WORLDS (built once, in window.ready) ═══════════ */
+function build() {
+  A.env = Env.studio({ colors: ['#0a0614', '#fff4ea', '#ff3f8e', '#6a35ff'] }); A.sky = { amt: .25, rough: .4 }; A.cam.fov = vertical ? 44 : 30;
+  A.floor({ y: -1.9, color: '#0a0614', reflect: .35, fade: .03 });
+  A.knot = A.mesh(Geo.torusKnot({ radius: 1.25, tube: .42 }), Mat.chrome());
+  A.ring = A.mesh(Geo.torus(2.35, .09, 120, 16), Mat.glass({ color: '#c6ff3a', density: 1.2, thickness: 1.2 }));
+  A.ring2 = A.mesh(Geo.torus(1.85, .035, 120, 10), Mat.emissive(PAL.lime, 1.4));
+  A.gems = [0, 1, 2].map(i => A.mesh(Geo.flat(Geo.icosphere(1, 1)), Mat.glass({ color: [PAL.pink, PAL.violet, PAL.lime][i], density: 1.4, thickness: 1.4 }), { scale: [.34, .34, .34] }));
+  TUN.env = Env.night(); TUN.sky = { amt: 0 }; TUN.fog = { color: '#0a0614', density: .03 }; TUN.cam.fov = 72;
+  const cols = [PAL.pink, PAL.violet, PAL.lime, PAL.bone], rings = []; for (let i = 0; i < 64; i++) rings.push({ pos: [0, 0, -i * 3], rot: [Math.PI / 2, 0, 0], scale: [1 + .12 * Math.sin(i * .7), 1, 1 + .12 * Math.cos(i * .9)], color: cols[i % 4] });
+  TUN.instances(Geo.torus(2.4, .06, 96, 10), Mat.emissive('#ffffff', 1.15), rings);
+  const N = 50000; MOR = new Parts.Morph(gfx, { count: N }); MOR.shapes([Parts.cloud(N, { w: W * 1.2, h: H * .95 }), Parts.text('TYPE', { height: minDim * .34, n: N, family: DISP, weight: 400 })]);
+  EMI = new Parts.Emitter(gfx, { count: 22000 });
+  EMI.burst({ t0: T.burst, n: 9000, speed: [260 * u, 1500 * u], drag: 2.3, gravity: [0, -380 * u, 0], life: [1, 2.1], size: [1.8, 5.5], colors: ['#fff6e8', PAL.lime, PAL.pink], glow: .35 });
+  EMI.burst({ t0: T.burst + .06, n: 5000, speed: [100 * u, 800 * u], drag: 1.7, life: [.8, 1.6], size: [2, 5], colors: ['#e3dcff', PAL.violet, '#ffffff'], glow: .35, sprite: 3 });
+  GIRIH = G.pattern('hex', 54, { size: minDim * .088, cols: 10, rows: 9 });
+}
+const sunburst = (g, x, y, R, rot, n, a, col) => { g.save(); g.translate(x, y); g.rotate(rot); g.fillStyle = col; g.globalAlpha = a; for (let i = 0; i < n; i += 2) { g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, R, i / n * K.TAU, (i + 1) / n * K.TAU); g.closePath(); g.fill(); } g.restore(); };
+/** a word drawn letter by letter: anim(i, n) → { dx, dy, rot, sc, a } */
+function letters(g, str, cx, cy, size, fill, anim, maxW = W * .9) {
+  g.save(); g.font = `400 ${size}px ${DISP}`; const ch = [...str]; let ws = ch.map(c => g.measureText(c).width), tw = ws.reduce((a, b) => a + b, 0);
+  if (tw > maxW) { size *= maxW / tw; g.font = `400 ${size}px ${DISP}`; ws = ch.map(c => g.measureText(c).width); tw = ws.reduce((a, b) => a + b, 0); } let x = cx - tw / 2;
+  ch.forEach((c, i) => { const a = anim(i, ch.length); g.save(); g.translate(x + ws[i] / 2 + (a.dx || 0), cy + (a.dy || 0)); g.rotate(a.rot || 0); g.scale(a.sc ?? 1, a.sc ?? 1); g.globalAlpha = a.a ?? 1; g.fillStyle = fill; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(c, 0, 0); g.restore(); x += ws[i]; });
+  g.restore();
+}
+function ringText(g, str, cx, cy, r, rot, size, fill) { const ch = [...str], n = ch.length; g.save(); g.translate(cx, cy); g.rotate(rot); g.font = `700 ${size}px ${MONO}`; g.fillStyle = fill; g.textAlign = 'center'; g.textBaseline = 'middle'; ch.forEach((c, i) => { g.save(); g.rotate(i / n * K.TAU); g.translate(0, -r); g.fillText(c, 0, 0); g.restore(); }); g.restore(); }
+
+/* ═══════════ 3. SCENES ═══════════ */
+const SL = [{ bg: PAL.pink, fg: PAL.ink }, { bg: PAL.lime, fg: PAL.ink }, { bg: PAL.violet, fg: PAL.bone }, { bg: PAL.bone, fg: PAL.ink }];
+S.timeline([
+  /* 1 · slam — one word per beat, four colour floods, four different entrances; a colour wipe hands each beat to the next */
+  { id: 'slam', at: T.slam, bg: null, look: { bloom: .12, threshold: .9, grain: .05, ca: .002, vignette: .1 },
+    draw: (g, lt) => { const i = clamp(Math.floor(lt / BEAT), 0, 3), p = lt - i * BEAT, c = SL[i], cx = W / 2, cy = H * .5;
+      g.fillStyle = c.bg; g.fillRect(0, 0, W, H); sunburst(g, cx, cy, Math.hypot(W, H), lt * .3, 24, .1, c.fg);
+      if (i === 0) K.slam(g, p, cx, cy, () => K.text(g, 'I', 0, 0, { size: minDim * 1.08, weight: 400, family: DISP, fill: c.fg }), { from: 1.8, d: .12 });
+      else if (i === 1) { for (let k = 4; k >= 0; k--) { const e = E.outCubic(seg(p, k * .02, .2 + k * .02)); K.text(g, 'MAKE', cx - (1 - e) * W * (.9 + k * .06), cy, { size: minDim * .62, max: W * .9, weight: 400, family: DISP, fill: k ? 'rgba(0,0,0,0)' : c.fg, stroke: c.fg, strokeW: k ? 3 * u : 0, alpha: k ? .4 * (1 - k / 5) : 1 }); } }
+      else if (i === 2) letters(g, 'THINGS', cx, cy, minDim * .5, c.fg, (k, n) => { const e = E.outBack(seg(p, k * .035, .26 + k * .035)); return { dy: -(1 - e) * H * .9, rot: (1 - e) * (k % 2 ? .5 : -.5), a: clamp(e * 3) }; });
+      else letters(g, 'MOVE', cx, cy, minDim * .66, c.fg, (k, n) => { const q = clamp((p - k * .045) / .3), hop = Math.sin(q * Math.PI) * H * .09 * (1 - q * .4); return { dy: -hop + (1 - E.outCubic(seg(p, 0, .1))) * H * .6, rot: Math.sin(q * Math.PI) * (k % 2 ? .22 : -.22), sc: 1 + .1 * Math.sin(q * Math.PI) }; }, W * .74);
+      if (i < 3) { const wp = E.inOutCubic(seg(p, BEAT - .09, BEAT)); g.fillStyle = SL[i + 1].bg; g.fillRect(0, 0, W * wp, H); } } },
+  /* 2 · form — chrome torus-knot, glass ring, three gems; an outline word sits BEHIND them */
+  { id: 'form', at: T.form, enter: ['whip', .3, { dir: [1, 0] }], look: { bloom: .55, threshold: .72, grain: .04, ca: .003, vignette: .2 },
+    gl: ({ rt }, lt, t) => { gfx.pass(FORMBG, {}, { to: rt });
+      const g = OUTLINE.getContext('2d'); g.clearRect(0, 0, W, H); const drift = (lt * .06 - .02) * W;
+      for (let r = 0; r < 2; r++) K.text(g, 'FORM', W / 2 + (r ? -1 : 1) * drift, H * (r ? .78 : .3), { size: minDim * .62, weight: 400, family: DISP, fill: 'rgba(0,0,0,0)', stroke: r ? 'rgba(198,255,58,.85)' : 'rgba(245,241,255,.8)', strokeW: 4 * u });
+      gfx.layer(OUTLINE, { to: rt, alpha: 1 });
+      const pop = E.outBack(seg(lt, -.05, .55)) * vs, R = 8.6 - lt * .55, cam = Cam3.orbit(lt, { center: [0, -.1, 0], radius: R, speed: .55, elev: .12 + .08 * lt, phase: .5 }); A.cam.pos = cam.pos; A.cam.target = cam.target;
+      A.knot.scale = [pop, pop, pop]; A.knot.rot = [lt * .5, lt * .8 + (1 - pop) * 2, .2]; A.ring.rot = [Math.PI / 2 + .35, lt * .9, 0]; A.ring.scale = [pop, pop, pop]; A.ring2.rot = [Math.PI / 2 - .5, -lt * 1.3, 0]; A.ring2.scale = [pop, pop, pop];
+      A.gems.forEach((m, i) => { const a = lt * (1.4 + i * .3) + i * 2.1; m.pos = [Math.cos(a) * 3.1 * pop, Math.sin(a * 1.2 + i) * 1.1, Math.sin(a) * 1.8]; m.rot = [a, a * 1.3, 0]; });
+      gfx.blit(A.render({ clear: [0, 0, 0, 0], dof: { focus: R, range: 3.2, blur: 8 } }), { to: rt, blend: 'alpha' }); } },
+  /* 3 · type — 50k particles: noise cloud → the word, a shock ring on the lock */
+  { id: 'type', at: T.type, enter: ['zoomBlurCut', .45], look: { bloom: .9, threshold: .6, grain: .04, ca: .003, vignette: .25 },
+    gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: [PAL.ink, '#241058', PAL.violet, PAL.ink], speed: .35, amt: .6 }, { to: rt });
+      MOR.draw({ progress: E.inOutCubic(seg(lt, .05, 1.0)), t, colors: [PAL.lime, PAL.pink], flow: 280 * u, size: 2.1 * u, glow: .18, spread: .5, wobble: .02, cam: { yaw: .24 * Math.sin(lt * .9), pitch: .06, dist: 1500 } }, { to: rt }); },
+    draw: (g, lt) => { const q = seg(lt, T.lock - T.type, T.lock - T.type + .5); if (q > 0 && q < 1) { g.strokeStyle = PAL.lime; g.globalAlpha = (1 - q) * .9; g.lineWidth = (14 * (1 - q) + 1.5) * u; g.beginPath(); g.arc(W / 2, H / 2, minDim * (.12 + .8 * E.outCubic(q)), 0, K.TAU); g.stroke(); g.globalAlpha = 1; } } },
+  /* 4 · pattern — an exact star pattern grows from the centre; the ink disc floods the frame (match cut into the dark UI) */
+  { id: 'pattern', at: T.pattern, enter: ['dots', .45], bg: null, look: { bloom: .1, threshold: .9, grain: .045, vignette: .12 },
+    draw: (g, lt) => { g.fillStyle = PAL.bone; g.fillRect(0, 0, W, H); G.draw(g, GIRIH, { cx: W / 2, cy: H / 2, reveal: seg(lt, 0, .9, E.outCubic), width: 5 * u, color: PAL.ink, rotate: lt * .06, scale: 1.15, fill: (poly, i) => [PAL.violet, PAL.lime, PAL.pink, null][i % 4] });
+      const r0 = minDim * .21 * E.outBack(seg(lt, .3, .8)), flood = E.inCubic(K.prog(lt, .9, 1.4)), r = K.lerp(r0, Math.hypot(W, H) * .56, flood);
+      g.fillStyle = PAL.ink; K.circle(g, W / 2, H / 2, r); g.fill();
+      K.text(g, 'PATTERN', W / 2, H / 2, { size: minDim * .1, weight: 400, family: DISP, fill: PAL.bone, alpha: seg(lt, .55, .9) * (1 - E.outCubic(K.prog(lt, .86, 1.04))), max: r0 * 1.7 }); } },
+  /* 5 · ui — dark dashboard: counters, chart, toggles, a cursor click and a toast */
+  { id: 'ui', at: T.ui, bg: null, look: { bloom: .25, threshold: .8, grain: .04, ca: .0025, vignette: .2 },
+    draw: (g, lt) => { g.fillStyle = PAL.ink; g.fillRect(0, 0, W, H);
+      const gl = g.createRadialGradient(W * .8, H * .15, 0, W * .8, H * .15, W * .7); gl.addColorStop(0, 'rgba(106,53,255,.55)'); gl.addColorStop(1, 'rgba(106,53,255,0)'); g.fillStyle = gl; g.fillRect(0, 0, W, H);
+      const gp = g.createRadialGradient(W * .1, H * .95, 0, W * .1, H * .95, W * .55); gp.addColorStop(0, 'rgba(255,63,142,.45)'); gp.addColorStop(1, 'rgba(255,63,142,0)'); g.fillStyle = gp; g.fillRect(0, 0, W, H);
+      K.text(g, 'INTERFACE', W / 2, H * .5, { size: minDim * .3, weight: 400, family: DISP, fill: 'rgba(0,0,0,0)', stroke: 'rgba(245,241,255,.1)', strokeW: 3 * u, max: W * .96 });
+      const e = E.outBack(seg(lt + .12, 0, .45)), cx = W * .07, cy = H * (.13 + (1 - e) * .5), cw = W * .62, ch = H * .74; UI.card(g, cx, cy, cw, ch, { radius: 30 * u });
+      COPY.kpi.forEach(([v, label], i) => { const x = cx + cw * (.19 + i * .31); Type.counter(g, v * E.outExpo(seg(lt, .15 + i * .08, 1.0)), x, cy + ch * .17, { size: minDim * .085, weight: 700, family: SANS, fill: PAL.bone, pad: String(v).length }); K.text(g, label, x, cy + ch * .29, { size: minDim * .024, weight: 500, family: SANS, fill: UI.theme.muted }); });
+      UI.lineChart(g, cx + cw * .06, cy + ch * .39, cw * .88, ch * .34, [3, 5, 4, 7, 6, 9, 8, 12, 11, 15, 14, 19], seg(lt, .25, 1.2), { color: PAL.lime, size: minDim * .02 });
+      const press = Math.max(0, 1 - Math.abs(lt - (T.click - T.ui)) * 9); UI.button(g, cx + cw * .06, cy + ch * .82, cw * .24, ch * .11, 'Export reel', { press, hover: seg(lt, .6, .9), size: minDim * .028, color: PAL.lime, ink: PAL.ink });
+      const e2 = E.outBack(seg(lt + .12, .12, .6)), rx = W * .72, ry = H * (.13 + (1 - e2) * .55), rw = W * .21; UI.card(g, rx, ry, rw, H * .74, { radius: 30 * u });
+      ['Motion blur', 'Film grain', 'Bloom'].forEach((lab, i) => { const y = ry + H * (.07 + i * .075); K.text(g, lab, rx + rw * .09, y, { size: minDim * .024, weight: 600, family: SANS, fill: PAL.bone, align: 'left' }); UI.toggle(g, rx + rw * .64, y - 14 * u, i < 2 ? seg(lt, .25 + i * .1, .5 + i * .1) : seg(lt, T.click - T.ui + .05, T.click - T.ui + .3), { w: 78 * u, h: 44 * u, color: i === 2 ? PAL.pink : PAL.lime }); });
+      UI.barChart(g, rx + rw * .08, ry + H * .3, rw * .84, H * .36, [5, 9, 6, 12, 8, 14, 10], lt - .3, { colors: [PAL.violet, PAL.pink], size: minDim * .018, gap: .3 });
+      if (lt > T.click - T.ui + .08) K.pop(g, lt - (T.click - T.ui) - .08, cx + cw * .62, cy + ch * .87, () => { UI.card(g, -cw * .2, -ch * .055, cw * .4, ch * .11, { radius: 20 * u }); K.text(g, COPY.toast, 0, 0, { size: minDim * .024, weight: 700, family: SANS, fill: PAL.lime }); }, { dur: .4, over: 1.6 });
+      UI.cursor(g, lt, [[0, W * .92, H * .95], [.2, W * .55, H * .62], [T.click - T.ui, cx + cw * .17, cy + ch * .88, E.inOutCubic, .1], [1.8, cx + cw * .5, cy + ch * .7]], [T.click - T.ui], { scale: 1.7 * u }); } },
+  /* 6 · fluid — raymarched liquid metal in a lavender studio */
+  { id: 'fluid', at: T.fluid, enter: ['liquid', .5], look: { bloom: .3, threshold: .8, grain: .04, ca: .002 },
+    gl: ({ rt }) => gfx.pass(BLOBS, {}, { to: rt }),
+    draw: (g, lt) => { const e = E.outExpo(seg(lt, .1, .7)); g.save(); g.translate(W / 2, H * (.5 + (1 - e) * .1)); g.globalAlpha = e; K.text(g, 'FLUID', 0, 0, { size: minDim * .34, weight: 400, family: DISP, fill: PAL.pink, shadow: { color: PAL.ink, blur: 0, x: 9 * u, y: 9 * u }, max: W * .9 }); g.restore(); } },
+  /* 7 · speed — a tunnel of rings, then echo type */
+  { id: 'speed', at: T.speed, enter: ['zoom', .45], look: { bloom: .65, threshold: .7, grain: .04, ca: .004, zoomBlur: .12 },
+    gl: ({ rt }, lt) => { TUN.cam.pos = [Math.sin(lt * 1.3) * .25, Math.cos(lt * 1.1) * .2, 3 - lt * 11]; TUN.cam.target = [Math.sin(lt * .9) * .6, Math.cos(lt * .7) * .4, -20 - lt * 11]; TUN.cam.up = [Math.sin(lt * .5) * .2, 1, 0];
+      gfx.blit(TUN.render({ clear: [.04, .02, .08, 1] }), { to: rt }); },
+    draw: (g, lt) => { const p = E.outCubic(seg(lt, 0, .5)); Type.stack(g, 'FAST', W / 2, H / 2, { n: 5, size: minDim * .28 * p, family: DISP, weight: 400, fill: PAL.bone, outline: PAL.bone, gap: .78 }); } },
+  /* 8 · burst — sparks + confetti + the line, slammed (the hero moment) */
+  { id: 'burst', at: T.burst, enter: ['flash', .2], look: { bloom: .8, threshold: .62, grain: .04, ca: .004 },
+    gl: ({ rt }, lt, t) => { fx.bg('rays', { c: [PAL.ink, PAL.pink, PAL.lime, '#ffffff'], speed: .6, amt: .4 * Math.exp(-lt * 2.4) }, { to: rt }); EMI.draw({ t, cam: {} }, { to: rt }); },
+    draw: (g, lt) => { const cols = [PAL.pink, PAL.lime, PAL.violet, PAL.bone]; K.confetti(g, lt - .05, W * .1, H * 1.02, { n: 90, life: 2.2, speed: 1500 * u, gravity: 1700 * u, colors: cols, size: 22 * u, angle: -1.2, spread: .9, seed: 1 }); K.confetti(g, lt - .05, W * .9, H * 1.02, { n: 90, life: 2.2, speed: 1500 * u, gravity: 1700 * u, colors: cols, size: 22 * u, angle: -1.95, spread: .9, seed: 2 });
+      K.slam(g, lt - .1, W / 2, H / 2, () => K.text(g, COPY.bang, 0, 0, { size: minDim * .21, weight: 400, family: DISP, fill: PAL.bone, shadow: { color: PAL.pink, blur: 0, x: 9 * u, y: 9 * u }, max: W * .9 }), { from: 1.6, d: .12 }); } },
+  /* 9 · end — name, role, stamp; a long calm hold */
+  { id: 'end', at: T.end, enter: ['blur', .8], bg: null, look: { bloom: .15, threshold: .85, grain: .04, vignette: .15 },
+    draw: (g, lt) => { g.fillStyle = PAL.bone; g.fillRect(0, 0, W, H); sunburst(g, W / 2, H * .45, Math.hypot(W, H), lt * .08, 36, .08, PAL.violet); const p = E.outCubic(seg(lt, .1, .9));
+      g.save(); g.translate(W / 2, H * .43); g.scale(.9 + .1 * p, .9 + .1 * p); K.text(g, COPY.name, 0, 0, { size: minDim * .27, weight: 400, family: DISP, fill: PAL.ink, alpha: p, max: W * .92 }); g.restore();
+      Type.reveal(g, COPY.role, W / 2, H * .43 + minDim * .2, lt - .5, { size: minDim * .052, weight: 700, family: SANS, fill: PAL.violet }); K.text(g, COPY.line, W / 2, H * .43 + minDim * .29, { size: minDim * .03, weight: 500, family: MONO, fill: '#6d6498', alpha: seg(lt, 1.0, 1.6), dir: 'ltr', spacing: 3 });
+      const bp = E.outBack(seg(lt, .35, 1.0)); ringText(g, 'MOTION · DESIGN · CODE · SOUND · ', W * .86, H * .27, minDim * .09 * bp, lt * .6, minDim * .02, PAL.ink); g.fillStyle = PAL.pink; K.circle(g, W * .86, H * .27, minDim * .028 * bp); g.fill();
+      [[PAL.pink, 0], [PAL.violet, 1], [PAL.lime, 2]].forEach(([c, i]) => { const a = lt * .5 + i * 2.1, x = W / 2 + Math.cos(a) * W * .43, y = H * .5 + Math.sin(a) * H * .38; g.fillStyle = c; g.globalAlpha = seg(lt, .3 + i * .1, 1); if (i === 0) K.circle(g, x, y, minDim * .03); else if (i === 1) { g.save(); g.translate(x, y); g.rotate(a); g.beginPath(); g.rect(-minDim * .025, -minDim * .025, minDim * .05, minDim * .05); g.restore(); } else K.regular(g, x, y, minDim * .035, 3, a); g.fill(); g.globalAlpha = 1; }); } },
+]);
+
+/* HUD — player-style chrome over the whole film (title · timecode · chapter · progress). The colour follows the background underneath. */
+const CHAP = [[T.slam, '01', 'TYPE'], [T.form, '02', 'FORM'], [T.type, '03', 'PARTICLES'], [T.pattern, '04', 'PATTERN'], [T.ui, '05', 'INTERFACE'], [T.fluid, '06', 'FLUID'], [T.speed, '07', 'SPEED'], [T.burst, '08', 'SOUND']];
+const lightBg = t => (t < T.form && !(t >= BEAT * 2 && t < BEAT * 3)) || (t >= T.pattern && t < T.ui - .28) || (t >= T.fluid && t < T.speed) || t >= T.end;
+S.overlay((g, t) => { const L = [-.12, -.06, 0, .06, .12].reduce((a, d) => a + (lightBg(t + d) ? 1 : 0), 0) / 5, col = K.mix(PAL.bone, PAL.ink, L), m = H * .048, fs = H * .021, ch = CHAP.filter(c => t >= c[0] - .05).pop();
+  K.text(g, 'CLAUDE  /  MOTION REEL ’26', m, m, { size: fs, weight: 600, family: MONO, fill: col, align: 'left', spacing: 2, alpha: .92 });
+  const ff = Math.floor((t % 1) * FPS), ss = Math.floor(t); K.text(g, `00:${String(ss).padStart(2, '0')}:${String(ff).padStart(2, '0')}`, W - m, m, { size: fs, weight: 600, family: MONO, fill: col, align: 'right', spacing: 2, alpha: .92 });
+  if (ch && t < T.end - .05) K.text(g, `${ch[1]} / 08   ${ch[2]}`, m, H - m - fs * 1.6, { size: fs, weight: 700, family: MONO, fill: col, align: 'left', spacing: 3, alpha: .92 });
+  g.globalAlpha = .28; g.fillStyle = col; g.fillRect(m, H - m, W - 2 * m, 3 * u); g.globalAlpha = .95; g.fillRect(m, H - m, (W - 2 * m) * clamp(t / DUR), 3 * u); g.globalAlpha = 1; });
+const SCENE_AT = [T.slam, T.form, T.type, T.pattern, T.ui, T.fluid, T.speed, T.burst, T.end, DUR];
+const pushIn = t => { let i = SCENE_AT.findIndex((a, k) => t >= a && t < SCENE_AT[k + 1]); if (i < 0) i = SCENE_AT.length - 2; const q = (t - SCENE_AT[i]) / (SCENE_AT[i + 1] - SCENE_AT[i]); return { zoom: 1 + (i === 8 ? .02 : .035) * E.outSine(clamp(q)) }; };
+S.camera = t => Cine.mix(pushIn(t), Cine.punch(t, HITS, { amp: .02, decay: .2 }), Cine.shake(t, HITS, { amp: .006 }), Cine.handheld(t, { amp: .002 }));
+S.look((t, base) => { const fadeIn = 1 - seg(t, 0, .1), fadeOut = seg(t, DUR - .5, DUR - .03, E.inCubic), p = K.pulse(t, HITS, .08); return { ca: (base.ca ?? .002) + .004 * p, fade: Math.max(fadeIn, fadeOut), fadeColor: [.039, .024, .078], flash: [.035 * p, .035 * p, .035 * p] }; });
+
+function renderFrame(t) { S.render(t); }
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['400 Anton', '700 Space Grotesk', '500 Space Grotesk', '600 Space Grotesk', '600 JetBrains Mono', '700 JetBrains Mono', '500 JetBrains Mono']).then(() => { build(); return S.ready(); }).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>

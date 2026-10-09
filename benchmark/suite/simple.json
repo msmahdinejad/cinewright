@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "note": "Simple motion graphics: the everyday jobs people actually ask for (introduce a person, a channel intro, a social promo, an infographic, an event promo). Plain-language prompts, no 3D spectacle needed — the question is how much better a coding agent makes them with the skill. Run with --suite-file benchmark/suite/simple.json.",
+  "footer": "---\nBenchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.",
+  "sets": {
+    "simple": ["person-intro-15s", "channel-intro-8s", "promo-vertical-12s", "infographic-20s"],
+    "all": ["person-intro-15s", "channel-intro-8s", "promo-vertical-12s", "infographic-20s", "event-promo-15s"]
+  },
+  "tasks": [
+    {
+      "id": "person-intro-15s", "domain": "motion graphics", "aspect": "16:9", "duration": 15, "lang": "en", "title": "Introduce a person",
+      "prompt": "Make a 15-second motion graphics video that introduces a person: Maya Chen, a senior product designer from Toronto (invent the details). Show her name and role, three skills, three numbers (years of experience, projects shipped, awards) and a short quote, and end on her handle @mayachen. Clean, modern, energetic — the kind of intro a personal brand would open a talk or a portfolio with. Original music and sound design. Go all out."
+    },
+    {
+      "id": "channel-intro-8s", "domain": "motion graphics", "aspect": "16:9", "duration": 8, "lang": "en", "title": "YouTube channel intro",
+      "prompt": "Make an 8-second YouTube channel intro for a fictional tech-review channel called \"Pixel Pulse\": a logo mark that builds itself, the name, a one-line tagline you write, punchy transitions and sound design (a hit, whooshes, a short musical sting). Bold, bright, memorable. Go all out."
+    },
+    {
+      "id": "promo-vertical-12s", "domain": "social", "aspect": "9:16", "duration": 12, "lang": "en", "title": "Vertical social promo",
+      "prompt": "Make a 12-second vertical (9:16) social-media promo for a fictional coffee shop called \"Brew & Co.\" announcing three autumn drinks with prices — Maple Latte €4.50, Spiced Cold Brew €4.00, Pumpkin Mocha €4.80 — and a call to action: \"Open daily 7–19 · Main Street\". Bold type, flat shapes and simple icon drawings (cups, leaves, beans), a beat-synced edit, punchy sound. Go all out."
+    },
+    {
+      "id": "infographic-20s", "domain": "explainer", "aspect": "16:9", "duration": 20, "lang": "en", "title": "Animated infographic",
+      "prompt": "Make a 20-second animated infographic explainer titled \"Why sleep matters\" with three facts — adults need 7–9 hours; one night of poor sleep can cut focus by about a third; a regular bedtime improves mood — each with an animated icon or chart (moon, brain, clock), counting numbers, a clear visual hierarchy, upbeat original music and sound design. Go all out."
+    },
+    {
+      "id": "event-promo-15s", "domain": "motion graphics", "aspect": "16:9", "duration": 15, "lang": "en", "title": "Event promo",
+      "prompt": "Make a 15-second motion graphics promo for a fictional design conference, \"Frame Summit 2026 · Oct 14–16 · Lisbon\": three speakers with their talk titles, a big date moment, bold typography and shapes, and the call to action \"Get tickets at framesummit.io\". Energetic, modern, with a beat-synced edit and sound design. Go all out."
+    }
+  ]
+}

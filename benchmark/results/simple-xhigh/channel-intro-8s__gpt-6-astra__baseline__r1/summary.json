@@ -1,0 +1,91 @@
+{
+  "schema": 2,
+  "id": "simple-xhigh/channel-intro-8s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "channel-intro-8s",
+  "domain": "motion graphics",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-09",
+  "wallSeconds": 980,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 8,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 2.81,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 7,
+      "truePeak": -1.3,
+      "silentShare": 0.064
+    },
+    "energy": {
+      "median": 0.0028,
+      "mean": 0.0177,
+      "quietPct": 57,
+      "cuts": 3,
+      "longestStatic": 3,
+      "curve": "▁▂▃▁███▄▁▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 9,
+      "emptyPct": 38,
+      "darkPct": 19
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 60,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 5,
+      "todo_list": 5,
+      "command_execution": 24,
+      "reasoning": 19
+    },
+    "turns": 1,
+    "inputTokens": 1023007,
+    "outputTokens": 29628,
+    "cachedInputTokens": 919808,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n8 seconds of self-assembling neon pixels, bold transitions, and “Less hype. More signal.” — rendered at 1080p60.\nEntirely code-generated, with original hits, stereo whooshes, and a musical sting; verified H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

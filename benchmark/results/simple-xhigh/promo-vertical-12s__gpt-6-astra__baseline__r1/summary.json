@@ -1,0 +1,92 @@
+{
+  "schema": 2,
+  "id": "simple-xhigh/promo-vertical-12s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "promo-vertical-12s",
+  "domain": "social",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-09",
+  "wallSeconds": 1472,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 12,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 2.86,
+    "audio": {
+      "lufs": -13.1,
+      "lra": 0.4,
+      "truePeak": -1.3,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0046,
+      "mean": 0.0185,
+      "quietPct": 41,
+      "cuts": 4,
+      "longestStatic": 1.5,
+      "curve": "▄▅█▅▁▁▁█▂▁▁▆█▁▁▁██▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 36,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 124,
+    "itemTypes": {
+      "error": 1,
+      "reasoning": 35,
+      "agent_message": 7,
+      "todo_list": 10,
+      "command_execution": 60,
+      "mcp_tool_call": 6
+    },
+    "turns": 1,
+    "inputTokens": 2500242,
+    "outputTokens": 44851,
+    "cachedInputTokens": 2382336,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n12-second, 1080×1920/60fps promo with bold autumn graphics, animated cups, all three prices, and the CTA.\nOriginal 120-BPM soundtrack and beat-synced transitions; H.264 + AAC, entirely code-generated with no stock media."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

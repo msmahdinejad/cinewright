@@ -89,3 +89,9 @@ g.fillStyle = K.gradient(g, cx - H * .3, cy - H * .3, cx + H * .3, cy + H * .3, 
 for (let k = 0; k < 12; k++) { const a = A * (k % 2 ? -2 : 1) + k * K.TAU / 12, r = H * (.34 + .03 * Math.sin(A * 3 + k)); K.glow(g, cx + Math.cos(a) * r, cy + Math.sin(a) * r * .85, 18 * u * 2, k % 2 ? '#40f5f5' : '#ffd23f', .9); }
 g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 3 * u * 2; g.beginPath(); g.arc(cx, cy, H * (.4 + .02 * Math.sin(A * 2)), 0, K.TAU); g.stroke();
 ```
+
+## mg-spec-structure — Describe the film as data
+tags: motion graphics spec json scenes structure editing beats pacing template
+use: any everyday motion-graphics job: write `scenes` with `at` times on beats (0.5 s grid at 120 BPM), one idea per scene, 2.5–4 s each, a fast `words` burst somewhere, a last image that holds ≥ 1.5 s
+how: start from the closest `--preset` of the `motion` template, replace the copy, then change scene order, durations, `bgColor` and wipes until the colour rhythm and pacing curve feel right; the same spec is read by the picture (mg.js) and the sound (audio.mjs)
+avoid: equal scene lengths; two text-heavy scenes in a row

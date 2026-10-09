@@ -1,0 +1,99 @@
+{
+  "schema": 2,
+  "id": "showcase-xhigh/last-signal-trailer__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "last-signal-trailer",
+  "domain": "cinematic",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-07",
+  "wallSeconds": 3150,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 2,
+  "transportFailures": [
+    {
+      "attempt": 1,
+      "seconds": 649,
+      "error": "stream disconnected before completion: Transport error: network error: error decoding response body"
+    }
+  ],
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 25,
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 100.1,
+    "audio": {
+      "lufs": -17.5,
+      "lra": 11.8,
+      "truePeak": -0.6,
+      "silentShare": 0.085
+    },
+    "energy": {
+      "median": 0.0044,
+      "mean": 0.0062,
+      "quietPct": 46,
+      "cuts": 0,
+      "longestStatic": 3.5,
+      "curve": "▁▁▁▁▁▁▁▂▃▃▃▂▃▃▃▄▄▁▁▁▁▁▁▁▄▃▃▂▁▁▁▃▃▁▂▂▁▅▂▁▂▁▂▁▁▁"
+    },
+    "look": {
+      "medianFill": 14,
+      "emptyPct": 36,
+      "darkPct": 66
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 86,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 5,
+      "todo_list": 5,
+      "command_execution": 28,
+      "reasoning": 29,
+      "mcp_tool_call": 6
+    },
+    "turns": 1,
+    "inputTokens": 1647627,
+    "outputTokens": 47522,
+    "cachedInputTokens": 1537664,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n25-second cinematic teaser with procedural 3D scenes, particle apparition, CRT decoding, planetary ring reveal, and title/date cards.\nOriginal synthesized soundtrack: rising drone, accelerating heartbeat, Morse-like pings, sub-bass impact, then silence. 1080p H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

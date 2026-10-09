@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "note": "Strong, art-directed prompts for the films shown on the website and in the README (run with --conditions skill). They are NOT the fair-comparison tasks (see suite.json): they ask for spectacle on purpose, to show what the skill makes possible in the hands of a coding agent.",
+  "footer": "---\nBenchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.",
+  "sets": {
+    "all": ["arc-launch", "last-signal-trailer", "manifesto-typography", "music-visualizer", "title-sequence", "data-story-vertical", "sci-fi-hud", "calm-landscape"],
+    "first": ["last-signal-trailer", "manifesto-typography", "music-visualizer"],
+    "second": ["title-sequence", "data-story-vertical", "sci-fi-hud", "calm-landscape"]
+  },
+  "tasks": [
+    {
+      "id": "arc-launch", "domain": "product", "aspect": "16:9", "duration": 30, "lang": "en", "title": "Product launch film — ARC",
+      "prompt": "Make a 30-second launch film for ARC, a fictional titanium smart ring — a seven-figure brand film made entirely from code. Look: a dark studio that is NOT monochrome — pools of coloured light (a cool teal key, a warm amber rim, a violet accent) sweep across brushed titanium with real reflections, and the camera never stops moving. Structure: (0–6 s) an extreme macro of the metal grain catching a travelling highlight, then the whole ring revealed by a slow dolly; (6–12 s) the ring comes apart into an exploded view — sensors, battery, titanium shell — each part with a hairline call-out and a one-word kinetic title; (12–24 s) three feature moments, each with its own visual idea: a 9-day battery as a ring of light slowly draining, sleep & HRV as a living waveform wrapping the ring, 50 m water resistance as caustic ripples; (24–30 s) the ring re-assembles into the hero pose, lock-up \"ARC\" and the tagline \"Less to wear. More to know.\" Typography: confident, large, few words. Sound: macro foley (clicks, glassy ticks, air), a deep sub on the reveal, a riser through the explosion, a resolving chord on the lock-up. No placeholder shots, no stretch longer than a second where nothing moves. Go all out."
+    },
+    {
+      "id": "last-signal-trailer", "domain": "cinematic", "aspect": "16:9", "duration": 25, "lang": "en", "title": "Sci-fi teaser — LAST SIGNAL",
+      "prompt": "Make a 25-second teaser trailer for \"LAST SIGNAL\" (a lone deep-space station keeps receiving a transmission from its own future). Cinematic dread: slow push-ins, flickering practical lights, cold blue instrument glow against one warm emergency red, heavy film grain, anamorphic streaks, a flythrough of a dim corridor, a waveform that resolves into a faceless silhouette made of particles, countdown numerals, decoded text on a CRT terminal (\"THIS IS THE STATION. IT HAS ALREADY HAPPENED.\"), a build to one enormous moment (the transmission's source revealed as a planet-sized ring), a hard cut to black, a title card and a release date. Sound: a low drone that rises for 20 s, a heartbeat that accelerates, morse-like pings, a sub-bass hit on the reveal, silence before the title. No actors, no footage: everything generated. Go all out."
+    },
+    {
+      "id": "manifesto-typography", "domain": "typography", "aspect": "16:9", "duration": 20, "lang": "en", "title": "Kinetic typography manifesto",
+      "prompt": "Make a 20-second kinetic typography film that delivers this manifesto word for word: \"We don't wait for inspiration. We build it. Frame by frame. Line by line. Until the thing you imagined starts to move.\" Type is the only hero — at least six different typographic treatments (mask reveal, slice, 3D extrusion with perspective, outline-to-fill, scale-through, glitch, per-letter physics) on a driving original drum-and-bass track at 174 BPM with every cut on the beat. Two saturated colours plus one neutral, huge type (at least 40 % of the frame height), a full-bleed colour flood every ~4 s, one camera flight through the letters in 3D and one beat of total silence before the last line. Sound: drums, bass, risers and a synth stab on every key word. Go all out."
+    },
+    {
+      "id": "music-visualizer", "domain": "music", "aspect": "16:9", "duration": 24, "lang": "en", "title": "Audio-reactive music visualizer",
+      "prompt": "First compose a 24-second original electronic track (synthesise it yourself): intro, build, drop, outro. Then make an audio-reactive music visualizer for it. The picture must be driven by the track's real analysis (envelopes of kick, bass, hats and lead): a GPU particle field that pulses with the kick, a bass-driven tunnel or terrain, a ring equaliser, light streaks on the hats, a palette that shifts at the drop. The drop must be the most spectacular moment (full-frame flash, shockwave, camera punch). Only a tiny title (\"SIGNAL / 24\") at the very end. Go all out."
+    },
+    {
+      "id": "title-sequence", "domain": "cinematic", "aspect": "16:9", "duration": 25, "lang": "en", "title": "Prestige-drama title sequence",
+      "prompt": "Make a 25-second main-title sequence for a fictional prestige thriller series called \"THE HOLLOW HOURS\" (a night-shift detective in a city that never sleeps) — Saul Bass meets a modern streaming title. Build everything from abstract shapes, light, grain and type: cut-paper layers that peel apart, a flickering neon sign, rain streaking down glass with bokeh street lights, a clock whose hands unravel into thread, a silhouette made of falling particles. Credit-style typography with invented names (\"Created by …\", \"Starring …\"), a brooding original score with a heartbeat pulse and a low brass swell, and a final title lock-up that holds for two seconds. Go all out."
+    },
+    {
+      "id": "data-story-vertical", "domain": "data", "aspect": "9:16", "duration": 15, "lang": "en", "title": "Vertical data story",
+      "prompt": "Make a 15-second VERTICAL (9:16) social video that makes people feel one statistic: in the fictional city of Lumen, daily bike-share rides grew from 12,000 in 2021 to 87,000 in 2025. Hook in the first second (a number slams in), one hero visual (a city of dots growing into a river of light), big readable numbers that count up, a map or line-chart moment, a beat drop where 87,000 lands, safe areas for phone UI, punchy music with a drop, and an end card with a one-line takeaway. Go all out."
+    },
+    {
+      "id": "sci-fi-hud", "domain": "ui", "aspect": "16:9", "duration": 15, "lang": "en", "title": "Sci-fi interface boot sequence",
+      "prompt": "Make a 15-second cinematic sci-fi interface sequence — a fictional starship's HUD booting up: radial menus, hex grids, scanning lines, a rotating 3D wireframe planet with orbit markers, data read-outs with counting numbers, a waveform scope, amber warnings, and a final \"ALL SYSTEMS NOMINAL\" glow. Layered parallax, constant micro-motion, glitches on the cuts, a scan-line / CRT grade. Sound: UI beeps, servo whirs, a rising power-up tone and a final confirm chord. Go all out."
+    },
+    {
+      "id": "calm-landscape", "domain": "generative", "aspect": "16:9", "duration": 15, "lang": "en", "title": "Meditative landscape, no text",
+      "prompt": "Make a 15-second meditative cinematic landscape with no text at all: dusk over a procedural terrain with layered mountain ridges, drifting mist, an aurora ribbon in the sky, a slowly rising moon, fireflies, a slow crane move. A gentle original ambient score (pads, a soft pluck, sparse bells). Palette: deep indigo to rose gold. Make it so beautiful that someone would loop it. Go all out."
+    }
+  ]
+}

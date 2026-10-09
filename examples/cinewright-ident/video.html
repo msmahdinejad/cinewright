@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cinewright — ident</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block;margin:auto;max-width:100vw;max-height:100vh;position:absolute;inset:0;width:auto;height:auto}</style>
+</head>
+<body>
+<canvas id="out"></canvas>
+
+<!-- ONE timeline for picture AND sound. 120 BPM → beat 0.5 s, bar 2 s; 12 s = 6 bars. code → assemble (particles) → reel (3D film-strip helix) → name. -->
+<script id="cues" type="application/json">
+{ "bpm": 120, "duration": 12,
+  "t": { "code": 0, "assemble": 2, "lock": 3.4, "reel": 4, "name": 7, "tag": 8.3, "end": 11.4 },
+  "hits": [0, 2, 3.4, 4, 5, 6, 7, 8.3] }
+</script>
+
+<script src="lib/kit.js"></script><script src="lib/post.js"></script><script src="lib/gfx.js"></script><script src="lib/fx.js"></script><script src="lib/trans.js"></script>
+<script src="lib/stage.js"></script><script src="lib/scene3d.js"></script><script src="lib/parts.js"></script><script src="lib/type.js"></script><script src="lib/cine.js"></script><script src="lib/ui.js"></script><script src="lib/geometry.js"></script>
+<script>
+'use strict';
+/* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   CINEWRIGHT — the ident (12 s). One idea: "a film is a function of time": code → the same particles become the mark → a helix of film frames → the name.
+   1 code      a glass window types the three lines of the idea                       (UI.code · aurora shader)
+   2 assemble  the window shatters; 50 000 particles gather into the two-tone mark     (Parts.Morph · Parts.image with true colours)
+   3 reel      a helix of 48 emissive film frames orbits the mark, camera dollies in   (Scene3D instances · DOF · Cam3.orbit)
+   4 name      the mark's particles become the wordmark; tagline types in; long hold   (Parts.Morph shape 3 · Type.reveal)
+   ═════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+const CUES = JSON.parse(document.getElementById('cues').textContent), T = CUES.t, HITS = CUES.hits, BEAT = 60 / CUES.bpm;
+const Q = K.params(), W = Q.w || 1920, H = Q.h || 1080, FPS = Q.fps || 30, DUR = CUES.duration, u = H / 1080, minDim = Math.min(W, H * 1.35);
+const PAL = { ink: '#05040a', violet: '#8a63ff', cyan: '#40f5f5', pink: '#ff5ea8', white: '#f4f2ff' };
+const CODE = "// a film is a function of time\nfunction renderFrame(t) {\n  scene.draw(t)   // pixels\n  sound.at(t)     // and sound\n}";
+window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: 'Cinewright — ident', audio: 'audio.wav', markers: Object.entries(T).map(([label, t]) => ({ t, label })) };
+const { E, seg, clamp } = K;
+
+const out = document.getElementById('out'); out.width = W; out.height = H;
+const post = new Post(out), gfx = new GFX(post), fx = new FX(gfx), S = new Stage(post, gfx, { fps: FPS });
+const A = new Scene3D(gfx, { W, H }); let MOR, DUST;
+Object.assign(UI.theme, { bg: PAL.ink, panel: '#0e0a24', panel2: '#17113a', line: 'rgba(138,99,255,.38)', ink: PAL.white, muted: '#9d92d8', accent: PAL.violet, accent2: PAL.cyan });
+
+function markCanvas(size) {                    // the Cinewright mark: two arcs (violet / cyan) around a four-point star — drawn from the same path data as the site's logo
+  const c = K.canvas(size, size), g = c.getContext('2d'); g.scale(size / 32, size / 32); g.lineCap = 'round'; g.lineWidth = 3.6;
+  g.strokeStyle = PAL.violet; g.stroke(new Path2D('M9 22a9 9 0 0 1 0-12')); g.strokeStyle = PAL.cyan; g.stroke(new Path2D('M23 10a9 9 0 0 1 0 12'));
+  g.fillStyle = '#ffffff'; g.fill(new Path2D('M16 10.5l1.7 3.8 3.8 1.7-3.8 1.7L16 21.5l-1.7-3.8-3.8-1.7 3.8-1.7z')); return c;
+}
+function wordCanvas() { const c = K.canvas(2000, 300), g = c.getContext('2d'); K.text(g, 'CINEWRIGHT', 1000, 160, { size: 250, weight: 700, family: K.FONTS.grotesk, fill: (ctx, o) => K.gradient(ctx, o.x0, 0, o.x1, 0, [[0, PAL.violet], [.55, '#c9b8ff'], [1, PAL.cyan]]) }); return c; }
+
+/* four little 16:9 "films" that the frames of the helix play (painted once; every frame of the strip shows one of them) */
+const FACES = (() => { const mk = fn => { const c = K.canvas(640, 360), g = c.getContext('2d'); fn(g, 640, 360); return c; };
+  return [
+    mk((g, w, h) => { g.fillStyle = K.gradient(g, 0, 0, w, h, [[0, '#8a63ff'], [1, '#ff5ea8']]); g.fillRect(0, 0, w, h); g.fillStyle = '#c6ff3a'; K.circle(g, w * .66, h * .5, h * .3); g.fill(); g.fillStyle = '#05040a'; K.circle(g, w * .66, h * .5, h * .12); g.fill(); }),
+    mk((g, w, h) => { g.fillStyle = '#0b0620'; g.fillRect(0, 0, w, h); g.strokeStyle = '#40f5f5'; g.lineWidth = 10; for (let i = -6; i < 14; i++) { g.beginPath(); g.moveTo(i * 60, h); g.lineTo(i * 60 + 240, 0); g.stroke(); } }),
+    mk((g, w, h) => { g.fillStyle = '#6a45ff'; g.fillRect(0, 0, w, h); K.text(g, 'Aa', w / 2, h * .54, { size: h * .95, weight: 400, family: K.FONTS.display, fill: '#ffffff' }); }),
+    mk((g, w, h) => { g.fillStyle = '#0a1230'; g.fillRect(0, 0, w, h); g.fillStyle = 'rgba(64,245,245,.55)'; for (let x = 20; x < w; x += 40) for (let y = 20; y < h; y += 40) { g.beginPath(); g.arc(x, y, 4, 0, K.TAU); g.fill(); } g.strokeStyle = '#ff5ea8'; g.lineWidth = 12; g.lineCap = 'round'; g.beginPath(); for (let x = 0; x <= w; x += 8) { const y = h / 2 + Math.sin(x * .03) * h * .26; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); }),
+  ]; })();
+const rgb3 = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), toHex = a => '#' + a.map(v => Math.round(clamp(v, 0, 255)).toString(16).padStart(2, '0')).join('');
+const hexMix = k => { const ramp = [PAL.violet, PAL.cyan, PAL.pink].map(rgb3), s = clamp(k) * 2, i = Math.min(1, Math.floor(s)), f = s - i; return toHex(ramp[i].map((v, c) => v + (ramp[i + 1][c] - v) * f)); };
+function build() {
+  DUST = new Parts.Emitter(gfx, { count: 5000 });
+  DUST.stream({ t0: 0, t1: 12, n: 4200, spawn: { box: [1900, 1100, 700] }, speed: [10, 46], life: [4, 8], dir: [0, 1, 0], angle: 1.3, flow: 70, size: [1, 3.2], colors: ['#ffffff', '#c9b8ff', '#9ff8ff'], loop: true, glow: .25 });
+  const N = 24000; MOR = new Parts.Morph(gfx, { count: N });
+  MOR.shapes([Parts.cloud(N, { w: W * 1.35, h: H * 1.1 }), Parts.image(markCanvas(900), { height: H * .68, step: 3 }), Parts.image(wordCanvas(), { height: H * .2, step: 3 })]);
+  A.env = Env.night({ colors: ['#05040a', '#8a63ff', '#40f5f5', '#ff5ea8'] }); A.sky = { amt: .1 }; A.fog = { color: '#05040a', density: .018 }; A.cam.fov = 34;
+  const n = 48, bodies = [], plates = [], glows = [];
+  for (let i = 0; i < n; i++) {
+    const a = i * .43, y = (i / (n - 1) - .5) * 6.2, r = 4.4 + .35 * Math.sin(i * .5), hue = i / (n - 1), col = hexMix(hue);
+    const base = { pos: [Math.cos(a) * r, y, Math.sin(a) * r], rot: [0, -a + Math.PI / 2, 0] };
+    bodies.push({ ...base, color: '#0b0a18' }); plates.push({ ...base, pos: [Math.cos(a) * (r + .05), y, Math.sin(a) * (r + .05)] }); glows.push({ ...base, color: col });
+  }
+  A.instances(Geo.box(2.05, 1.22, .06), Mat.pbr({ base: '#0b0a18', metal: .6, rough: .35 }), bodies);
+  FACES.forEach((cv, d) => A.instances(Geo.plane(1.78, 1), Mat.emissive('#ffffff', .85, { map: A.tex(cv) }), plates.filter((_, i) => i % FACES.length === d)));
+}
+
+S.timeline([
+  /* 1 · code — a glass window types the idea */
+  { id: 'code', at: T.code, look: { bloom: .4, threshold: .7, grain: .05, vignette: .3, ca: .002 },
+    gl: ({ rt }) => fx.bg('aurora', { c: [PAL.ink, '#1b1262', PAL.violet, PAL.cyan], speed: .45, amt: .85 }, { to: rt }),
+    draw: (g, lt) => { const e = E.outCubic(seg(lt, 0, .55)); g.save(); g.translate(W / 2, H / 2); g.scale(.9 + .1 * e, .9 + .1 * e); g.globalAlpha = e; g.translate(-W / 2, -H / 2);
+      UI.code(g, W * .12, H * .2, W * .76, H * .6, CODE, { t: lt - .25, speed: 78, size: H * .056, title: 'film.js' }); g.restore(); } },
+  /* 2 · assemble — the window shatters into particles that become the mark; a shock ring on the lock */
+  { id: 'assemble', at: T.assemble, enter: ['shatter', .6], look: { bloom: .55, threshold: .72, grain: .045, ca: .003, vignette: .3 },
+    gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: [PAL.ink, '#150c3a', PAL.violet, PAL.ink], speed: .35, amt: .55 }, { to: rt });
+      MOR.draw({ progress: E.inOutCubic(seg(lt, .05, 1.3)), t, colors: [PAL.violet, PAL.cyan], flow: 340 * u, size: 1.5 * u, glow: .07, spread: .55, cam: { yaw: .5 * Math.sin(lt * .7) - .15, pitch: .08, dist: 1500 } }, { to: rt }); },
+    draw: (g, lt) => { const q = seg(lt, T.lock - T.assemble, T.lock - T.assemble + .6); if (q > 0 && q < 1) { g.strokeStyle = PAL.cyan; g.globalAlpha = (1 - q) * .9; g.lineWidth = (12 * (1 - q) + 1.5) * u; g.beginPath(); g.arc(W / 2, H / 2, minDim * (.18 + .9 * E.outCubic(q)), 0, K.TAU); g.stroke(); g.globalAlpha = 1; } } },
+  /* 3 · reel — a helix of film frames orbits the mark; the camera dollies in */
+  { id: 'reel', at: T.reel, enter: ['zoomBlurCut', .5], look: { bloom: .42, threshold: .8, grain: .045, ca: .0035, vignette: .3 },
+    gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: [PAL.ink, '#190d44', '#3a1d9a', PAL.ink], speed: .3, amt: .6 }, { to: rt });
+      const R = 14.5 - lt * .85, cam = Cam3.orbit(lt, { center: [0, 0, 0], radius: R, speed: .42, elev: .12 + .05 * Math.sin(lt * .5), phase: 0 }); A.cam.pos = cam.pos; A.cam.target = cam.target;
+      gfx.blit(A.render({ clear: [0, 0, 0, 0], dof: { focus: R - 2, range: 5, blur: 7 } }), { to: rt, blend: 'alpha' });
+      MOR.draw({ progress: 1, t, colors: [PAL.violet, PAL.cyan], flow: 0, size: 1.5 * u, glow: .07, spread: .55, cam: { yaw: .35 * Math.sin(lt * .6 + 1), pitch: .06, dist: 1500 } }, { to: rt }); DUST.draw({ t, cam: {} }, { to: rt }); } },
+  /* 4 · name — the mark's particles become the wordmark; the tagline types in; a long hold */
+  { id: 'name', at: T.name, enter: ['flash', .3], look: { bloom: .5, threshold: .74, grain: .045, ca: .0025, vignette: .3 },
+    gl: ({ rt }, lt, t) => { fx.bg('gradient', { c: [PAL.ink, '#120a33', '#2d1a7a', PAL.ink], speed: .3, amt: .55 }, { to: rt });
+      MOR.draw({ progress: 1 + E.inOutCubic(seg(lt, 0, 1.2)), t, colors: [PAL.violet, PAL.cyan], flow: 300 * u, size: 2.1 * u, glow: .1, spread: .4, wobble: [3 * u, 26 * u], cam: { yaw: .16 * Math.sin(lt * .5), pitch: .03, dist: 1500 } }, { to: rt });
+      DUST.draw({ t, cam: {} }, { to: rt }); },
+    draw: (g, lt) => { const sw = seg(lt, 1.0, 4.2, E.inOutSine); if (sw > 0 && sw < 1) { const x = W * (-.2 + 1.4 * sw), gr = g.createLinearGradient(x - W * .12, 0, x + W * .12, 0); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(.5, 'rgba(235,228,255,.16)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.save(); g.translate(W / 2, H * .5); g.rotate(-.35); g.translate(-W / 2, -H * .5); g.fillRect(x - W * .12, -H * .4, W * .24, H * 1.8); g.restore(); }
+      Type.reveal(g, 'Your coding agent can now direct films.', W / 2, H * .64, lt - (T.tag - T.name), { size: H * .037, weight: 500, family: K.FONTS.sans, fill: 'rgba(244,242,255,.88)' });
+      g.globalAlpha = seg(lt, 2.2, 3) * .8; K.text(g, 'github.com/msmahdinejad/cinewright', W / 2, H * .72, { size: H * .021, weight: 500, family: K.FONTS.mono, fill: PAL.cyan, spacing: 2 }); g.globalAlpha = 1; } },
+]);
+S.camera = t => Cine.mix({ zoom: 1 + .03 * E.outSine(clamp(t / DUR)) }, Cine.punch(t, HITS, { amp: .018, decay: .22 }), Cine.shake(t, HITS, { amp: .004 }), Cine.handheld(t, { amp: .002 }));
+S.look((t, base) => { const fadeIn = 1 - seg(t, 0, .25), fadeOut = seg(t, DUR - .6, DUR - .03, E.inCubic), p = K.pulse(t, HITS, .08); return { ca: (base.ca ?? .002) + .004 * p, fade: Math.max(fadeIn, fadeOut), fadeColor: [.02, .016, .04], flash: [.03 * p, .03 * p, .04 * p] }; });
+
+function renderFrame(t) { S.render(t); }
+window.renderFrame = renderFrame;
+window.ready = K.loadFonts(['700 Space Grotesk', '500 Inter', '500 JetBrains Mono', '600 JetBrains Mono']).then(() => { build(); return S.ready(); }).then(() => true);
+K.play(renderFrame, { dur: DUR, fps: FPS, grid: K.grid(CUES.bpm) });
+</script>
+</body>
+</html>
