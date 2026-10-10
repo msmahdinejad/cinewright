@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "note": "The everyday prompts of simple.json with one more sentence — \"it has to feel like real motion design, not a slideshow\" — given identically to both conditions. Added after the first everyday-prompt pass, where the with-skill films were better but still read as slides.",
+  "footer": "---\nBenchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.",
+  "sets": {
+    "motion": [
+      "person-intro-motion-15s",
+      "channel-intro-motion-8s",
+      "promo-vertical-motion-12s",
+      "infographic-motion-20s"
+    ],
+    "all": [
+      "person-intro-motion-15s",
+      "channel-intro-motion-8s",
+      "promo-vertical-motion-12s",
+      "infographic-motion-20s"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "person-intro-motion-15s",
+      "domain": "motion graphics",
+      "aspect": "16:9",
+      "duration": 15,
+      "lang": "en",
+      "title": "Introduce a person",
+      "prompt": "Make a 15-second motion graphics video that introduces a person: Maya Chen, a senior product designer from Toronto (invent the details). Show her name and role, three skills, three numbers (years of experience, projects shipped, awards) and a short quote, and end on her handle @mayachen. Clean, modern, energetic — the kind of intro a personal brand would open a talk or a portfolio with. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Original music and sound design. Go all out."
+    },
+    {
+      "id": "channel-intro-motion-8s",
+      "domain": "motion graphics",
+      "aspect": "16:9",
+      "duration": 8,
+      "lang": "en",
+      "title": "YouTube channel intro",
+      "prompt": "Make an 8-second YouTube channel intro for a fictional tech-review channel called \"Pixel Pulse\": a logo mark that builds itself, the name, a one-line tagline you write, punchy transitions and sound design (a hit, whooshes, a short musical sting). Bold, bright, memorable. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Go all out."
+    },
+    {
+      "id": "promo-vertical-motion-12s",
+      "domain": "social",
+      "aspect": "9:16",
+      "duration": 12,
+      "lang": "en",
+      "title": "Vertical social promo",
+      "prompt": "Make a 12-second vertical (9:16) social-media promo for a fictional coffee shop called \"Brew & Co.\" announcing three autumn drinks with prices — Maple Latte €4.50, Spiced Cold Brew €4.00, Pumpkin Mocha €4.80 — and a call to action: \"Open daily 7–19 · Main Street\". Bold type, flat shapes and simple icon drawings (cups, leaves, beans), a beat-synced edit, punchy sound. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Go all out."
+    },
+    {
+      "id": "infographic-motion-20s",
+      "domain": "explainer",
+      "aspect": "16:9",
+      "duration": 20,
+      "lang": "en",
+      "title": "Animated infographic",
+      "prompt": "Make a 20-second animated infographic explainer titled \"Why sleep matters\" with three facts — adults need 7–9 hours; one night of poor sleep can cut focus by about a third; a regular bedtime improves mood — each with an animated icon or chart (moon, brain, clock), counting numbers, a clear visual hierarchy, upbeat original music and sound design. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Go all out."
+    }
+  ]
+}

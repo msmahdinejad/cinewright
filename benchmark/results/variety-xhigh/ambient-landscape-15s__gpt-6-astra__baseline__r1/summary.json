@@ -1,0 +1,92 @@
+{
+  "schema": 2,
+  "id": "variety-xhigh/ambient-landscape-15s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "ambient-landscape-15s",
+  "domain": "generative",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-10",
+  "wallSeconds": 2206,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 3840,
+    "height": 2160,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 28.35,
+    "audio": {
+      "lufs": -17.9,
+      "lra": 2,
+      "truePeak": -6.7,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0006,
+      "mean": 0.0006,
+      "quietPct": 100,
+      "cuts": 0,
+      "longestStatic": 14,
+      "curve": "▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 35,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 104,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 8,
+      "command_execution": 46,
+      "reasoning": 37,
+      "todo_list": 5,
+      "mcp_tool_call": 4
+    },
+    "turns": 1,
+    "inputTokens": 2700496,
+    "outputTokens": 42478,
+    "cachedInputTokens": 2583936,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n15-second 4K procedural landscape with layered mountains, drifting mist, aurora, moonlight, fireflies, and a looping crane move—no text.\nOriginal ambient pads, soft plucks, and sparse bells; H.264 video with stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

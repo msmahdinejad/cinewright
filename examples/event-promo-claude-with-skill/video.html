@@ -10,15 +10,16 @@
 <canvas id="out"></canvas>
 
 <!-- THE FILM IS THIS SPEC. Edit the copy, the theme, the scenes and their times; picture (mg.js) and sound (audio.mjs) are both drawn from it.
-     Scene types: title · chips · stats · quote · list · fact · chart · logo · cta · words — fields per type: references/motion-graphics.md (skill folder).
-     Times in seconds; scenes start on beats (bpm 120 → every 0.5 s). "wipe" = the transition INTO that scene: stripes · circle · slide · flood · blocks · diagonal.
+     Scene types: title · hit · fact · words · quote · logo · cta · chart · chips · stats · list — fields per type: references/motion-graphics.md (skill folder).
+     Cut the film into SHOTS: one idea per scene, 1–2 s each (hit = a word or phrase, fact = a number); only the opener and the ending run longer than 2.5 s. chips / stats / list are rows of cards — a slide layout, use sparingly.
+     Times in seconds; scenes start on beats (bpm 120 → every 0.5 s). "transition" = how the camera gets INTO that scene: whip · push · zoom · iris · blinds · cut (legacy colour "wipe": stripes · circle · slide · flood · blocks · diagonal). "carry" = the one object that travels through the film.
      Item i of a scene appears at  at + (lead ?? .3) + i * (step ?? beat/2). -->
 <script id="cues" type="application/json">
 {
  "bpm": 120,
  "duration": 15,
  "mood": "tech",
- "wipe": "stripes",
+ "transition": "whip",
  "theme": {
   "preset": "night",
   "a": "#7a5cff",
@@ -29,6 +30,82 @@
   "bg2": "#17163a",
   "head": "grotesk"
  },
+ "carry": {
+  "fill": "a",
+  "fill2": "d",
+  "keys": [
+   {
+    "at": 0.15,
+    "dur": 0.9,
+    "x": 0.75,
+    "y": 0.5,
+    "size": 0.44,
+    "icon": "calendar"
+   },
+   {
+    "at": 2.2,
+    "dur": 0.6,
+    "x": 0.2227,
+    "y": 0.5,
+    "size": 0.5,
+    "icon": "mic",
+    "fill": "b",
+    "fill2": "d"
+   },
+   {
+    "at": 3.75,
+    "dur": 0.5,
+    "x": 0.7773,
+    "y": 0.5,
+    "size": 0.5,
+    "icon": "code",
+    "fill": "a",
+    "fill2": "d"
+   },
+   {
+    "at": 5.25,
+    "dur": 0.5,
+    "x": 0.2227,
+    "y": 0.5,
+    "size": 0.5,
+    "icon": "pen",
+    "fill": "a",
+    "fill2": "c"
+   },
+   {
+    "at": 6.7,
+    "dur": 0.6,
+    "x": 0.93,
+    "y": 0.13,
+    "size": 0.085,
+    "icon": "calendar",
+    "fill": "a",
+    "fill2": "d"
+   },
+   {
+    "at": 9.75,
+    "dur": 0.5,
+    "x": 0.93,
+    "y": 0.13,
+    "size": 0.085,
+    "icon": "calendar",
+    "fill": "a",
+    "fill2": "a"
+   },
+   {
+    "at": 11.7,
+    "dur": 0.85,
+    "x": 0.5,
+    "y": 0.56,
+    "w": 0.96,
+    "h": 0.172,
+    "text": "framesummit.io",
+    "ts": 0.11,
+    "fill": "a",
+    "fill2": "d"
+   }
+  ]
+ },
  "scenes": [
   {
    "type": "title",
@@ -38,62 +115,79 @@
     "Frame",
     "Summit"
    ],
-   "sub": "Oct 14–16 · Lisbon · 2026",
-   "icon": "calendar",
-   "badges": [
-    "pen",
-    "play",
-    "mic"
+   "styles": [
+    "slideL",
+    "slam"
    ],
+   "sub": "Oct 14–16 · Lisbon · 2026",
+   "art": true,
    "bg": "blobs"
   },
   {
-   "type": "list",
-   "at": 3.5,
-   "kicker": "THREE OF THE SPEAKERS",
-   "title": "Meet the makers",
-   "items": [
-    {
-     "label": "Lena Hart",
-     "value": "Day 1",
-     "icon": "mic",
-     "note": "Designing in the open"
-    },
-    {
-     "label": "Omar Reyes",
-     "value": "Day 2",
-     "icon": "code",
-     "note": "Tiny tools, big teams"
-    },
-    {
-     "label": "Ines Duval",
-     "value": "Day 3",
-     "icon": "pen",
-     "note": "Drawing with code"
-    }
-   ],
-   "wipe": "circle",
-   "bg": "grid"
+   "type": "hit",
+   "at": 2.5,
+   "text": "Lena Hart",
+   "sub": "Designing in the open · Day 1",
+   "carried": true,
+   "color": "a",
+   "layout": "right",
+   "transition": "iris",
+   "transitionDur": 0.6
+  },
+  {
+   "type": "hit",
+   "at": 4,
+   "text": "Omar Reyes",
+   "sub": "Tiny tools, big teams · Day 2",
+   "carried": true,
+   "color": "d",
+   "layout": "left",
+   "transition": "whip",
+   "transitionDur": 0.5
+  },
+  {
+   "type": "hit",
+   "at": 5.5,
+   "text": "Ines Duval",
+   "sub": "Drawing with code · Day 3",
+   "carried": true,
+   "color": "b",
+   "layout": "right",
+   "transition": "zoom",
+   "transitionDur": 0.5
   },
   {
    "type": "words",
-   "at": 8.5,
+   "at": 7,
    "words": [
     "14–16",
     "OCTOBER",
     "LISBON"
    ],
    "step": 1,
-   "wipe": "flood"
+   "transition": "cut"
+  },
+  {
+   "type": "fact",
+   "at": 10,
+   "value": 40,
+   "suffix": "+",
+   "text": "talks across three stages",
+   "icon": "mic",
+   "color": "b",
+   "layout": "left",
+   "transition": "blinds",
+   "transitionDur": 0.55
   },
   {
    "type": "cta",
-   "at": 11.5,
+   "at": 12,
    "line": "Be in the room",
-   "handle": "framesummit.io",
+   "handle": false,
    "sub": "Early-bird tickets close Sept 30",
    "button": "Get tickets",
-   "wipe": "stripes",
+   "transition": "zoom",
+   "transitionDur": 0.7,
    "bg": "blobs"
   }
  ]
@@ -105,7 +199,7 @@
 'use strict';
 /* A motion-graphics film from data: MG.film() schedules the scenes, camera and wipes; this file only boots it and applies the finishing grade.
    Need something the kit does not have? Register a scene:  MG.scenes.mine = (g, lt, t, sc, X) => { … 2D drawing; X = { W, H, U (unit = H/1080), V (vertical), T (theme), B (beat) } … };  then  { "type": "mine" }  in the spec. */
-const SPEC = JSON.parse(document.getElementById('cues').textContent);
+const SPEC = JSON.parse(document.getElementById('cues').textContent); SPEC.lang = SPEC.lang || document.documentElement.lang;   // lang fa/ar/he → right-to-left layout (spec.dir overrides), fa → Persian digits
 const Q = K.params(), W = Q.w || SPEC.w || 1920, H = Q.h || SPEC.h || 1080, FPS = Q.fps || 30, DUR = SPEC.duration, { E } = K;
 window.VIDEO = { width: W, height: H, fps: FPS, duration: DUR, title: 'Frame Summit 2026', audio: 'audio.wav', markers: SPEC.scenes.map((s, i) => ({ t: s.at ?? 0, label: (i + 1) + ' ' + s.type })) };
 

@@ -112,3 +112,27 @@ const cx = W / 2, fl = t0 => { const q = lt - t0; return q < 0 ? 0 : q < 1.1 ? (
   const o = { size, weight: 700, family: K.FONTS.rounded, fill: 'rgba(0,0,0,0)', alpha: on };
   K.text(g, str, cx, y, { ...o, stroke: col, strokeW: 8 * u * 2, shadow: { color: col, blur: 40 * u * 2 } }); K.text(g, str, cx, y, { ...o, stroke: tube, strokeW: 4 * u * 2, shadow: { color: col, blur: 14 * u * 2 } }); K.text(g, str, cx, y, { ...o, stroke: '#fff4fa', strokeW: 1.6 * u * 2 }); });
 ```
+
+## light-dusk-landscape — A dusk landscape with depth: aerial perspective, mist, moon, aurora, fireflies
+tags: landscape dusk mountains ridges mist fog aurora moon fireflies stars ambient meditative loop no text calm generative 2d cinematic
+use: meditative / ambient films, loops, wallpapers, calm openers, "breathing" backgrounds behind a title — anywhere the picture itself is the hero and nothing should shout. Flat silhouettes of the same dark colour look like clip art; this recipe is about DEPTH
+how: six fbm ridges from far to near — each one darker, sharper and less hazy than the one behind it (aerial perspective: far = closer to the sky colour), a mist band resting in every valley and drifting at its own speed, a sky gradient with a warm horizon, twinkling stars that fade toward the horizon, three additive aurora ribbons, a moon that rises with a two-layer halo, fireflies that blink in the foreground; a slow crane (everything moves up, near layers more) gives parallax. Grade with grain + vignette; keep the score as slow as the picture
+avoid: one dark colour for every ridge; a moon without a halo; mist as a uniform grey veil; anything moving faster than a breath; text
+pair: particles-fireflies, edit-seamless-loop (for loops make every motion periodic in the loop length), cam-push-in, sound pad-cinematic-swell
+```js scene
+//@ {"peak":5,"look":{"bloom":0.4,"threshold":0.85,"grain":0.035,"vignette":0.35}}
+const R = K.rng(7), cr = K.E.inOutCubic(K.prog(lt, 0, 10));                                           // a slow crane over ten seconds
+g.fillStyle = K.gradient(g, 0, 0, 0, H, [[0, '#0a0c27'], [.36, '#2e2457'], [.52, '#a8607a'], [.62, '#e7a07e'], [.72, '#f6c79a']]); g.fillRect(0, 0, W, H);
+for (let i = 0; i < 160; i++) { const x = R() * W, y = R() * H * .55, ph = R() * 6.28, sp = 1 + R() * 2, a = (.25 + .55 * (.5 + .5 * Math.sin(t * sp + ph))) * (1 - y / (H * .55)); g.fillStyle = `rgba(255,236,226,${a.toFixed(3)})`; g.fillRect(x, y + cr * H * .04, 1.8 * u, 1.8 * u); }
+g.save(); g.globalCompositeOperation = 'lighter';                                                    // aurora: vertical curtains hanging from a wandering ribbon, brightest at the lower edge
+[['#5ff2c4', .15, .14, 1], ['#ff9ac0', .23, .045, .35]].forEach(([col, y0, hh, am], k) => { const st = W / 150; for (let x = 0; x < W; x += st) { const y = H * y0 + cr * H * .04 + Math.sin(x / W * 4.2 + t * .22 + k * 1.7) * H * .045 + K.noise2(x / W * 2.2 + k * 3, t * .07) * H * .04, h = H * hh * (.55 + .45 * (.5 + .5 * K.noise2(x / W * 6 + k, t * .15))), fl = .5 + .5 * Math.sin(x / W * 40 + t * 1.3 + k), env = Math.max(0, Math.min(1, .45 + 1.3 * K.noise2(x / W * 1.6 + k * 5, t * .05))); const gr = g.createLinearGradient(0, y - h, 0, y + H * .01); gr.addColorStop(0, K.rgba(col, 0)); gr.addColorStop(.75, K.rgba(col, (.05 + .05 * fl) * am * env)); gr.addColorStop(.93, K.rgba(col, (.14 + .06 * fl) * am * env)); gr.addColorStop(1, K.rgba(col, (.04 + .02 * fl) * am * env)); g.fillStyle = gr; g.fillRect(x, y - h, st + 1, h + H * .01); } });
+const mx = W * .72, my = H * (.62 - .3 * K.E.outCubic(K.prog(lt, .5, 9))) + cr * H * .05;
+K.glow(g, mx, my, H * .45, '#f3c8a8', .22); K.glow(g, mx, my, H * .14, '#fff1dc', .38); g.restore();
+g.fillStyle = '#fff6ea'; g.beginPath(); g.arc(mx, my, H * .055, 0, Math.PI * 2); g.fill();
+const L = 6; for (let i = 0; i < L; i++) { const d = i / (L - 1), base = H * (.6 + d * .27) - cr * H * (.02 + d * .12), amp = H * (.09 + d * .05);   // far → near: darker, sharper, less hazy
+  g.beginPath(); g.moveTo(0, H); for (let x = 0; x <= W; x += W / 160) { const n = 1 - Math.abs(K.fbm(x / W * (1.4 + d * 1.1) + i * 7.3 + t * .004 * (1 + d * 4), i * 3.1, 4)); g.lineTo(x, base - amp * Math.pow(n, 1.6 - d * .6)); } g.lineTo(W, H); g.closePath(); g.fillStyle = K.mix('#9a7aa6', '#0b0a1a', Math.pow(d, .75)); g.fill();
+  if (i < L - 1) { const vy = base + amp * .1, a = (.16 - d * .08).toFixed(3), mg = g.createLinearGradient(0, vy - H * .06, 0, vy + H * .05); mg.addColorStop(0, 'rgba(240,190,200,0)'); mg.addColorStop(.5, `rgba(240,190,200,${a})`); mg.addColorStop(1, 'rgba(240,190,200,0)'); g.fillStyle = mg; g.fillRect(-W + (t * W * .01 * (1 + d)) % W, vy - H * .06, W * 3, H * .11); } }
+g.save(); g.globalCompositeOperation = 'lighter';
+for (let i = 0; i < 40; i++) { const bx = R() * W, by = H * (.8 + R() * .18), ph = R() * 6.28, sp = 1.2 + R(), x = bx + Math.sin(t * .4 + ph) * W * .02, y = by + Math.cos(t * .5 + ph * 1.3) * H * .015 - cr * H * .1, bl = Math.max(0, Math.sin(t * sp + ph)); if (bl > .05) K.glow(g, x, y, H * .018 * (.6 + bl), '#ffd88a', .8 * bl); }
+g.restore();
+```

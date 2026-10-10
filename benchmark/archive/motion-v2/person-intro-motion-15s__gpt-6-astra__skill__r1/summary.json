@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "motion-v2/person-intro-motion-15s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "person-intro-motion-15s",
+  "domain": "motion graphics",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.3.0-draft",
+  "date": "2026-10-09",
+  "wallSeconds": 4198,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 6.98,
+    "audio": {
+      "lufs": -14.3,
+      "lra": 1.4,
+      "truePeak": -1.4,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0057,
+      "mean": 0.0257,
+      "quietPct": 21,
+      "cuts": 2,
+      "longestStatic": 0,
+      "curve": "█▃▂▂▂▂██▄▁▂▂▂██▂▁▁▄█▂▁▁▁█▁▁▁"
+    },
+    "look": {
+      "medianFill": 14,
+      "emptyPct": 17,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 140,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 6,
+      "command_execution": 56,
+      "reasoning": 32,
+      "todo_list": 6,
+      "mcp_tool_call": 8
+    },
+    "turns": 1,
+    "inputTokens": 3779719,
+    "outputTokens": 28295,
+    "cachedInputTokens": 3439488,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 15-second kinetic personal-brand intro for Maya Chen with connected 2D/3D-style motion, travelling typography, skills, stats, quote, Toronto identity, and @mayachen end card.  \nAdded an original synthesized electronic score and sound design, rendered as 1920×1080 H.264 video with AAC audio."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 3310,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

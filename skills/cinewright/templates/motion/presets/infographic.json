@@ -1,11 +1,23 @@
 {
-  "bpm": 120, "duration": 20, "mood": "chill", "wipe": "circle",
+  "bpm": 120, "duration": 20, "mood": "chill", "transition": "whip",
   "theme": { "preset": "ocean", "head": "grotesk" },
+  "carry": { "fill": "a", "fill2": "b", "keys": [
+    { "at": 0.15, "dur": 0.9, "x": 0.77, "y": 0.5, "size": 0.46, "icon": "leaf" },
+    { "at": 2.7, "dur": 0.7, "x": 0.26, "y": 0.5, "size": 0.55, "icon": "clock", "fill": "d", "fill2": "c" },
+    { "at": 4.75, "dur": 0.5, "x": 0.93, "y": 0.13, "size": 0.09, "icon": "clock", "fill": "a", "fill2": "b" },
+    { "at": 9.75, "dur": 0.5, "x": 0.93, "y": 0.13, "size": 0.09, "icon": "bulb", "fill": "c", "fill2": "d" },
+    { "at": 11.7, "dur": 0.7, "x": 0.7773, "y": 0.5, "size": 0.5, "icon": "bulb", "fill": "c", "fill2": "d" },
+    { "at": 13.7, "dur": 0.6, "x": 0.5, "y": 0.29, "size": 0.37, "icon": "target", "fill": "d", "fill2": "c" },
+    { "at": 15.7, "dur": 0.85, "x": 0.5, "y": 0.56, "w": 0.9, "h": 0.17, "text": "walkmore.org", "ts": 0.11, "fill": "a", "fill2": "b" }
+  ] },
   "scenes": [
-    { "type": "title", "at": 0, "kicker": "DID YOU KNOW?", "lines": ["The power", "of walking"], "sub": "Three numbers worth a stroll", "icon": "leaf", "bg": "blobs" },
-    { "type": "fact", "at": 3.5, "icon": "clock", "value": 30, "suffix": " min", "text": "a day lowers the risk of heart disease", "kicker": "FACT 1", "color": "a", "wipe": "circle" },
-    { "type": "chart", "at": 8, "title": "How people feel after a walk", "kind": "ring", "unit": "%", "max": 100, "data": [ { "label": "Happier", "value": 78 }, { "label": "More focused", "value": 64 }, { "label": "Less stressed", "value": 71 } ], "caption": "Share of walkers who report it", "wipe": "stripes", "bg": "grid" },
-    { "type": "fact", "at": 12.5, "icon": "bulb", "value": 3, "suffix": "×", "text": "more creative ideas while walking than sitting", "kicker": "FACT 3", "color": "b", "wipe": "blocks" },
-    { "type": "cta", "at": 16.5, "line": "Take the next step", "handle": "walkmore.org", "button": "Start today", "wipe": "flood", "bg": "blobs" }
+    { "type": "title", "at": 0, "kicker": "DID YOU KNOW?", "lines": ["The power", "of walking"], "styles": ["slideL", "slam"], "sub": "Three numbers worth a stroll", "art": true, "bg": "blobs" },
+    { "type": "fact", "at": 3, "carried": true, "value": 30, "suffix": " min", "text": "a day lowers the risk of heart disease", "kicker": "FACT 1", "color": "a", "layout": "left", "transition": "iris", "transitionDur": 0.7, "focus": [0.26,0.5] },
+    { "type": "words", "at": 5, "words": ["Happier", "Calmer", "Sharper"], "step": 0.75, "transition": "whip", "transitionDur": 0.5 },
+    { "type": "chart", "at": 7.5, "title": "How people feel after a walk", "kind": "ring", "unit": "%", "max": 100, "data": [ { "label": "Happier", "value": 78 }, { "label": "More focused", "value": 64 }, { "label": "Less stressed", "value": 71 } ], "caption": "Share of walkers who report it", "bg": "grid", "transition": "push", "transitionDur": 0.6 },
+    { "type": "fact", "at": 10, "value": 3, "suffix": "×", "text": "more creative ideas while walking than sitting", "kicker": "FACT 3", "icon": "bulb", "color": "b", "layout": "right", "transition": "zoom", "transitionDur": 0.6 },
+    { "type": "hit", "at": 12, "text": "Start small.", "sub": "ten minutes after lunch is enough", "carried": true, "color": "c", "layout": "left", "transition": "iris", "transitionDur": 0.7, "focus": [0.7773,0.5] },
+    { "type": "hit", "at": 14, "text": "Keep going.", "sub": "one more block, every day", "carried": true, "color": "d", "layout": "center", "transition": "blinds", "transitionDur": 0.6 },
+    { "type": "cta", "at": 16, "line": "Take the next step", "handle": false, "button": "Start today", "transition": "whip", "bg": "blobs" }
   ]
 }

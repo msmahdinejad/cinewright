@@ -1,0 +1,91 @@
+{
+  "schema": 2,
+  "id": "motion-xhigh/promo-vertical-motion-12s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "promo-vertical-motion-12s",
+  "domain": "social",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-09",
+  "wallSeconds": 2067,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 12,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 7.19,
+    "audio": {
+      "lufs": -12.9,
+      "lra": 0.7,
+      "truePeak": -0.9,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0102,
+      "mean": 0.0307,
+      "quietPct": 0,
+      "cuts": 3,
+      "longestStatic": 0,
+      "curve": "▆▂█▃▂▃▇█▂▂▂█▇▂▃▃█▇▁▂▂▂"
+    },
+    "look": {
+      "medianFill": 35,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 92,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 7,
+      "command_execution": 32,
+      "reasoning": 28,
+      "todo_list": 5
+    },
+    "turns": 1,
+    "inputTokens": 1349266,
+    "outputTokens": 33644,
+    "cachedInputTokens": 1249152,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n12-second 1080×1920 promo with kinetic typography, morphing cups, and beat-synced camera moves.\nOriginal punchy soundtrack, all three drinks and prices, and the requested CTA; H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

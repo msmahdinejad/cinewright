@@ -1,9 +1,17 @@
 {
-  "bpm": 120, "duration": 8, "mood": "tech", "wipe": "circle",
+  "bpm": 120, "duration": 8, "mood": "tech", "transition": "whip",
   "theme": { "preset": "night", "head": "grotesk" },
+  "carry": { "fill": "a", "fill2": "b", "keys": [
+    { "at": 0.1, "dur": 0.5, "x": 0.9, "y": 0.86, "size": 0.05, "r": 0.012, "icon": "bolt" },
+    { "at": 1.2, "dur": 0.9, "x": 0.5, "y": 0.42, "size": 0.37, "r": 0.1, "icon": "bolt" },
+    { "at": 3.2, "dur": 0.6, "x": 0.93, "y": 0.13, "size": 0.09, "r": 0.025, "icon": "bolt" },
+    { "at": 5.25, "dur": 0.8, "x": 0.5, "y": 0.56, "w": 0.78, "h": 0.17, "text": "@techpulse", "ts": 0.1, "fill": "a", "fill2": "b" }
+  ] },
   "scenes": [
     { "type": "words", "at": 0, "words": ["Unbox.", "Test.", "Repeat."], "step": 0.5 },
-    { "type": "logo", "at": 1.5, "mark": "pulse", "name": "Tech Pulse", "tag": "Gadgets, tested.", "wipe": "flood", "bg": "blobs" },
-    { "type": "cta", "at": 6.5, "handle": "@techpulse", "button": "Subscribe", "wipe": "stripes", "bg": "blobs" }
+    { "type": "logo", "at": 1.5, "mark": "none", "name": "Tech Pulse", "tag": "Gadgets, tested.", "transition": "zoom", "transitionDur": 0.6, "bg": "blobs" },
+    { "type": "hit", "at": 3.5, "text": "Honest reviews", "sub": "no sponsors, no spin", "color": "b", "layout": "left", "icon": "shield", "transition": "whip", "transitionDur": 0.5 },
+    { "type": "fact", "at": 4.5, "value": 500, "suffix": "+", "text": "gadgets tested", "icon": "search", "color": "a", "layout": "right", "transition": "cut" },
+    { "type": "cta", "at": 5.5, "line": "Join the signal.", "handle": false, "button": "Subscribe", "transition": "iris", "transitionDur": 0.7, "bg": "blobs" }
   ]
 }

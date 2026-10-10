@@ -132,7 +132,7 @@ function blocks() {
   const BS = path.join(DOCS, 'assets', 'benchmark', 'summary.json'), rows = fs.existsSync(BS) ? JSON.parse(fs.readFileSync(BS, 'utf8')) : [], row = id => rows.find(r => r.id === id);
   const faDig = s => String(s).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]).replace(/\./g, '٫');
   const proof = fa => {
-    const NL = '\n', FENCE = '`'.repeat(3), num = x => fa ? faDig(x) : String(x), out = [], label = it => String(it.agent).replace(/ \+ Cinewright/, '');
+    const NL = '\n', FENCE = '`'.repeat(3), num = x => fa ? faDig(x) : String(x), out = [], label = it => String(it.agent).replace(/ \+ Cinewright/, ''); let lastGroup = null;
     for (const t of P.tasks || []) {
       const its = P.items.filter(i => i.section === 'compare' && (i.task || 'showreel') === t.id && i.readme && fs.existsSync(path.join(DOCS, 'assets', 'anim', i.id + '.webp')));
       const pairs = [...new Set(its.map(i => i.pair))].map(k => ({ k, a: its.find(i => i.pair === k && i.side === 'without'), b: its.find(i => i.pair === k && i.side === 'with') })).filter(p => p.a && p.b);
@@ -147,6 +147,7 @@ function blocks() {
           : `${label(p.b)}: frame fill ${a.fill}% → ${b.fill}% · near-static ${a.quietPct}% → ${b.quietPct}%${tok}`; }).filter(Boolean).join('<br>');
       const head = '**' + (fa ? t.title.fa : t.title.en) + '**', prompt = FENCE + 'text' + NL + '$cinewright ' + t.prompt + NL + FENCE, tbl = '<table dir="ltr">' + NL + tableRows + NL + '</table>';
       const note = cap ? '<sub>' + cap + (fa ? ' · هر خانه یک اجرا' : ' · one run per cell') + '</sub>' : '';
+      const gl = t.group ? (fa ? t.group.fa : t.group.en) : null; if (gl && gl !== lastGroup) out.push(fa ? `<div dir="rtl">${NL}${NL}### ${gl}${NL}${NL}</div>` : `### ${gl}`); lastGroup = gl;   // prompts are grouped (everyday motion graphics · other kinds of film · the showreel)
       out.push(fa ? ['<div dir="rtl">', '', head, '', '</div>', '', prompt, '', tbl, '', note && '<div dir="rtl">', note && '', note, note && '', note && '</div>'].filter(x => x !== undefined && x !== false && x !== null).join(NL).replace(/\n{3,}/g, NL + NL)
         : [head, '', prompt, '', tbl, '', note].join(NL).trimEnd());
     }

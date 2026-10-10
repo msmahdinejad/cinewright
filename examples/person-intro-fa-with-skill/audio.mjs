@@ -17,7 +17,7 @@ const M = MOODS[C.mood] || MOODS.upbeat, bars = Math.ceil(dur / bar) + 1;
 const chords = progression(M.key, M.mode, Array.from({ length: bars }, (_, i) => M.prog.split(' ')[i % M.prog.split(' ').length]).join(' '));
 
 /* music — the energy follows the picture: calm under a quote or a chart, full on the lists and counters, biggest on the call to action */
-const ENERGY = { title: .85, chips: 1, stats: 1, list: 1, fact: .95, chart: .7, quote: .45, logo: 1, cta: 1.12, words: 1.1 };
+const ENERGY = { title: .85, chips: 1, stats: 1, list: 1, fact: .95, hit: 1.02, chart: .7, quote: .45, logo: 1, cta: 1.12, words: 1.1 };
 const energyAt = t => { let e = .8; for (const sc of scenes) if (t >= sc.at) e = ENERGY[sc.type] ?? 1; return e; };
 chords.forEach((c, i) => s.pad(i * bar, c, bar + .4, { vel: M.pad * (.7 + .45 * energyAt(i * bar + bar / 2)), attack: .35, release: .9, cutoff: 1700, send: .3 }));
 const g0 = Math.ceil(1.0 / bar) * bar, gBars = Math.floor((dur - .6 - g0) / bar), allKicks = [];
@@ -37,12 +37,15 @@ for (const sc of scenes) {
   else if (type === 'list') list.forEach((_, k) => { s.swipe(it(k) + .1 - .08, .22, { vel: .3 }); s.pop(it(k) + .1 + .35, { vel: .45, f0: 1100 + k * 80 }); });
   else if (type === 'stats') list.forEach((_, k) => { s.pop(it(k), { vel: .5, f0: 820 + k * 100 }); for (let q = 0; q < 17; q++) s.tick(it(k) + .15 + q * .075, { vel: .12 + q * .004 }); s.chime(it(k) + 1.55, ['C6', 'G6'], { vel: .28 }); });
   else if (type === 'quote') { s.riser(at + .1, .9, { vel: .18 }); (sc.text || '').split(/\s+/).forEach((_, k, a) => { if (k % 3 === 0) s.tick(at + .35 + k * .075, { vel: .16 }); }); s.chime(at + .9, ['E6', 'B6'], { vel: .3 }); }
-  else if (type === 'fact') { s.impact(at + .4, { size: .45, vel: .6 }); for (let q = 0; q < 14; q++) s.tick(at + .55 + q * .075, { vel: .15 }); s.success(at + 1.7, { vel: .4 }); }
+  else if (type === 'fact') { const k = Math.max(.45, Math.min(1, (sc.end - at) / 2.8)); s.impact(at + .4 * k, { size: .45, vel: .6 }); for (let q = 0; q < 14; q++) s.tick(at + (.55 + q * .075) * k, { vel: .15 }); s.success(at + 1.7 * k, { vel: .4 }); }   // shot scale k: the same formula as MG.shotK in mg.js
+  else if (type === 'hit') { const k = Math.max(.45, Math.min(1, (sc.end - at) / 2.8)), txt = String(sc.lines ? sc.lines.join(' ') : sc.text || ''), n = sc.lines ? sc.lines.length : (/s/.test(txt) && txt.length > 14 ? 2 : 1); for (let q = 0; q < n; q++) s.pop(at + (.2 + q * .1) * k, { vel: .55, f0: 880 + q * 170 + (i % 3) * 90 }); s.tick(at + .6 * k, { vel: .2 }); if (sc.sub) s.pop(at + .85 * k, { vel: .3, f0: 1250 }); }
   else if (type === 'chart') { list.forEach((_, k) => { s.pop(at + .35 + k * .14 + .1, { vel: .45, f0: 640 + k * 90 }); }); s.chime(at + 1.5, ['C6', 'E6', 'G6'], { vel: .3 }); }
-  else if (type === 'logo') { s.riser(at, 1.0, { vel: .4 }); s.impact(at + 1.05, { size: 1, vel: .9 }); s.chime(at + 1.1, ['C6', 'E6', 'G6', 'C7'], { vel: .55 }); (sc.name || '').split('').forEach((_, k) => s.tick(at + 1.05 + k * .045, { vel: .18 })); s.whoosh(at + 1.85, .5, { vel: .35 }); }
+  else if (type === 'logo') { const lk = Math.max(.6, Math.min(1, (sc.end - at) / 3.4)); s.riser(at, 1.0 * lk, { vel: .4 }); s.impact(at + 1.05 * lk, { size: 1, vel: .9 }); s.chime(at + 1.1 * lk, ['C6', 'E6', 'G6', 'C7'], { vel: .55 }); (sc.name || '').split('').forEach((_, k) => s.tick(at + (1.05 + k * .045) * lk, { vel: .18 })); s.whoosh(at + 1.85 * lk, .5, { vel: .35 }); }
   else if (type === 'cta') { s.sparkle(at + .3, 1.2, { vel: .35, seed: 2 }); s.pop(at + .6, { vel: .6, f0: 900 }); s.chime(at + .65, ['G5', 'C6', 'E6', 'G6'], { vel: .5 }); if (sc.button) s.pop(at + 1.45, { vel: .5, f0: 1200 }); }
   else if (type === 'words') { s.riser(at - .6, .6, { vel: .22 }); list.forEach((_, k) => { const t0 = at + k * (sc.step ?? B); s.impact(t0, { size: .4, vel: .7 }); s.clap(t0, { vel: .4 }); s.hat(t0 + B / 2, { vel: .35, open: true }); s.sparkle(t0 + .06, .5, { vel: .22, seed: 3 + k }); s.pop(t0 + .05, { vel: .5, f0: 900 + k * 90 }); }); }
 }
+/* the carried object: a pop when it appears, a swipe as it travels and a pop as it lands — scored from the same spec */
+(C.carry?.keys || []).forEach((k, i) => { const d = k.dur ?? .75; if (i === 0) s.pop(k.at + .35, { vel: .5, f0: 880 }); else { s.swipe(k.at, d * .8, { vel: .28 }); s.pop(k.at + d * .92, { vel: .38, f0: 1000 }); } });
 /* the end: a resolved chord that rings under the last image */
 const last = scenes[scenes.length - 1]; s.chime(last.at + (last.type === 'cta' ? 1.9 : 1.0), ['C6', 'G6', 'C7'], { vel: .3 });
 s.write('audio.wav', { lufs: -14, reverb: { rt60: 1.7, mix: .22 }, fadeOut: .5 });

@@ -1,9 +1,22 @@
 {
-  "w": 1080, "h": 1920, "bpm": 120, "duration": 12, "mood": "upbeat", "wipe": "stripes",
+  "w": 1080, "h": 1920, "bpm": 120, "duration": 12, "mood": "upbeat", "transition": "push",
   "theme": { "preset": "poster" },
+  "carry": { "fill": "b", "fill2": "c", "keys": [
+    { "at": 0.15, "dur": 0.9, "x": 0.5, "y": 0.235, "size": 0.5, "icon": "gift" },
+    { "at": 1.7, "dur": 0.6, "x": 0.5, "y": 0.27, "size": 0.5, "icon": "star", "fill": "a", "fill2": "c" },
+    { "at": 3.2, "dur": 0.5, "x": 0.5, "y": 0.27, "size": 0.5, "icon": "sun", "fill": "b", "fill2": "d" },
+    { "at": 4.7, "dur": 0.5, "x": 0.5, "y": 0.27, "size": 0.5, "icon": "heart", "fill": "c", "fill2": "d" },
+    { "at": 6.2, "dur": 0.6, "x": 0.88, "y": 0.06, "size": 0.11, "icon": "gift", "fill": "b", "fill2": "b" },
+    { "at": 8.3, "dur": 0.5, "x": 0.88, "y": 0.06, "size": 0.11, "icon": "gift", "fill": "c", "fill2": "c" },
+    { "at": 9.75, "dur": 0.85, "x": 0.5, "y": 0.5, "w": 0.84, "h": 0.16, "text": "Baker Street 12", "ts": 0.1, "fill": "a", "fill2": "c" }
+  ] },
   "scenes": [
-    { "type": "title", "at": 0, "kicker": "NEW THIS SUMMER", "lines": ["Sweet", "Treats"], "sub": "Sunny Bakery", "icon": "gift", "badges": ["star", "heart", "bolt"], "bgColor": "a" },
-    { "type": "list", "at": 2.5, "kicker": "THE MENU", "title": "Fresh today", "items": [ { "label": "Peach tart", "value": "€3.80", "icon": "star", "note": "almond cream" }, { "label": "Lemon cake", "value": "€4.20", "icon": "sun", "note": "zesty glaze" }, { "label": "Berry scone", "value": "€2.90", "icon": "heart", "note": "warm, with jam" } ], "wipe": "circle", "bgColor": "b" },
-    { "type": "cta", "at": 8.5, "line": "Open daily 8–18", "handle": "Baker Street 12", "button": "Come say hi", "wipe": "slide", "bgColor": "c" }
+    { "type": "title", "at": 0, "kicker": "NEW THIS SUMMER", "lines": ["Sweet", "Treats"], "styles": ["slideL", "slam"], "sub": "Sunny Bakery", "art": true, "bgColor": "a" },
+    { "type": "hit", "at": 2, "text": "Peach tart", "sub": "almond cream · €3.80", "carried": true, "color": "b", "transition": "push", "transitionDur": 0.5 },
+    { "type": "hit", "at": 3.5, "text": "Lemon cake", "sub": "zesty glaze · €4.20", "carried": true, "color": "c", "transition": "push", "transitionDur": 0.5 },
+    { "type": "hit", "at": 5, "text": "Berry scone", "sub": "warm, with jam · €2.90", "carried": true, "color": "a", "transition": "zoom", "transitionDur": 0.5 },
+    { "type": "fact", "at": 6.5, "value": 6, "suffix": " am", "text": "baked fresh every morning", "icon": "sun", "color": "d", "transition": "iris", "transitionDur": 0.6 },
+    { "type": "words", "at": 8.5, "words": ["Open", "daily", "8–18"], "step": 0.5, "transition": "cut" },
+    { "type": "cta", "at": 10, "line": "Come say hi", "handle": false, "button": "See the menu", "transition": "push", "bgColor": "c" }
   ]
 }

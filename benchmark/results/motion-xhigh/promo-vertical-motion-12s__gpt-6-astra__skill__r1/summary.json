@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "motion-xhigh/promo-vertical-motion-12s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "promo-vertical-motion-12s",
+  "domain": "social",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.3.0",
+  "date": "2026-10-10",
+  "wallSeconds": 1007,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 12,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 7.59,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 0.6,
+      "truePeak": -1.2,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0361,
+      "mean": 0.0453,
+      "quietPct": 0,
+      "cuts": 4,
+      "longestStatic": 0,
+      "curve": "█▂█▆██▄▄██▅██▄▃████▄▁▁"
+    },
+    "look": {
+      "medianFill": 33,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 1,
+      "perMinute": 5
+    }
+  },
+  "session": {
+    "events": 194,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 8,
+      "command_execution": 126,
+      "todo_list": 7,
+      "reasoning": 38,
+      "mcp_tool_call": 10
+    },
+    "turns": 1,
+    "inputTokens": 7780868,
+    "outputTokens": 26912,
+    "cachedInputTokens": 7426816,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\n12-second vertical promo, 1080×1920 at 60 fps, featuring all three drinks, prices, and the requested CTA.\nBold kinetic type, original cup illustrations, travelling bean transitions, and punchy synthesized music—verified H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 3751,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

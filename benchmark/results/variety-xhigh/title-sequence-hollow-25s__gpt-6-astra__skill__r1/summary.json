@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "variety-xhigh/title-sequence-hollow-25s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "title-sequence-hollow-25s",
+  "domain": "cinematic",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.3.0",
+  "date": "2026-10-10",
+  "wallSeconds": 3600,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 25,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 39.24,
+    "audio": {
+      "lufs": -15,
+      "lra": 3.4,
+      "truePeak": -1.8,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0078,
+      "mean": 0.0154,
+      "quietPct": 9,
+      "cuts": 2,
+      "longestStatic": 1.5,
+      "curve": "▃▆▇▆█▂▁▁▆▃▂▂▄▁▁▃▂▁▁█▂▂▂▂▂▂█▁▁▃▄▂▁▁▁▂▃▃▅▄██▄▁▁▁"
+    },
+    "look": {
+      "medianFill": 38,
+      "emptyPct": 2,
+      "darkPct": 2
+    },
+    "scenes": {
+      "changes": 2,
+      "perMinute": 4.8
+    }
+  },
+  "session": {
+    "events": 154,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 8,
+      "command_execution": 68,
+      "reasoning": 50,
+      "todo_list": 7,
+      "mcp_tool_call": 16
+    },
+    "turns": 1,
+    "inputTokens": 7657083,
+    "outputTokens": 33596,
+    "cachedInputTokens": 7390976,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\n25-second, 1080p noir title sequence with peeling paper, flickering neon, rain, unraveling clock hands, particle detective, and invented credits.\nOriginal heartbeat-and-low-brass score, ending with a two-second title lock-up; verified H.264 video + stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 4380,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

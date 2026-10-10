@@ -1,0 +1,91 @@
+{
+  "schema": 2,
+  "id": "variety-xhigh/data-story-lumen-15s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "data-story-lumen-15s",
+  "domain": "data",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-10",
+  "wallSeconds": 1337,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 12.73,
+    "audio": {
+      "lufs": -13.6,
+      "lra": 2.3,
+      "truePeak": -1.5,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0096,
+      "mean": 0.0098,
+      "quietPct": 14,
+      "cuts": 0,
+      "longestStatic": 2,
+      "curve": "▄▁▁▁▁▂▂▃▃▄▄▄▄▄▃▃▃▃▇▂▁▁▁▂▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 16,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 1,
+      "perMinute": 4
+    }
+  },
+  "session": {
+    "events": 76,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 8,
+      "todo_list": 6,
+      "command_execution": 32,
+      "reasoning": 25
+    },
+    "turns": 1,
+    "inputTokens": 1223727,
+    "outputTokens": 26286,
+    "cachedInputTokens": 1156608,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n15-second vertical film: slam-in numbers, a dot-city becoming a river of light, and a 7.25× takeaway.\nOriginal punchy soundtrack drops as 87,000 lands; verified 1080×1920, 60 fps, H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

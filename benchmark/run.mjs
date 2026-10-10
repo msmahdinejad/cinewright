@@ -122,7 +122,8 @@ for (const [n, job] of jobs.entries()) {
   for (;;) {                                                                                    // a dropped connection is not a result: retry transport failures with a fresh folder
     attempts++; res = await runAgent(job, work, prompt, path.join(dir, 'events.jsonl'), path.join(dir, 'agent.log'));
     const tail = (() => { try { return fs.readFileSync(path.join(dir, 'events.jsonl'), 'utf8').slice(-1500) + fs.readFileSync(path.join(dir, 'agent.log'), 'utf8').slice(-800); } catch { return ''; } })();
-    const infra = res.stalled || !findVideo(work) && !res.timedOut && /turn\.failed|stream disconnected|Transport error|network error|ECONNRESET|ETIMEDOUT|socket hang up|overloaded|Reconnecting\.\.\. 5\/5|\b(429|502|503|504)\b/i.test(tail);
+    const found = findVideo(work), readable = !!found && measureVideo(found).ok;                  // a half-written final.mp4 (the agent died while encoding) is not a result either
+    const infra = res.stalled || !readable && !res.timedOut && /turn\.failed|stream disconnected|Transport error|network error|ECONNRESET|ETIMEDOUT|socket hang up|overloaded|Reconnecting\.\.\. 5\/5|\b(429|502|503|504)\b/i.test(tail);
     if (!infra || attempts > retries) break;
     infraLog.push({ attempt: attempts, seconds: Math.round(res.seconds), error: res.stalled ? `stalled: no output for ${Math.round(stallMs / 60000)} min` : ((tail.match(/"message":"[^"]{0,200}/g) || []).pop() || 'transport error').slice(11) });
     console.log(`   ⚠ transport failure after ${Math.round(res.seconds / 60)} min (${infraLog.at(-1).error.slice(0, 120)}) — retrying ${attempts}/${retries} in a fresh folder`);

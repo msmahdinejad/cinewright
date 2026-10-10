@@ -1,0 +1,95 @@
+{
+  "schema": 2,
+  "id": "motion-v2/channel-intro-motion-8s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "channel-intro-motion-8s",
+  "domain": "motion graphics",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.3.0-draft",
+  "date": "2026-10-09",
+  "wallSeconds": 3317,
+  "exitCode": 1,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 8,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 4.01,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 1,
+      "truePeak": -1.6,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0182,
+      "mean": 0.0298,
+      "quietPct": 14,
+      "cuts": 3,
+      "longestStatic": 0,
+      "curve": "█▂██▂█▄▄█▄█▂▁▁"
+    },
+    "look": {
+      "medianFill": 21,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 4,
+      "perMinute": 30
+    }
+  },
+  "session": {
+    "events": 146,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 5,
+      "command_execution": 76,
+      "reasoning": 28,
+      "todo_list": 6,
+      "mcp_tool_call": 6
+    },
+    "turns": 0,
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "cachedInputTokens": 0,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "I’m refining scene-to-scene continuity and tightening the final sound tail before delivery.\n"
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 2856,
+    "reviewRounds": 0,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

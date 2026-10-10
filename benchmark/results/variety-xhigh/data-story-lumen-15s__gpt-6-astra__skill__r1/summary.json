@@ -1,0 +1,94 @@
+{
+  "schema": 2,
+  "id": "variety-xhigh/data-story-lumen-15s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "data-story-lumen-15s",
+  "domain": "data",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.3.0",
+  "date": "2026-10-10",
+  "wallSeconds": 2731,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 15.72,
+    "audio": {
+      "lufs": -13.6,
+      "lra": 2,
+      "truePeak": -0.6,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0183,
+      "mean": 0.0234,
+      "quietPct": 0,
+      "cuts": 4,
+      "longestStatic": 0,
+      "curve": "▄▂▂▂▁▇▃▄▄▅▅▇██▆▂█▇▇█▃▃▃▃█▃▂▂"
+    },
+    "look": {
+      "medianFill": 26,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 4,
+      "perMinute": 16
+    }
+  },
+  "session": {
+    "events": 151,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 8,
+      "command_execution": 74,
+      "todo_list": 6,
+      "reasoning": 45
+    },
+    "turns": 1,
+    "inputTokens": 4205602,
+    "outputTokens": 34387,
+    "cachedInputTokens": 3845504,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\n15-second vertical film: a dot-city becomes a river of light, with giant counters, chart proof, and a 7.25× takeaway.\nOriginal synthesized music drops as 87,000 lands; delivered in 1080×1920 at 60fps, H.264 + AAC."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 4522,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 1
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

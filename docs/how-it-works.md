@@ -12,7 +12,7 @@ Because no frame depends on any other, frames can be rendered in parallel, out o
 flowchart LR
   A[Prompt<br/>"go all out"] --> B[Brief<br/>concept · style bible · shot list]
   B --> C[inspire.mjs<br/>3 creative directions]
-  C --> D[Atlas<br/>251 tested techniques]
+  C --> D[Atlas<br/>256 tested techniques]
   D --> E[video.html + audio.mjs<br/>one shared cue timeline]
   E --> F[render.mjs<br/>parallel headless Chrome → ffmpeg]
   F --> G[QC gates<br/>energy · audio · craft · verify]
@@ -28,16 +28,16 @@ flowchart LR
 | module | what it gives an agent |
 |---|---|
 | `Stage` | scene timeline with **32 GPU transitions**, per-scene look, global camera and overlay |
-| `Scene3D` | its own WebGL2 renderer: chrome, glass, floor reflections, depth of field, instancing, 3D text, night-city flights |
 | `Parts` | GPU particles (up to 50 000), **morphing** between text, logos, meshes and shapes |
 | `FX` | 25 shader backgrounds and 26 filters (ASCII, dither, stained glass, VHS, CRT, datamosh…) |
 | `Type`, `K.words` | kinetic typography; Persian/RTL shaped word-by-word, never per letter |
 | `Cine` | camera paths, beat punches, shake, handheld, speed ramps |
-| `MG` | the motion-graphics kit: a film as **data** — ten scene types, seven themes, 50 self-drawing icons, wipes, counters — scored from the same spec (`audio.mjs`); mirrors its layout for Persian/Arabic |
+| `MG` | the motion-graphics kit: a film as **data** — eleven scene types cut into one-idea shots, seven themes, 50 self-drawing icons, a carried object, travelling transitions, counters — scored from the same spec (`audio.mjs`); mirrors its layout for Persian/Arabic |
 | `synth.mjs` | drums, bass, pads, strings, keys, **santur, ney, tombak, daf**, risers, impacts, `groove()` presets, quarter-tone notes, ducking and mastering to −14 LUFS |
+| `Scene3D` | a WebGL2 renderer for the occasional 3D scene: chrome, glass, floor reflections, depth of field, 3D text |
 
 ### 2 · The knowledge — teaches *what is possible* and *when to use it*
-The **[atlas](atlas.md)** is 251 short recipes — use / how / avoid / pairs-with — most with code that is executed in CI so it never rots, plus a **[gallery](assets/gallery)** of contact sheets so an agent can *see* options before choosing. Families: type · 3D · particles · shaders · looks · camera · transitions · light · UI/data · graphic · logos · sound · ideas · editing · colour · styles · pipelines. 22 of the entries are complete *style systems* (palette, fonts, motion rules, grade, sound) — an agent picks one and commits, which is what stops films from looking like a pile of effects.
+The **[atlas](atlas.md)** is 256 short recipes — use / how / avoid / pairs-with — most with code that is executed in CI so it never rots, plus a **[gallery](assets/gallery)** of contact sheets so an agent can *see* options before choosing. Families: type · 3D · particles · shaders · looks · camera · transitions · light · UI/data · graphic · logos · sound · ideas · editing · colour · styles · pipelines. 22 of the entries are complete *style systems* (palette, fonts, motion rules, grade, sound) — an agent picks one and commits, which is what stops films from looking like a pile of effects.
 
 `inspire.mjs` turns any brief into three *different* creative directions: a concept device, a metaphor, a style system, a twist, ≥ 6 techniques from ≥ 4 families, a timeline skeleton and a sound plan.
 

@@ -282,3 +282,9 @@ tags: motion graphics stats numbers counter count up cards infographic kpi
 use: "8+ years · 120 projects · 14 awards", prices, percentages — numbers are the strongest thing a simple film can show (`stats` scene, `MG.stat`)
 how: ease the value with `outExpo` over ~1.4 s from the moment its card lands, set the suffix at half the size, tick sound while it counts and a chime when it lands (audio.mjs does this from the spec)
 avoid: numbers typed as text; counting longer than 1.8 s
+
+## mg-type-entrances — Four ways for a line to arrive
+tags: motion graphics type kinetic slide slam drop rise mask entrance title
+use: titles and big words where one entrance for every line looks like a template: `"styles": ["slideL", "slam"]` on a title scene, or `style` on `MG.mask`
+how: `rise` (default: slides up out of a mask), `slideL` / `slideR` (slides in from the line's own edge, skewed by its speed), `slam` (lands scaled up and tilted, settles with overshoot, no mask), `drop` (falls from above and settles); give the first line a quiet entrance and the last one the hit; one hit per scene
+avoid: slam on more than one line of a scene; two lines entering at the same delay with the same style

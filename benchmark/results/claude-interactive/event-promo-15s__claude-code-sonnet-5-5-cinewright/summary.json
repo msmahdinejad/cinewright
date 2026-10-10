@@ -7,10 +7,10 @@
   "label": "Claude Code (Sonnet 5.5) + Cinewright",
   "agent": "Claude Code, interactive session",
   "model": "claude-sonnet-5-5",
-  "skill": "2.2.0",
-  "date": "2026-10-09",
+  "skill": "2.3.0",
+  "date": "2026-10-10",
   "wallSeconds": null,
-  "note": "Interactive session with the motion kit (spec in video.html), brief, three written review rounds, determinism check, QC gate; about 45 minutes. Not blind.",
+  "note": "Interactive session with the motion kit (spec in video.html), a brief with a continuity table and a nine-shot list, three written review rounds, determinism check, QC gate. Not blind.",
   "video": {
     "ok": true,
     "duration": 15,
@@ -21,24 +21,24 @@
     "pixFmt": "yuv420p",
     "hasAudio": true,
     "audioCodec": "aac",
-    "sizeMB": 18.34,
+    "sizeMB": 18.61,
     "audio": {
-      "lufs": -13.9,
-      "lra": 2.3,
+      "lufs": -14,
+      "lra": 3.6,
       "truePeak": -1.4,
       "silentShare": 0
     },
     "energy": {
-      "median": 0.0084,
-      "mean": 0.0174,
-      "quietPct": 7,
-      "cuts": 5,
+      "median": 0.0145,
+      "mean": 0.0236,
+      "quietPct": 4,
+      "cuts": 3,
       "longestStatic": 0,
-      "curve": "▄▄▂▂▂▂█▃▃▂▂▂▂▁▂█▂█▂█▁█▄▃▂▁▁▅"
+      "curve": "▄▄▂▁█▃▁█▂▁█▂▃█▅▇█▂▇▃▂▁█▄▂▂▁▅"
     },
     "look": {
-      "medianFill": 53,
-      "emptyPct": 3,
+      "medianFill": 58,
+      "emptyPct": 0,
       "darkPct": 0
     },
     "scenes": {
@@ -49,7 +49,7 @@
   "session": null,
   "project": {
     "briefWritten": true,
-    "briefChars": 2859,
+    "briefChars": 5030,
     "reviewRounds": 3,
     "hasVideoHtml": true,
     "craft": {
@@ -58,6 +58,7 @@
     }
   },
   "files": {
-    "sheet": "sheet.jpg"
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
   }
 }

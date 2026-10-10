@@ -1,0 +1,91 @@
+{
+  "schema": 2,
+  "id": "variety-xhigh/app-explainer-pocketwise-20s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "app-explainer-pocketwise-20s",
+  "domain": "explainer",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-10",
+  "wallSeconds": 1494,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 20,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 3.2,
+    "audio": {
+      "lufs": -14.3,
+      "lra": 1.2,
+      "truePeak": -1.2,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0012,
+      "mean": 0.0089,
+      "quietPct": 65,
+      "cuts": 0,
+      "longestStatic": 5,
+      "curve": "▂▃▁▁▁▁▄█▃▂▁▁▁▁▁▁▁█▃▁▁▁▁▁▁▁▁▁▁█▃▁▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 15,
+      "emptyPct": 28,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 117,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 9,
+      "command_execution": 52,
+      "reasoning": 41,
+      "todo_list": 5
+    },
+    "turns": 1,
+    "inputTokens": 2342969,
+    "outputTokens": 43181,
+    "cachedInputTokens": 2222976,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n20-second, 1080p/60fps explainer with custom app UI, animated expense totals, and a polished Pocketwise finale.\nOriginal electronic music and synchronized UI sound design; entirely code-created visuals, delivered as H.264/AAC."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

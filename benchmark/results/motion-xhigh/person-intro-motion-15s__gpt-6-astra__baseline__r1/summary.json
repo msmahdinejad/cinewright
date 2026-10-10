@@ -1,0 +1,99 @@
+{
+  "schema": 2,
+  "id": "motion-xhigh/person-intro-motion-15s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "person-intro-motion-15s",
+  "domain": "motion graphics",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-09",
+  "wallSeconds": 3676,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 2,
+  "transportFailures": [
+    {
+      "attempt": 1,
+      "seconds": 1049,
+      "error": "stream disconnected before completion: Transport error: network error: error decoding response body"
+    }
+  ],
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 15,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 6.84,
+    "audio": {
+      "lufs": -14.2,
+      "lra": 0.5,
+      "truePeak": -3.3,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0028,
+      "mean": 0.0225,
+      "quietPct": 54,
+      "cuts": 2,
+      "longestStatic": 2,
+      "curve": "█▂▁▁▁▁█▂▁▁▁█▅▁▁▁██▁▁▁▁█▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 12,
+      "emptyPct": 10,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 165,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 6,
+      "command_execution": 90,
+      "reasoning": 32,
+      "todo_list": 5,
+      "mcp_tool_call": 6
+    },
+    "turns": 1,
+    "inputTokens": 2928655,
+    "outputTokens": 31221,
+    "cachedInputTokens": 2690688,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n15-second, 1080p60 intro with kinetic typography, a rotating 3D sculpture, traveling transitions, and Maya’s complete profile.\nOriginal 128-BPM music and synchronized sound design; entirely code-generated, verified H.264 video with stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

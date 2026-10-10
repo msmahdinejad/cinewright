@@ -4,6 +4,42 @@ All notable changes to this project are documented here. Format: [Keep a Changel
 
 ## [Unreleased]
 
+## [2.3.0] — 2026-10-10
+
+The "motion design, not slides" release. The project owner's verdict on the first everyday benchmark was: *better, but still a slideshow — it does not look like real motion graphics.* Looking at the frames showed why. Even with whips and a carried object, every preset was five slides — a heading above three cards, three seconds each — and an agent told to "go all out" walked past the kit and hand-built the same five chapters. This release fixes the structure, not just the transitions.
+
+### Added
+- **Shots, not slides.** A new `hit` scene — ONE idea filling the frame: a colour flood, a statement that lands (slam / slide / rise), a ghost copy of it drifting behind, tone-on-tone decoration, an icon disc or the carried object. `fact` gained a mirrored layout, a word or phrase instead of a number, and fitted text. One-idea scenes (`hit`, `fact`, `logo`) compress their entrances to the shot length (`MG.shotK`; `audio.mjs` applies the same factor), so a one-second shot is a real shot.
+- **A continuity system.** `spec.carry` — one object that lives above the scenes and travels, resizes, recolours and changes content from shot to shot (it stretches along its path, breathes on the beat and recolours itself when it would vanish into a flood of its own colour); five travelling transitions — `whip`, `push`, `zoom`, `iris` (opens from the carried object), `blinds` — and `cut` (a punch-in on the beat); per-move bezier curves (`MG.ease`); type entrance styles (`slideL`, `slideR`, `slam`, `drop`); a camera that breathes through every shot.
+- **`references/anti-slideshow.md`** — what separates motion design from animated slides (§0 *Shots, not slides*, continuity, curves, type, rhythm) with a checklist for polish round A — and four atlas recipes (256 entries): `mg-hit-shots`, `mg-travel-transitions`, `mg-carry-object`, `mg-type-entrances`.
+- **`qc craft` checks** for the things that made films read as slides: shots per second (from the brief's shot table and from the motion spec), rows of cards (`chips`/`stats`/`list`), travelling transitions, a carried object, a *Continuity* table in `brief.md`; `Pacing: <why>` declares a deliberately slow film.
+- **Genre playbooks — `references/genres.md`.** Every kind of film fails in its own way (a landscape as flat clip art, a title sequence as static credit cards, a data story as a dashboard), so each genre — vertical data story, title sequence, ambient / loop, app explainer, logo sting, kinetic type, music visualizer, product reveal — gets its structure, its look, its failure modes, its sound and the atlas ids to start from. SKILL.md's route table and the protocol send every non-intro brief there first; `inspire.mjs` names the genre, points to its playbook and suggests the right template.
+- **`light-dusk-landscape`** — a tested atlas recipe for an ambient landscape with real depth: aerial perspective over six ridges, mist in every valley, a warm horizon, an aurora curtain, a rising moon with a halo, blinking fireflies, a slow crane (256 entries).
+- **`qc.mjs loop`** — checks that a looping film has no visible seam (the jump from the last frame to the first against a normal frame-to-frame change).
+- `benchmark/suite/variety.json` — the third pass: four kinds of film that are not intros (a vertical data story, a prestige title sequence, an ambient landscape with no text, an app explainer), both conditions, identical prompts.
+- `benchmark/suite/motion.json` — the four everyday prompts plus one sentence asking for real motion design, given identically to both conditions (the second pass). The report has a section for it; the first pass stays below it, and the earlier attempt with the intermediate skill is archived in `benchmark/archive/motion-v2/`.
+
+### Changed
+- **All five presets are re-cut into 7–10 one-idea shots** (a person intro: title · three skills · three numbers · quote · handle) with a carried object and a different travelling transition at every boundary; the score has an arc (films of 12 s or more start with pads and keys, the groove drops in at ~4 s on a riser: loudness range 1.5 → 3.6 LU on the event promo).
+- **Routing.** SKILL.md opens with a *route first* table: everyday motion graphics — "go all out" included — start from the motion kit; the hand-built engines (`cinema`, `showreel`, `basic`) are for what the kit cannot draw. `inspire.mjs` says the same for such briefs and cuts its timeline skeleton into ~1.7-second shots (it used to tell every brief, a person intro included, to fork `--template cinema`); the protocol's scaffold step names the motion template; the scaffold prints the shot rhythm of the preset.
+- **The website and README stop showcasing 3D.** The 3D reel and the vase clip are gone, the hero cards and the engine card show the re-cut presets, and the proof tabs show the second pass (the first pass is in the report). *Frame Summit 2026* and the Persian person intro were rebuilt from the new presets.
+- **Website:** the *Made with it* lightbox fits the whole film in the window (its width follows the film's aspect ratio and the height left after the caption), so a vertical film no longer needs scrolling; the proof tabs are grouped (everyday motion graphics · other kinds of film · the showreel), and so is the README proof.
+- `benchmark/run.mjs` also treats a transport error that leaves a half-written `final.mp4` behind as a dropped connection (it used to count it as a result).
+
+### Benchmark — second everyday pass (Codex · gpt-6-astra · xhigh, one run per cell; [details](docs/benchmark.md))
+- **Introduce a person:** frame fill 12 → 25 %, near-static 54 → 0 %, at 3.4× the tokens and 1.1× the time — five handsome chapters became ten one-idea shots.
+- **Animated infographic:** frame fill 12 → 22 %, near-static 57 → 5 %, 4.4× the tokens, 0.6× the time (23 vs 38 min).
+- **YouTube channel intro:** frame fill 16 → 31 %, near-static 36 → 14 %, 1.4× the time. **A loss:** the no-skill sting has the wider loudness range (4.1 vs 1.1 LU).
+- **Vertical social promo:** a draw — unaided, Codex already makes a very good poster promo (frame fill 35 vs 33 %, neither film is ever static); the skill run took half the time (17 vs 34 min) at 5.6× the tokens.
+- In all four with-skill runs Codex forked the motion kit as a film grammar and added drawings of its own as custom scenes (a phone with a badge, illustrated cups, a pixel P in a tunnel of squares, sleep icons that turn into each other). The metrics check motion and sound hygiene, not beauty — watch the films.
+
+### Benchmark — other kinds of film (third pass; Codex · gpt-6-astra · xhigh, one run per cell)
+- **Title sequence:** the clearest gain — quiet vignettes with credits on cards (59 % static frames) became moving graphic shots that one red clock hand runs through into the title (9 % static, frame fill 21 → 38 %), at 3.6× the tokens and 2.5× the time.
+- **App explainer:** a tidy four-section product page (65 % static) became a story in shots (16 % static, frame fill 15 → 48 %), at 3.8× the tokens and 2.3× the time.
+- **Vertical data story:** close — both turn a grid of dots into a river of light; the skill film is more readable on a phone and never static (0 vs 14 %), the baseline has finer detail; 3.4× the tokens, 2× the time.
+- **Ambient landscape:** a draw — both ray-march a real 3D valley with a seamless loop; the skill film has more depth (frame fill 35 → 46 %), the baseline the bolder aurora and a 4K render; 1.3× the tokens, slightly less time.
+- The new with-skill title sequence and landscape replaced the older showcase films of those genres in *Made with it*; the older data story and app explainer are still at least as good and stayed.
+
 ## [2.2.0] — 2026-10-09
 
 The "show, don't tell" release: the proof is now films you can watch with sound, each agent compared with itself — and the skill learns the thing people ask for most, **simple, good-looking motion graphics** (a person intro, a channel intro, a promo, an infographic).

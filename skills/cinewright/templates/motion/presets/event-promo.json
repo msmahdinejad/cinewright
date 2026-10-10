@@ -1,10 +1,22 @@
 {
-  "bpm": 120, "duration": 15, "mood": "upbeat", "wipe": "diagonal",
+  "bpm": 120, "duration": 15, "mood": "upbeat", "transition": "whip",
   "theme": { "preset": "studio", "head": "grotesk" },
+  "carry": { "fill": "a", "fill2": "c", "keys": [
+    { "at": 0.15, "dur": 0.9, "x": 0.75, "y": 0.5, "size": 0.46, "icon": "calendar" },
+    { "at": 2.2, "dur": 0.6, "x": 0.2227, "y": 0.5, "size": 0.5, "icon": "mic", "fill": "a", "fill2": "c" },
+    { "at": 3.75, "dur": 0.5, "x": 0.7773, "y": 0.5, "size": 0.5, "icon": "code", "fill": "b", "fill2": "d" },
+    { "at": 5.25, "dur": 0.5, "x": 0.2227, "y": 0.5, "size": 0.5, "icon": "pen", "fill": "c", "fill2": "a" },
+    { "at": 6.7, "dur": 0.6, "x": 0.93, "y": 0.13, "size": 0.085, "icon": "calendar", "fill": "b", "fill2": "b" },
+    { "at": 9.75, "dur": 0.5, "x": 0.93, "y": 0.13, "size": 0.085, "icon": "calendar", "fill": "a", "fill2": "c" },
+    { "at": 11.7, "dur": 0.85, "x": 0.5, "y": 0.56, "w": 0.96, "h": 0.17, "text": "makersummit.io", "ts": 0.11, "fill": "a", "fill2": "c" }
+  ] },
   "scenes": [
-    { "type": "title", "at": 0, "kicker": "SAVE THE DATE", "lines": ["Maker", "Summit"], "sub": "Nov 5–7 · Vienna", "icon": "calendar", "badges": ["pen", "code", "mic"], "bg": "dots" },
-    { "type": "list", "at": 3, "kicker": "SPEAKERS", "title": "Meet the makers", "items": [ { "label": "Lena Hart", "value": "Fri 10:00", "icon": "mic", "note": "Designing in the open" }, { "label": "Omar Reyes", "value": "Fri 14:30", "icon": "code", "note": "Tiny tools, big teams" }, { "label": "Ines Duval", "value": "Sat 11:00", "icon": "pen", "note": "Drawing with code" } ], "wipe": "stripes", "bg": "blobs" },
-    { "type": "words", "at": 8, "words": ["3 days.", "40 talks.", "1 city."], "step": 1, "wipe": "circle" },
-    { "type": "cta", "at": 11.5, "line": "Be there in November", "handle": "makersummit.io", "button": "Get tickets", "wipe": "flood", "bg": "blobs" }
+    { "type": "title", "at": 0, "kicker": "SAVE THE DATE", "lines": ["Maker", "Summit"], "styles": ["slideL", "slam"], "sub": "Nov 5–7 · Vienna", "art": true, "bg": "dots" },
+    { "type": "hit", "at": 2.5, "text": "Lena Hart", "sub": "Designing in the open · Fri 10:00", "carried": true, "color": "b", "layout": "right", "transition": "iris", "transitionDur": 0.6 },
+    { "type": "hit", "at": 4, "text": "Omar Reyes", "sub": "Tiny tools, big teams · Fri 14:30", "carried": true, "color": "c", "layout": "left", "transition": "whip", "transitionDur": 0.5 },
+    { "type": "hit", "at": 5.5, "text": "Ines Duval", "sub": "Drawing with code · Sat 11:00", "carried": true, "color": "a", "layout": "right", "transition": "zoom", "transitionDur": 0.5 },
+    { "type": "words", "at": 7, "words": ["3 days.", "40 talks.", "1 city."], "step": 1, "transition": "cut" },
+    { "type": "hit", "at": 10, "text": "Nov 5–7", "sub": "Vienna", "color": "d", "layout": "left", "icon": "pin", "transition": "blinds", "transitionDur": 0.55 },
+    { "type": "cta", "at": 12, "line": "Be there in November", "handle": false, "button": "Get tickets", "transition": "zoom", "transitionDur": 0.7, "bg": "blobs" }
   ]
 }

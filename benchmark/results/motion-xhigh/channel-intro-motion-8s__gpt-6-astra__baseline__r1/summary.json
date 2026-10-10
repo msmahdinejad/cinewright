@@ -1,0 +1,91 @@
+{
+  "schema": 2,
+  "id": "motion-xhigh/channel-intro-motion-8s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "channel-intro-motion-8s",
+  "domain": "motion graphics",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-09",
+  "wallSeconds": 1313,
+  "exitCode": 1,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 8,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 4.8,
+    "audio": {
+      "lufs": -13.9,
+      "lra": 4.1,
+      "truePeak": -1.2,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0181,
+      "mean": 0.0411,
+      "quietPct": 36,
+      "cuts": 3,
+      "longestStatic": 2.5,
+      "curve": "▄▅▂███▃█▄▁▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 16,
+      "emptyPct": 6,
+      "darkPct": 6
+    },
+    "scenes": {
+      "changes": 2,
+      "perMinute": 15
+    }
+  },
+  "session": {
+    "events": 76,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 4,
+      "command_execution": 28,
+      "reasoning": 23,
+      "todo_list": 4
+    },
+    "turns": 0,
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "cachedInputTokens": 0,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "Frames look clean. Rendering 1080p60 with the finished soundtrack.\n"
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

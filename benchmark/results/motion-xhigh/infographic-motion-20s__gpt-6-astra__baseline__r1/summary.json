@@ -1,0 +1,99 @@
+{
+  "schema": 2,
+  "id": "motion-xhigh/infographic-motion-20s__gpt-6-astra__baseline__r1",
+  "kind": "run",
+  "task": "infographic-motion-20s",
+  "domain": "explainer",
+  "condition": "baseline",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra, no skill",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "none",
+  "date": "2026-10-09",
+  "wallSeconds": 2286,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 2,
+  "transportFailures": [
+    {
+      "attempt": 1,
+      "seconds": 709,
+      "error": "stream disconnected before completion: Transport error: network error: error decoding response body"
+    }
+  ],
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 20,
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 5.04,
+    "audio": {
+      "lufs": -15,
+      "lra": 0.9,
+      "truePeak": -1.1,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0017,
+      "mean": 0.0167,
+      "quietPct": 57,
+      "cuts": 3,
+      "longestStatic": 2.5,
+      "curve": "▆▂▁▁▅█▂▁▁▁▁▁██▂▁▁▁▁▃█▂▁▁▁▁▁█▃▁▁█▂▁▁▁▁"
+    },
+    "look": {
+      "medianFill": 12,
+      "emptyPct": 20,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 113,
+    "itemTypes": {
+      "error": 1,
+      "agent_message": 11,
+      "command_execution": 40,
+      "reasoning": 40,
+      "todo_list": 5,
+      "web_search": 2
+    },
+    "turns": 1,
+    "inputTokens": 1604101,
+    "outputTokens": 43173,
+    "cachedInputTokens": 1449600,
+    "imageViews": 0,
+    "touchedSkill": false,
+    "usedAtlas": false,
+    "usedInspire": false,
+    "finalMessage": "`./final.mp4`\n\n20-second, 1080p/60fps explainer with morphing icons, counting statistics, kinetic typography, and beat-synced camera moves.\nOriginal synthesized music and sound design; verified H.264 video with stereo AAC audio."
+  },
+  "project": {
+    "briefWritten": false,
+    "briefChars": 0,
+    "reviewRounds": 0,
+    "hasVideoHtml": false,
+    "craft": null
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": false,
+    "touchedSkill": false,
+    "contaminated": false
+  }
+}

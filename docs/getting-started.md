@@ -97,7 +97,7 @@ node tools/render.mjs serve          # live preview with audio in your browser
 Explore the atlas from your terminal:
 
 ```bash
-node skills/cinewright/scripts/atlas.mjs search liquid chrome 3d text
+node skills/cinewright/scripts/atlas.mjs search carry transition whip
 node skills/cinewright/scripts/atlas.mjs clip logo-shatter-in --gif       # render a technique as real motion
 node skills/cinewright/scripts/inspire.mjs --brief "a 20 s teaser for a translation app"
 ```

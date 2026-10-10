@@ -65,3 +65,5 @@ creative engine (also from inside the project):
   node tools/inspire.mjs --brief "…"     # three creative directions for a brief
   node tools/atlas.mjs search <words>    # 250+ tested techniques; show <id> · sheet <ids> to SEE them     (skill folder: ${SKILL})
   API on one page: ${path.join(SKILL, 'references', 'engine.md')}    process: ${path.join(SKILL, 'references', 'protocol.md')}`);
+if (preset?.scenes) console.log(`
+this film is cut into ${preset.scenes.reduce((n, x) => n + (x.type === 'words' ? (x.words || []).length : 1), 0)} shots in ${preset.duration} s (video.html → <script id="cues">): one idea per shot, a carried object, travelling transitions. Replace the copy and keep that rhythm — a heading above three cards is a slide, give each item its own shot (hit / fact / words). Fields and recipes: ${path.join(SKILL, 'references', 'motion-graphics.md')}`);

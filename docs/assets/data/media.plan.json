@@ -28,60 +28,47 @@
     {
       "id": "herocard-a",
       "section": "herocard",
-      "src": "reel-hero-a",
+      "src": "reel-motion-a",
       "encode": {
         "w": 960,
         "crf": 23,
-        "audio": false
+        "audio": false,
+        "from": 2.5,
+        "dur": 9
       },
       "poster": 1.5
     },
     {
       "id": "herocard-b",
       "section": "herocard",
-      "src": "reel-hero-b",
+      "src": "reel-motion-engine",
       "encode": {
         "w": 960,
         "crf": 23,
-        "audio": false
+        "audio": false,
+        "from": 2.8,
+        "dur": 14
       },
-      "poster": 1.5
+      "poster": 1.2
     },
     {
       "id": "engine",
       "section": "engine",
-      "src": "reel-engine",
+      "src": "reel-motion-b",
       "encode": {
         "w": 960,
         "crf": 23,
-        "audio": false
+        "audio": false,
+        "from": 0,
+        "dur": 8
       },
-      "poster": 1.5
+      "poster": 2.4
     },
     {
       "id": "reel-type",
       "section": "reel",
       "family": "type",
       "src": "reel-type",
-      "encode": {
-        "w": 960,
-        "crf": 24,
-        "audio": false
-      },
-      "poster": 1.5,
-      "readme": {
-        "from": 0,
-        "dur": 6,
-        "w": 440,
-        "fps": 12,
-        "q": 62
-      }
-    },
-    {
-      "id": "reel-3d",
-      "section": "reel",
-      "family": "three-d",
-      "src": "reel-3d",
       "encode": {
         "w": 960,
         "crf": 24,
@@ -374,21 +361,21 @@
       }
     },
     {
-      "id": "cmp-person-baseline",
+      "id": "cmp-person-motion-baseline",
       "section": "compare",
-      "task": "person-intro-15s",
+      "task": "person-intro-motion-15s",
       "pair": "codex-gpt-6-astra",
       "side": "without",
-      "src": "person-intro-15s__codex-gpt-6-astra__baseline",
-      "from": "run:simple-xhigh/person-intro-15s__gpt-6-astra__baseline__r1",
-      "metrics": "simple-xhigh/person-intro-15s__gpt-6-astra__baseline__r1",
+      "src": "person-intro-motion-15s__codex-gpt-6-astra__baseline",
+      "from": "run:motion-xhigh/person-intro-motion-15s__gpt-6-astra__baseline__r1",
+      "metrics": "motion-xhigh/person-intro-motion-15s__gpt-6-astra__baseline__r1",
       "agent": "Codex · gpt-6-astra · xhigh",
       "agentFamily": "codex",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 2.0,
+      "poster": 2,
       "readme": {
         "from": 0,
         "dur": 15,
@@ -397,26 +384,26 @@
         "q": 62
       },
       "alt": {
-        "en": "Codex without the skill: a cream-and-black editorial intro for Maya Chen with a purple 3D knot, a lime flash, three skill cards and a quote",
-        "fa": "Codex بدون اسکیل: اینترو ویراستاری کرم و مشکی برای مایا چن با گرهٔ سه‌بعدی بنفش، یک چشمک لیمویی، سه کارت مهارت و یک نقل‌قول"
+        "en": "Codex without the skill: a cream-and-black editorial intro for Maya Chen — a purple 3D ring, three skills as rows, three large numbers side by side and a quote",
+        "fa": "Codex بدون اسکیل: اینترو ویراستاری کرم و مشکی برای مایا چن — حلقهٔ سه‌بعدی بنفش، سه مهارت به‌صورت ردیف، سه عدد بزرگ کنار هم و یک نقل‌قول"
       }
     },
     {
-      "id": "cmp-person-skill",
+      "id": "cmp-person-motion-skill",
       "section": "compare",
-      "task": "person-intro-15s",
+      "task": "person-intro-motion-15s",
       "pair": "codex-gpt-6-astra",
       "side": "with",
-      "src": "person-intro-15s__codex-gpt-6-astra__skill",
-      "from": "run:simple-xhigh/person-intro-15s__gpt-6-astra__skill__r1",
-      "metrics": "simple-xhigh/person-intro-15s__gpt-6-astra__skill__r1",
+      "src": "person-intro-motion-15s__codex-gpt-6-astra__skill",
+      "from": "run:motion-xhigh/person-intro-motion-15s__gpt-6-astra__skill__r1",
+      "metrics": "motion-xhigh/person-intro-motion-15s__gpt-6-astra__skill__r1",
       "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
       "agentFamily": "codex",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 2.0,
+      "poster": 4.2,
       "readme": {
         "from": 0,
         "dur": 15,
@@ -424,24 +411,24 @@
         "fps": 12,
         "q": 62
       },
-      "read": {
-        "en": "Unaided, Codex makes a tasteful editorial intro — a purple 3D knot, small type on cream and black, a lime flash — but 57 % of the film is near-static and the picture fills only 14 % of the frame. With the skill the same agent builds a bolder, fuller piece: electric-blue and lime blocks, a 3D cursor, interface rows with toggles and sliders, counting numbers, a highlighted quote (frame fill 50 %, nothing static), after writing a brief and three review rounds. The price: about 2.8× the tokens and 1.3× the time.",
-        "fa": "بدون اسکیل، Codex یک اینترو ویراستاری خوش‌سلیقه می‌سازد — گرهٔ سه‌بعدی بنفش، نوشتهٔ ریز روی کرم و مشکی، یک چشمک لیمویی — اما ۵۷٪ فیلم تقریباً ساکن است و تصویر فقط ۱۴٪ قاب را پر می‌کند. با اسکیل همان ایجنت اثری جسورتر و پُرتر می‌سازد: بلوک‌های آبی برقی و لیمویی، نشانگر سه‌بعدی، ردیف‌های رابط با کلید و اسلایدر، اعداد شمارشی، نقل‌قول هایلایت‌شده (پُری قاب ۵۰٪، بدون هیچ مکث ساکن) — بعد از نوشتن بریف و سه دور بازبینی. بهایش: حدود ۲٫۸ برابر توکن و ۱٫۳ برابر زمان."
-      },
       "alt": {
-        "en": "Codex with the skill: electric-blue, lime and black blocks — a 3D cursor, interface rows with toggles, counting numbers, a highlighted quote and the @mayachen card",
-        "fa": "Codex با اسکیل: بلوک‌های آبی برقی، لیمویی و مشکی — نشانگر سه‌بعدی، ردیف‌های رابط با کلید، اعداد شمارشی، نقل‌قول هایلایت‌شده و کارت @mayachen"
+        "en": "Codex with the skill: ten one-idea shots on colour blocks — the MC badge, “Senior product designer.”, one skill per shot, one counting number per shot, the quote and the @mayachen pill",
+        "fa": "Codex با اسکیل: ده شاتِ تک‌ایده‌ای روی بلوک‌های رنگی — نشان MC، «Senior product designer.»، هر مهارت در یک شات، هر عدد شمارشی در یک شات، نقل‌قول و پیل @mayachen"
+      },
+      "read": {
+        "en": "Asked for real motion design, Codex without the skill still builds five chapters — the name, a heading over three skills, three numbers side by side, a quote, the handle — handsome, with a purple 3D ring, but 54 % of the film is near-static and the picture fills 12 % of the frame. With the skill the same agent cuts it into ten one-idea shots joined by whips, an iris and a zoom, with one badge that travels from shot to shot (frame fill 25 %, nothing static), after a written brief, a continuity table and three review rounds. The price: 3.4× the tokens and 1.1× the time.",
+        "fa": "حتی وقتی موشن‌دیزاین واقعی خواسته می‌شود، Codex بدون اسکیل باز پنج «فصل» می‌سازد — نام، یک تیتر روی سه مهارت، سه عدد کنار هم، نقل‌قول، هندل — زیبا و با حلقهٔ سه‌بعدی بنفش، اما ۵۴٪ فیلم تقریباً ساکن است و تصویر فقط ۱۲٪ قاب را پر می‌کند. با اسکیل همان ایجنت آن را به ده شاتِ تک‌ایده‌ای می‌برد که با ویپ، آیریس و زوم به هم وصل‌اند و یک نشان از شات به شات سفر می‌کند (پُری قاب ۲۵٪، بدون هیچ مکث ساکن)، بعد از نوشتن بریف، جدول پیوستگی و سه دور بازبینی. بهایش: ۳٫۴ برابر توکن و ۱٫۱ برابر زمان."
       }
     },
     {
-      "id": "cmp-promo-baseline",
+      "id": "cmp-promo-motion-baseline",
       "section": "compare",
-      "task": "promo-vertical-12s",
+      "task": "promo-vertical-motion-12s",
       "pair": "codex-gpt-6-astra",
       "side": "without",
-      "src": "promo-vertical-12s__codex-gpt-6-astra__baseline",
-      "from": "run:simple-xhigh/promo-vertical-12s__gpt-6-astra__baseline__r1",
-      "metrics": "simple-xhigh/promo-vertical-12s__gpt-6-astra__baseline__r1",
+      "src": "promo-vertical-motion-12s__codex-gpt-6-astra__baseline",
+      "from": "run:motion-xhigh/promo-vertical-motion-12s__gpt-6-astra__baseline__r1",
+      "metrics": "motion-xhigh/promo-vertical-motion-12s__gpt-6-astra__baseline__r1",
       "agent": "Codex · gpt-6-astra · xhigh",
       "agentFamily": "codex",
       "encode": {
@@ -457,26 +444,26 @@
         "q": 62
       },
       "alt": {
-        "en": "Codex without the skill: an orange-and-yellow poster promo with illustrated cups, a price stamp per drink and a closing menu card",
-        "fa": "Codex بدون اسکیل: پرومو پوستری نارنجی و زرد با فنجان‌های تصویرسازی‌شده، مهر قیمت برای هر نوشیدنی و کارت پایانی منو"
+        "en": "Codex without the skill: an orange-and-cream poster promo — “Fall in love”, one illustrated cup and price stamp per drink, and a closing menu card",
+        "fa": "Codex بدون اسکیل: پرومو پوستری نارنجی و کرم — «عاشق پاییز شو»، برای هر نوشیدنی یک لیوان تصویرسازی‌شده با مهر قیمت، و کارت منوی پایانی"
       }
     },
     {
-      "id": "cmp-promo-skill",
+      "id": "cmp-promo-motion-skill",
       "section": "compare",
-      "task": "promo-vertical-12s",
+      "task": "promo-vertical-motion-12s",
       "pair": "codex-gpt-6-astra",
       "side": "with",
-      "src": "promo-vertical-12s__codex-gpt-6-astra__skill",
-      "from": "run:simple-xhigh/promo-vertical-12s__gpt-6-astra__skill__r1",
-      "metrics": "simple-xhigh/promo-vertical-12s__gpt-6-astra__skill__r1",
+      "src": "promo-vertical-motion-12s__codex-gpt-6-astra__skill",
+      "from": "run:motion-xhigh/promo-vertical-motion-12s__gpt-6-astra__skill__r1",
+      "metrics": "motion-xhigh/promo-vertical-motion-12s__gpt-6-astra__skill__r1",
       "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
       "agentFamily": "codex",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 3.2,
+      "poster": 3.4,
       "readme": {
         "from": 0,
         "dur": 12,
@@ -484,24 +471,24 @@
         "fps": 12,
         "q": 62
       },
-      "read": {
-        "en": "Both are tidy poster-style promos with hand-drawn cups and a price stamp per drink — unaided, Codex already lays out a strong vertical (frame fill 36 % vs 37 %). What differs is motion and process: without the skill 41 % of the film is near-static; with it nothing holds still, and the agent wrote a brief and three review rounds first. The mix stays modest in both (loudness range 0.4 vs 0.8 LU). Honest verdict: a draw on design, a win on motion, at about 3.6× the tokens and 1.7× the time.",
-        "fa": "هر دو پرومو در سبک پوستر با فنجان‌های دست‌کشیده و مهر قیمت برای هر نوشیدنی‌اند — Codex بدون اسکیل هم چیدمان عمودی خوبی می‌سازد (پُری قاب ۳۶٪ در برابر ۳۷٪). تفاوت در حرکت و فرایند است: بدون اسکیل ۴۱٪ فیلم تقریباً ساکن است؛ با اسکیل هیچ لحظه‌ای ساکن نیست و ایجنت اول بریف و سه دور بازبینی نوشته است. میکس در هر دو متواضع می‌ماند (دامنهٔ بلندی ۰٫۴ در برابر ۰٫۸). قضاوت صادقانه: در طراحی مساوی، در حرکت برنده — با حدود ۳٫۶ برابر توکن و ۱٫۷ برابر زمان."
-      },
       "alt": {
-        "en": "Codex with the skill: red, mustard and green poster cards with illustrated cups, price stamps and a closing “Fall for your next cup” card",
-        "fa": "Codex با اسکیل: کارت‌های پوستری قرمز، خردلی و سبز با فنجان‌های تصویرسازی‌شده، مهر قیمت و کارت پایانی «Fall for your next cup»"
+        "en": "Codex with the skill: cream, red, mustard and green poster shots — BREW & CO., “Autumn is here.”, one illustrated cup and price stamp per drink, three cups together and “Open daily 7–19 · Main Street”",
+        "fa": "Codex با اسکیل: شات‌های پوستری کرم، قرمز، خردلی و سبز — BREW & CO.، «Autumn is here.»، برای هر نوشیدنی یک لیوان تصویرسازی‌شده با مهر قیمت، سه لیوان کنار هم و «Open daily 7–19 · Main Street»"
+      },
+      "read": {
+        "en": "Unaided, Codex already makes a very good vertical poster promo — hand-drawn cups, a price stamp per drink, a whip between each of five shots — so the metrics are a draw (frame fill 35 vs 33 %, neither film is ever static; the unaided mix is louder, the skill mix sits on the −14 LUFS target). The skill film is cut into eight shots with a carried bean badge, comes with a written brief and three review rounds, and took half the wall-clock time (17 vs 34 minutes) — at 5.6× the tokens.",
+        "fa": "بدون اسکیل، Codex خودش هم یک پرومو پوستری عمودی خیلی خوب می‌سازد — لیوان‌های دست‌کشیده، مهر قیمت برای هر نوشیدنی، ویپ بین پنج شات — برای همین معیارها مساوی است (پُری قاب ۳۵ در برابر ۳۳٪، هیچ‌کدام هرگز ساکن نیست؛ میکس بدون اسکیل بلندتر است و میکس اسکیل روی هدف ‎−۱۴ LUFS می‌نشیند). فیلم با اسکیل در هشت شات بریده شده با یک نشان دانهٔ قهوهٔ حامل، با بریف نوشته‌شده و سه دور بازبینی، و نصف زمانِ دیوار طول کشید (۱۷ در برابر ۳۴ دقیقه) — با ۵٫۶ برابر توکن."
       }
     },
     {
-      "id": "cmp-channel-baseline",
+      "id": "cmp-channel-motion-baseline",
       "section": "compare",
-      "task": "channel-intro-8s",
+      "task": "channel-intro-motion-8s",
       "pair": "codex-gpt-6-astra",
       "side": "without",
-      "src": "channel-intro-8s__codex-gpt-6-astra__baseline",
-      "from": "run:simple-xhigh/channel-intro-8s__gpt-6-astra__baseline__r1",
-      "metrics": "simple-xhigh/channel-intro-8s__gpt-6-astra__baseline__r1",
+      "src": "channel-intro-motion-8s__codex-gpt-6-astra__baseline",
+      "from": "run:motion-xhigh/channel-intro-motion-8s__gpt-6-astra__baseline__r1",
+      "metrics": "motion-xhigh/channel-intro-motion-8s__gpt-6-astra__baseline__r1",
       "agent": "Codex · gpt-6-astra · xhigh",
       "agentFamily": "codex",
       "encode": {
@@ -517,26 +504,26 @@
         "q": 62
       },
       "alt": {
-        "en": "Codex without the skill: a dark navy intro where a pixel “P” builds itself from lime squares, then lime and violet name cards and the Pixel Pulse lock-up",
-        "fa": "Codex بدون اسکیل: اینترو سرمه‌ای تیره که «P» پیکسلی از مربع‌های لیمویی ساخته می‌شود، بعد کارت‌های نام لیمویی و بنفش و قفل‌شدن Pixel Pulse"
+        "en": "Codex without the skill: lit pixel cubes assemble into a P, the camera dives into giant PIXEL type on lime, PULSE on purple, then the PIXEL PULSE lockup",
+        "fa": "Codex بدون اسکیل: مکعب‌های پیکسلیِ نورخورده به یک P تبدیل می‌شوند، دوربین در تایپ غول‌پیکر PIXEL روی لیمویی فرو می‌رود، PULSE روی بنفش، و بعد لوگوی PIXEL PULSE"
       }
     },
     {
-      "id": "cmp-channel-skill",
+      "id": "cmp-channel-motion-skill",
       "section": "compare",
-      "task": "channel-intro-8s",
+      "task": "channel-intro-motion-8s",
       "pair": "codex-gpt-6-astra",
       "side": "with",
-      "src": "channel-intro-8s__codex-gpt-6-astra__skill",
-      "from": "run:simple-xhigh/channel-intro-8s__gpt-6-astra__skill__r1",
-      "metrics": "simple-xhigh/channel-intro-8s__gpt-6-astra__skill__r1",
+      "src": "channel-intro-motion-8s__codex-gpt-6-astra__skill",
+      "from": "run:motion-xhigh/channel-intro-motion-8s__gpt-6-astra__skill__r1",
+      "metrics": "motion-xhigh/channel-intro-motion-8s__gpt-6-astra__skill__r1",
       "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
       "agentFamily": "codex",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 2.0,
+      "poster": 2,
       "readme": {
         "from": 0,
         "dur": 8,
@@ -545,23 +532,23 @@
         "q": 62
       },
       "alt": {
-        "en": "Codex with the skill: a “P” built from lit 3D cubes on violet, colour-flood name reveals, a heartbeat line and the Pixel Pulse lock-up",
-        "fa": "Codex با اسکیل: «P» ساخته‌شده از مکعب‌های سه‌بعدیِ نوردار روی بنفش، رونمایی نام با سیل رنگ، خط ضربان و قفل‌شدن Pixel Pulse"
+        "en": "Codex with the skill: a tunnel of concentric squares, pixel cubes that build a P with a pulse line, a whip to PIXEL on lime, PULSE on indigo, then the PIXEL PULSE lockup with its tagline",
+        "fa": "Codex با اسکیل: تونلی از مربع‌های هم‌مرکز، مکعب‌های پیکسلی که یک P با خط ضربان می‌سازند، ویپ به PIXEL روی لیمویی، PULSE روی نیلی، و بعد لوگوی PIXEL PULSE با شعارش"
       },
       "read": {
-        "en": "Both build a pixel “P” for Pixel Pulse. Unaided, Codex makes a tidy flat version — squares on a dark field — with 57 % of the film near-static and only 9 % of the frame filled. With the skill the same agent builds the mark from lit 3D cubes, adds colour-flood name reveals and a heartbeat line, and keeps moving throughout (near-static 14 %, frame fill 31 %), after a brief and three review rounds. One honest loss: the no-skill sting has the wider loudness range (7 vs 0.7 LU — a quiet start and a big hit); the skill version’s mix is flatter. The price: about 5.1× the tokens and 1.7× the time.",
-        "fa": "هر دو برای Pixel Pulse یک «P» پیکسلی می‌سازند. بدون اسکیل، Codex نسخهٔ تخت و مرتبی می‌سازد — مربع‌ها روی زمینهٔ تیره — با ۵۷٪ زمان تقریباً ساکن و فقط ۹٪ پُری قاب. با اسکیل همان ایجنت نشان را از مکعب‌های سه‌بعدیِ نوردار می‌سازد، رونمایی نام با سیل رنگ و خط ضربان اضافه می‌کند و همیشه در حرکت می‌ماند (زمان ساکن ۱۴٪، پُری قاب ۳۱٪)، بعد از بریف و سه دور بازبینی. یک باخت صادقانه: استینگِ بدون اسکیل دامنهٔ بلندی بیشتری دارد (۷ در برابر ۰٫۷ — شروع آرام و یک ضربهٔ بزرگ)؛ میکس نسخهٔ با اسکیل یکنواخت‌تر است. بها: حدود ۵٫۱ برابر توکن و ۱٫۷ برابر زمان."
+        "en": "This is the pair where the unaided agent does best on the idea: lit 3D pixel cubes build the P, the camera dives into the type, a lockup closes it — and its sting has the wider loudness range (4.1 vs 1.1 LU: a quiet start and one big hit), which the skill film loses. With the skill the film has more going on in every frame — a tunnel of squares, a P that travels from shot to shot, whips with motion blur between seven shots (frame fill 31 vs 16 %, near-static 14 vs 36 %) — plus a written brief and three review rounds. The price: 1.4× the time.",
+        "fa": "این همان جفتی است که ایجنتِ بدون اسکیل در «ایده» بهترین کارش را می‌کند: مکعب‌های پیکسلیِ سه‌بعدی P را می‌سازند، دوربین در تایپ فرو می‌رود، لوگو فیلم را می‌بندد — و استینگ آن گسترهٔ بلندیِ صدای بیشتری دارد (۴٫۱ در برابر ۱٫۱ LU: شروع آرام و یک ضربهٔ بزرگ)، که فیلم با اسکیل در آن می‌بازد. با اسکیل فیلم در هر قاب اتفاق بیشتری دارد — تونلی از مربع‌ها، P ای که از شات به شات سفر می‌کند، ویپ با موشن‌بلر بین هفت شات (پُری قاب ۳۱ در برابر ۱۶٪، زمان تقریباً ساکن ۱۴ در برابر ۳۶٪) — به‌علاوهٔ بریف نوشته‌شده و سه دور بازبینی. بهایش: ۱٫۴ برابر زمان."
       }
     },
     {
-      "id": "cmp-infographic-baseline",
+      "id": "cmp-infographic-motion-baseline",
       "section": "compare",
-      "task": "infographic-20s",
+      "task": "infographic-motion-20s",
       "pair": "codex-gpt-6-astra",
       "side": "without",
-      "src": "infographic-20s__codex-gpt-6-astra__baseline",
-      "from": "run:simple-xhigh/infographic-20s__gpt-6-astra__baseline__r1",
-      "metrics": "simple-xhigh/infographic-20s__gpt-6-astra__baseline__r1",
+      "src": "infographic-motion-20s__codex-gpt-6-astra__baseline",
+      "from": "run:motion-xhigh/infographic-motion-20s__gpt-6-astra__baseline__r1",
+      "metrics": "motion-xhigh/infographic-motion-20s__gpt-6-astra__baseline__r1",
       "agent": "Codex · gpt-6-astra · xhigh",
       "agentFamily": "codex",
       "encode": {
@@ -577,26 +564,26 @@
         "q": 62
       },
       "alt": {
-        "en": "Codex without the skill: a dark navy explainer with a lime moon, a brain, a clock and card-style facts",
-        "fa": "Codex بدون اسکیل: اکسپلینر سرمه‌ای تیره با ماه و مغز و ساعتِ لیمویی و واقعیت‌هایی در قالب کارت"
+        "en": "Codex without the skill: a navy explainer — a lime moon, “Adults need 7–9 hours”, an orange brain with “−33 %”, a clock on lilac and a closing “Sleep is a superpower”",
+        "fa": "Codex بدون اسکیل: توضیح‌ویدیوی سرمه‌ای — ماه لیمویی، «بزرگسالان ۷ تا ۹ ساعت لازم دارند»، مغز نارنجی با «‎−۳۳٪»، ساعتی روی زمینهٔ یاسی و جملهٔ پایانی «خواب یک ابرقدرت است»"
       }
     },
     {
-      "id": "cmp-infographic-skill",
+      "id": "cmp-infographic-motion-skill",
       "section": "compare",
-      "task": "infographic-20s",
+      "task": "infographic-motion-20s",
       "pair": "codex-gpt-6-astra",
       "side": "with",
-      "src": "infographic-20s__codex-gpt-6-astra__skill",
-      "from": "run:simple-xhigh/infographic-20s__gpt-6-astra__skill__r1",
-      "metrics": "simple-xhigh/infographic-20s__gpt-6-astra__skill__r1",
+      "src": "infographic-motion-20s__codex-gpt-6-astra__skill",
+      "from": "run:motion-xhigh/infographic-motion-20s__gpt-6-astra__skill__r1",
+      "metrics": "motion-xhigh/infographic-motion-20s__gpt-6-astra__skill__r1",
       "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
       "agentFamily": "codex",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 6.0,
+      "poster": 7.6,
       "readme": {
         "from": 0,
         "dur": 20,
@@ -605,12 +592,252 @@
         "q": 62
       },
       "alt": {
-        "en": "Codex with the skill: a bold poster-style explainer in cream, lilac, navy and lime with illustrated moon, brain and clock characters",
-        "fa": "Codex با اسکیل: اکسپلینر جسور در سبک پوستر با رنگ‌های کرم، یاسی، سرمه‌ای و لیمویی و شخصیت‌های تصویرسازی‌شدهٔ ماه، مغز و ساعت"
+        "en": "Codex with the skill: eleven shots on navy, lilac, yellow and coral — one icon that turns from moon to clock, brain and smiley, a ring counting up to ≈33 %, “Same time. Every night.” and “Sleep well. Live brighter.”",
+        "fa": "Codex با اسکیل: یازده شات روی سرمه‌ای، یاسی، زرد و مرجانی — یک آیکون که از ماه به ساعت، مغز و اسمایلی تبدیل می‌شود، حلقه‌ای که تا ≈۳۳٪ می‌شمارد، «Same time. Every night.» و «Sleep well. Live brighter.»"
       },
       "read": {
-        "en": "Unaided, Codex builds a neat dark-card explainer — a moon, a brain, a clock — but 73 % of the film is near-static and the soundtrack is flat (loudness range 0.8 LU). With the skill the same agent switches to a bold poster style (cream, lilac, navy and lime), draws characterful moon, brain and clock illustrations and keeps everything moving (near-static 8 %, frame fill 26 % vs 12 %, loudness range 2.2 LU), after writing a brief and three review rounds. The price: about 2.8× the tokens and 1.2× the time.",
-        "fa": "بدون اسکیل، Codex یک اکسپلینر تمیز با کارت‌های تیره می‌سازد — ماه، مغز، ساعت — اما ۷۳٪ فیلم تقریباً ساکن است و صدا یکنواخت (دامنهٔ بلندی ۰٫۸). با اسکیل همان ایجنت به سبک پوستر جسورانه (کرم، یاسی، سرمه‌ای و لیمویی) می‌رود، ماه و مغز و ساعتِ باشخصیت می‌کشد و همه‌چیز را در حرکت نگه می‌دارد (زمان ساکن ۸٪، پُری قاب ۲۶٪ در برابر ۱۲٪، دامنهٔ بلندی ۲٫۲)، بعد از نوشتن بریف و سه دور بازبینی. بهایش: حدود ۲٫۸ برابر توکن و ۱٫۲ برابر زمان."
+        "en": "Unaided, Codex builds a neat explainer — a moon, a brain, a clock, one fact per slide — but 57 % of the film is near-static and the picture fills 12 % of the frame. With the skill the same agent cuts it into eleven shots joined by zooms, irises, a whip and blinds, with one icon that turns from moon to clock to brain to smiley (frame fill 22 %, near-static 5 %), after a written brief and three review rounds — in 0.6× the time (23 vs 38 minutes) and 4.4× the tokens.",
+        "fa": "بدون اسکیل، Codex یک توضیح‌ویدیوی مرتب می‌سازد — ماه، مغز، ساعت، یک واقعیت در هر اسلاید — اما ۵۷٪ فیلم تقریباً ساکن است و تصویر ۱۲٪ قاب را پر می‌کند. با اسکیل همان ایجنت آن را به یازده شات می‌برد که با زوم، آیریس، ویپ و بلایندز به هم وصل‌اند، با آیکونی که از ماه به ساعت، مغز و اسمایلی تبدیل می‌شود (پُری قاب ۲۲٪، زمان تقریباً ساکن ۵٪)، بعد از بریف نوشته‌شده و سه دور بازبینی — در ۰٫۶ برابر زمان (۲۳ در برابر ۳۸ دقیقه) و ۴٫۴ برابر توکن."
+      }
+    },
+    {
+      "id": "cmp-datastory-variety-baseline",
+      "section": "compare",
+      "task": "data-story-lumen-15s",
+      "pair": "codex-gpt-6-astra",
+      "side": "without",
+      "src": "data-story-lumen-15s__codex-gpt-6-astra__baseline",
+      "from": "run:variety-xhigh/data-story-lumen-15s__gpt-6-astra__baseline__r1",
+      "metrics": "variety-xhigh/data-story-lumen-15s__gpt-6-astra__baseline__r1",
+      "agent": "Codex · gpt-6-astra · xhigh",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 11,
+      "readme": {
+        "from": 0,
+        "dur": 15,
+        "w": 270,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex without the skill: a dark vertical HUD — the count climbs from 12,000 to 87,000 above a tilted grid of dots that gathers into a glowing river, a thin line chart underneath, and a 7.25× end card",
+        "fa": "Codex بدون اسکیل: یک HUD عمودی تیره — شمارنده از ۱۲٬۰۰۰ تا ۸۷٬۰۰۰ بالا می‌رود بالای شبکه‌ای کج از نقطه‌ها که به رودی درخشان جمع می‌شود، یک نمودار خطی باریک زیر آن و کارت پایانی ۷٫۲۵×"
+      }
+    },
+    {
+      "id": "cmp-datastory-variety-skill",
+      "section": "compare",
+      "task": "data-story-lumen-15s",
+      "pair": "codex-gpt-6-astra",
+      "side": "with",
+      "src": "data-story-lumen-15s__codex-gpt-6-astra__skill",
+      "from": "run:variety-xhigh/data-story-lumen-15s__gpt-6-astra__skill__r1",
+      "metrics": "variety-xhigh/data-story-lumen-15s__gpt-6-astra__skill__r1",
+      "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 10.5,
+      "readme": {
+        "from": 0,
+        "dur": 15,
+        "w": 270,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex with the skill: huge condensed numbers counting up over a city of lights that becomes a river, a line-chart beat (“Four years. One direction.”), 87,000 landing in yellow on the drop, and a LUMEN end card with a bike",
+        "fa": "Codex با اسکیل: اعداد فشردهٔ خیلی بزرگ که روی شهری از نور می‌شمارند و شهر رود می‌شود، یک لحظهٔ نمودار خطی («Four years. One direction.»)، ۸۷٬۰۰۰ زرد روی دراپ و کارت پایانی LUMEN با دوچرخه"
+      },
+      "read": {
+        "en": "Close. Unaided, Codex makes a strong data story — the dot grid turning into a river of light is the same idea, with finer HUD detail. The skill film reads better on a phone (numbers twice the size, one line of copy per beat, a dedicated chart shot, a yellow 87,000 on the drop), has no static frame at all against 14 %, and fills 26 % of the frame against 16 % — at 3.4× the tokens and twice the time (46 vs 22 minutes).",
+        "fa": "نزدیک. بدون اسکیل هم Codex یک داستان داده‌ای قوی می‌سازد — همان ایدهٔ شبکهٔ نقطه‌ها که رود نور می‌شود، با جزئیات HUD ظریف‌تر. فیلم با اسکیل روی موبایل خواناتر است (اعداد دو برابر بزرگ‌تر، هر بیت یک خط متن، یک شات مخصوص نمودار، ۸۷٬۰۰۰ زرد روی دراپ)، هیچ فریم ساکنی ندارد در برابر ۱۴٪، و ۲۶٪ قاب را پر می‌کند در برابر ۱۶٪ — با ۳٫۴ برابر توکن و دو برابر زمان (۴۶ در برابر ۲۲ دقیقه)."
+      }
+    },
+    {
+      "id": "cmp-title-variety-baseline",
+      "section": "compare",
+      "task": "title-sequence-hollow-25s",
+      "pair": "codex-gpt-6-astra",
+      "side": "without",
+      "src": "title-sequence-hollow-25s__codex-gpt-6-astra__baseline",
+      "from": "run:variety-xhigh/title-sequence-hollow-25s__gpt-6-astra__baseline__r1",
+      "metrics": "variety-xhigh/title-sequence-hollow-25s__gpt-6-astra__baseline__r1",
+      "agent": "Codex · gpt-6-astra · xhigh",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 23,
+      "readme": {
+        "from": 0,
+        "dur": 12,
+        "w": 480,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex without the skill: muted paper-texture vignettes — a stylised street, an OPEN ALL NIGHT neon sign, rain bokeh, a cracking clock, a particle silhouette — with small credits on the left, ending on THE HOLLOW HOURS",
+        "fa": "Codex بدون اسکیل: قاب‌های آرام با بافت کاغذ — یک خیابان استیلیزه، تابلوی نئون OPEN ALL NIGHT، بوکهٔ باران، ساعتی که ترک می‌خورد، یک سیلوئت ذره‌ای — با تیتراژ کوچک در چپ و پایان روی THE HOLLOW HOURS"
+      }
+    },
+    {
+      "id": "cmp-title-variety-skill",
+      "section": "compare",
+      "task": "title-sequence-hollow-25s",
+      "pair": "codex-gpt-6-astra",
+      "side": "with",
+      "src": "title-sequence-hollow-25s__codex-gpt-6-astra__skill",
+      "from": "run:variety-xhigh/title-sequence-hollow-25s__gpt-6-astra__skill__r1",
+      "metrics": "variety-xhigh/title-sequence-hollow-25s__gpt-6-astra__skill__r1",
+      "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 23.5,
+      "readme": {
+        "from": 0,
+        "dur": 12,
+        "w": 480,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex with the skill: bold red, teal and cream graphic shots in a Saul Bass spirit — concentric rings split by a clock hand, an ALL NIGHT neon sign in the rain, a clock on red unwinding a ribbon, a fingerprint cut by a red line, a particle silhouette dissolving, and the title struck through by the hand",
+        "fa": "Codex با اسکیل: شات‌های گرافیکی جسور قرمز و سبزآبی و کرم به حال‌وهوای سال باس — حلقه‌های هم‌مرکز که عقربه آن‌ها را می‌شکافد، نئون ALL NIGHT زیر باران، ساعتی روی قرمز که روبانی را باز می‌کند، اثر انگشتی که خطی قرمز آن را می‌برد، سیلوئت ذره‌ای که فرو می‌ریزد و عنوانی که عقربه از وسطش می‌گذرد"
+      },
+      "read": {
+        "en": "The clearest gain of this pass. Unaided, Codex has the right ideas (neon, rain, a clock, a silhouette) but plays them as quiet vignettes with credits on a card: 59 % of the frames are static, the longest still is 3.5 s. With the genre playbook every credit lands on a moving graphic shot, one object (the red clock hand) cuts through the whole film into the title, the palette is committed: 9 % static frames, frame fill 38 % against 21 % — at 3.6× the tokens and 2.5× the time (60 vs 24 minutes).",
+        "fa": "روشن‌ترین بهبود این دور. بدون اسکیل، Codex ایده‌های درستی دارد (نئون، باران، ساعت، سیلوئت) ولی آن‌ها را به‌صورت قاب‌های آرام با تیتراژ روی کارت اجرا می‌کند: ۵۹٪ فریم‌ها ساکن است و طولانی‌ترین سکون ۳٫۵ ثانیه. با دفترچهٔ ژانر هر اسم روی یک شات گرافیکی متحرک می‌نشیند، یک شیء (عقربهٔ قرمز) از کل فیلم می‌گذرد تا به عنوان برسد و پالت قاطع است: ۹٪ فریم ساکن، پُری قاب ۳۸ در برابر ۲۱٪ — با ۳٫۶ برابر توکن و ۲٫۵ برابر زمان (۶۰ در برابر ۲۴ دقیقه)."
+      }
+    },
+    {
+      "id": "cmp-ambient-variety-baseline",
+      "section": "compare",
+      "task": "ambient-landscape-15s",
+      "pair": "codex-gpt-6-astra",
+      "side": "without",
+      "src": "ambient-landscape-15s__codex-gpt-6-astra__baseline",
+      "from": "run:variety-xhigh/ambient-landscape-15s__gpt-6-astra__baseline__r1",
+      "metrics": "variety-xhigh/ambient-landscape-15s__gpt-6-astra__baseline__r1",
+      "agent": "Codex · gpt-6-astra · xhigh",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 7,
+      "readme": {
+        "from": 0,
+        "dur": 15,
+        "w": 480,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex without the skill: a ray-marched valley at dusk — a wide aurora curtain, a full moon, pine-covered slopes and a still lake reflecting the light, rendered in 4K",
+        "fa": "Codex بدون اسکیل: دره‌ای ری‌مارچ‌شده در غروب — پردهٔ پهن شفق، ماه کامل، دامنه‌های پوشیده از کاج و دریاچه‌ای آرام که نور را بازتاب می‌دهد، در 4K"
+      }
+    },
+    {
+      "id": "cmp-ambient-variety-skill",
+      "section": "compare",
+      "task": "ambient-landscape-15s",
+      "pair": "codex-gpt-6-astra",
+      "side": "with",
+      "src": "ambient-landscape-15s__codex-gpt-6-astra__skill",
+      "from": "run:variety-xhigh/ambient-landscape-15s__gpt-6-astra__skill__r1",
+      "metrics": "variety-xhigh/ambient-landscape-15s__gpt-6-astra__skill__r1",
+      "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 7,
+      "readme": {
+        "from": 0,
+        "dur": 15,
+        "w": 480,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex with the skill: a ray-marched mountain range seen from above — ridge after ridge fading into mist, a river winding through the valley, a softer aurora, a rising moon and fireflies over the dark foreground pines",
+        "fa": "Codex با اسکیل: رشته‌کوهی ری‌مارچ‌شده از بالا — ستیغ پشت ستیغ که در مه محو می‌شود، رودی که در دره پیچ می‌خورد، شفقی ملایم‌تر، ماهی که بالا می‌آید و کرم‌های شب‌تاب روی کاج‌های تیرهٔ پیش‌زمینه"
+      },
+      "read": {
+        "en": "A draw — honestly. Both agents ray-march a real 3D valley and both loops are seamless (checked with the new qc loop). The skill film has more depth — six ridges of aerial perspective, mist in every valley, a river, fireflies — and fills more of the frame (46 vs 35 %); the unaided film has the bolder aurora and a 4K render. Both are meditative by design, so both read as ‘static’ to the motion meter. Cost was close this time: 1.3× the tokens, slightly less time (31 vs 37 minutes).",
+        "fa": "صادقانه مساوی. هر دو ایجنت یک درهٔ سه‌بعدی واقعی ری‌مارچ می‌کنند و لوپ هر دو بی‌درز است (با qc loop جدید بررسی شد). فیلم با اسکیل عمق بیشتری دارد — شش ستیغ با پرسپکتیو هوایی، مه در هر دره، رود، کرم شب‌تاب — و قاب بیشتری را پر می‌کند (۴۶ در برابر ۳۵٪)؛ فیلم بدون اسکیل شفق پررنگ‌تر و رندر 4K دارد. هر دو عمداً آرام‌اند، پس سنجهٔ حرکت هر دو را «ساکن» می‌خواند. هزینه این بار نزدیک بود: ۱٫۳ برابر توکن و کمی زمان کمتر (۳۱ در برابر ۳۷ دقیقه)."
+      }
+    },
+    {
+      "id": "cmp-explainer-variety-baseline",
+      "section": "compare",
+      "task": "app-explainer-pocketwise-20s",
+      "pair": "codex-gpt-6-astra",
+      "side": "without",
+      "src": "app-explainer-pocketwise-20s__codex-gpt-6-astra__baseline",
+      "from": "run:variety-xhigh/app-explainer-pocketwise-20s__gpt-6-astra__baseline__r1",
+      "metrics": "variety-xhigh/app-explainer-pocketwise-20s__gpt-6-astra__baseline__r1",
+      "agent": "Codex · gpt-6-astra · xhigh",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 14,
+      "readme": {
+        "from": 0,
+        "dur": 20,
+        "w": 480,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex without the skill: clean cream and green layouts — a headline on the left, floating expense cards or a phone on the right — “Shared home. Scattered spending.”, “Every expense. One place.”, a donut summary of $1,240, and the Pocketwise end card",
+        "fa": "Codex بدون اسکیل: چیدمان‌های تمیز کرم و سبز — تیتر در چپ، کارت‌های هزینه یا گوشی شناور در راست — «Shared home. Scattered spending.»، «Every expense. One place.»، خلاصهٔ دونات ۱٬۲۴۰ دلار و کارت پایانی Pocketwise"
+      }
+    },
+    {
+      "id": "cmp-explainer-variety-skill",
+      "section": "compare",
+      "task": "app-explainer-pocketwise-20s",
+      "pair": "codex-gpt-6-astra",
+      "side": "with",
+      "src": "app-explainer-pocketwise-20s__codex-gpt-6-astra__skill",
+      "from": "run:variety-xhigh/app-explainer-pocketwise-20s__gpt-6-astra__skill__r1",
+      "metrics": "variety-xhigh/app-explainer-pocketwise-20s__gpt-6-astra__skill__r1",
+      "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
+      "agentFamily": "codex",
+      "encode": {
+        "w": 1280,
+        "crf": 22
+      },
+      "poster": 11,
+      "readme": {
+        "from": 0,
+        "dur": 20,
+        "w": 480,
+        "fps": 12,
+        "q": 62
+      },
+      "alt": {
+        "en": "Codex with the skill: purple, lilac and lime shots — receipts and “who paid for this?” bubbles, the app mark, a phone, an Add-expense card splitting $72 into four $18 tiles, a motion-blurred whip, a donut counting to $2,400, four $600 shares and the Pocketwise end card",
+        "fa": "Codex با اسکیل: شات‌های بنفش و یاسی و لیمویی — رسیدها و حباب‌های «who paid for this?»، نشان اپ، گوشی، کارت افزودن هزینه که ۷۲ دلار را به چهار کاشی ۱۸ دلاری تقسیم می‌کند، یک ویپ با موشن‌بلور، دوناتی که تا ۲٬۴۰۰ دلار می‌شمارد، چهار سهم ۶۰۰ دلاری و کارت پایانی Pocketwise"
+      },
+      "read": {
+        "en": "A clear gain. Unaided, Codex builds a tidy product page that moves in four sections — headline left, card right — and holds still for 65 % of the frames. The skill film tells the story in shots: the receipt chaos, one expense split four ways, a whip to the monthly donut, four equal shares, the mark; 16 % static frames, frame fill 48 % against 15 %. The price is real: 3.8× the tokens and 2.3× the time (58 vs 25 minutes).",
+        "fa": "بهبود روشن. بدون اسکیل، Codex یک صفحهٔ محصول مرتب می‌سازد که در چهار بخش حرکت می‌کند — تیتر چپ، کارت راست — و ۶۵٪ فریم‌ها ساکن است. فیلم با اسکیل داستان را در شات‌ها می‌گوید: آشوب رسیدها، یک هزینه که چهار قسمت می‌شود، ویپ به دونات ماهانه، چهار سهم برابر، نشان؛ ۱۶٪ فریم ساکن، پُری قاب ۴۸ در برابر ۱۵٪. هزینه واقعی است: ۳٫۸ برابر توکن و ۲٫۳ برابر زمان (۵۸ در برابر ۲۵ دقیقه)."
       }
     },
     {
@@ -625,15 +852,15 @@
         "fa": "Frame Summit 2026 — پرومو ۱۵ ثانیه‌ای یک رویداد"
       },
       "desc": {
-        "en": "Title with a calendar badge → three speaker rows with a light sweep → the date as three colour floods, one word per beat → a pulsing handle and a button. The whole film is a JSON spec; picture and sound are both drawn from it.",
-        "fa": "تیتر با نشان تقویم ← سه ردیف سخنران با جاروی نور ← تاریخ در سه سیل رنگی، هر کلمه روی یک ضرب ← دستگیرهٔ ضرباندار و یک دکمه. کل فیلم یک مشخصات JSON است؛ تصویر و صدا هر دو از آن ساخته می‌شوند."
+        "en": "Title with a calendar badge → three speakers, one shot each, the badge turning into a microphone, a code window and a pen → the date as three colour floods, one word per beat → 40+ talks → a handle pill and a button. Nine shots; the whole film is a JSON spec, and picture and sound are both drawn from it.",
+        "fa": "تیتر با نشان تقویم ← سه سخنران، هر کدام یک شات، با نشانی که به میکروفون، پنجرهٔ کد و قلم تبدیل می‌شود ← تاریخ در سه سیل رنگی، هر کلمه روی یک ضرب ← «۴۰+ سخنرانی» ← پیلِ هندل و یک دکمه. نه شات؛ کل فیلم یک مشخصات JSON است و تصویر و صدا هر دو از آن ساخته می‌شوند."
       },
       "prompt": "Make a 15-second motion graphics promo for a fictional design conference, \"Frame Summit 2026 · Oct 14–16 · Lisbon\": three speakers with their talk titles, a big date moment, bold typography and shapes, and the call to action \"Get tickets at framesummit.io\". Energetic, modern, with a beat-synced edit and sound design. Go all out.",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 2.8,
+      "poster": 3.3,
       "readme": {
         "from": 0,
         "dur": 15,
@@ -684,15 +911,15 @@
         "fa": "Pocketwise — اکسپلینر ۲۰ ثانیه‌ای یک اپ"
       },
       "desc": {
-        "en": "Receipts and group-chat nagging → a 3D phone running a live app UI → gold coins settling four balances to €0.00 after one breath of silence → a monthly dashboard → the mark. Original lo-fi score and UI foley; every frame is code.",
-        "fa": "رسیدها و پیام‌های گروهی ← یک گوشی سه‌بعدی با رابط زندهٔ اپ ← سکه‌های طلایی که چهار حساب را پس از یک نفس سکوت به €۰٫۰۰ می‌رسانند ← داشبورد ماهانه ← نشان. موسیقی لوفای اورجینال و صدای رابط؛ هر فریم کد است."
+        "en": "Receipts and group-chat nagging → a phone running a live app UI → gold coins settling four balances to €0.00 after one breath of silence → a monthly dashboard → the mark. Original lo-fi score and UI foley; every frame is code.",
+        "fa": "رسیدها و پیام‌های گروهی ← یک گوشی با رابط زندهٔ اپ ← سکه‌های طلایی که چهار حساب را پس از یک نفس سکوت به €۰٫۰۰ می‌رسانند ← داشبورد ماهانه ← نشان. موسیقی لوفای اورجینال و صدای رابط؛ هر فریم کد است."
       },
       "prompt": "Make a 20-second explainer video for \"Pocketwise\", a fictional app that turns shared household expenses into a simple monthly summary. Show the problem, the app UI (invent the screens), one satisfying data moment (numbers/chart), and end with the name and a one-line tagline. Original music and UI sound design. Go all out.",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 5.0,
+      "poster": 5,
       "readme": {
         "from": 0,
         "dur": 20,
@@ -733,8 +960,8 @@
     {
       "id": "film-title-sequence",
       "section": "showcase",
-      "src": "title-sequence__codex-gpt-6-astra",
-      "from": "run:showcase-xhigh/title-sequence__gpt-6-astra__skill__r1",
+      "src": "title-sequence-hollow-25s__codex-gpt-6-astra",
+      "from": "run:variety-xhigh/title-sequence-hollow-25s__gpt-6-astra__skill__r1",
       "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
       "agentFamily": "codex",
       "lang": "en",
@@ -743,18 +970,18 @@
         "fa": "تیتراژ «ساعت‌های توخالی» — سبک ساول‌بس"
       },
       "desc": {
-        "en": "Cut-paper skyline, a flickering neon sign, rain on glass, a clock whose hands unravel into thread, a silhouette made of falling particles — drawn in code, scored with a heartbeat pulse and a brass swell.",
-        "fa": "خط افق کاغذبریده، تابلوی نئون سوسوزن، باران روی شیشه، ساعتی که عقربه‌هایش به نخ باز می‌شوند، سایه‌ای از ذرات ریزان — همه با کد، با ضربان قلب و بوق برنجی."
+        "en": "A crime drama’s opening in a Saul Bass spirit: concentric rings split by a clock hand, ALL NIGHT neon in the rain, a clock on red unwinding a ribbon, a silhouette dissolving into particles — one red hand runs through every shot and strikes through the title. Every credit lands on a moving graphic.",
+        "fa": "تیتراژ آغازین یک درام جنایی به حال‌وهوای سال باس: حلقه‌های هم‌مرکز که عقربه آن‌ها را می‌شکافد، نئون ALL NIGHT زیر باران، ساعتی روی قرمز که روبانی را باز می‌کند، سیلوئتی که به ذره فرو می‌ریزد — یک عقربهٔ قرمز از همهٔ شات‌ها می‌گذرد و از وسط عنوان رد می‌شود. هر اسم روی یک گرافیک متحرک می‌نشیند."
       },
       "prompt": "Make a 25-second main-title sequence for a fictional prestige thriller series called \"THE HOLLOW HOURS\" (a night-shift detective in a city that never sleeps) — Saul Bass meets a modern streaming title. Build everything from abstract shapes, light, grain and type: cut-paper layers that peel apart, a flickering neon sign, rain streaking down glass with bokeh street lights, a clock whose hands unravel into thread, a silhouette made of falling particles. Credit-style typography with invented names (\"Created by …\", \"Starring …\"), a brooding original score with a heartbeat pulse and a low brass swell, and a final title lock-up that holds for two seconds. Go all out.",
       "encode": {
         "w": 1280,
         "crf": 25
       },
-      "poster": 20.5,
+      "poster": 23.5,
       "readme": {
-        "from": 0,
-        "dur": 20,
+        "from": 10,
+        "dur": 15,
         "w": 480,
         "fps": 12,
         "q": 62
@@ -763,8 +990,8 @@
     {
       "id": "film-calm-landscape",
       "section": "showcase",
-      "src": "calm-landscape__codex-gpt-6-astra",
-      "from": "run:showcase-xhigh/calm-landscape__gpt-6-astra__skill__r1",
+      "src": "ambient-landscape-15s__codex-gpt-6-astra",
+      "from": "run:variety-xhigh/ambient-landscape-15s__gpt-6-astra__skill__r1",
       "agent": "Codex · gpt-6-astra · xhigh + Cinewright",
       "agentFamily": "codex",
       "lang": "en",
@@ -773,21 +1000,21 @@
         "fa": "غروب، طلوع ماه، کرم شب‌تاب — بدون متن"
       },
       "desc": {
-        "en": "A meditative landscape you could loop all evening: layered ridges, drifting mist, a rising moon, fireflies and a gentle original ambient score.",
-        "fa": "منظره‌ای آرام که می‌شود تمام شب تکرارش کرد: رشته‌کوه‌های لایه‌لایه، مه شناور، ماهِ در حال طلوع، کرم شب‌تاب و موسیقی ملایم اورجینال."
+        "en": "A ray-marched mountain range at dusk: ridge after ridge fading into mist, a river winding through the valley, an aurora, a rising moon and fireflies over the pines — a seamless 15-second loop with a soft ambient bed and no text at all.",
+        "fa": "رشته‌کوهی ری‌مارچ‌شده در غروب: ستیغ پشت ستیغ که در مه محو می‌شود، رودی که در دره پیچ می‌خورد، شفق، ماهی که بالا می‌آید و کرم‌های شب‌تاب روی کاج‌ها — لوپ بی‌درز ۱۵ ثانیه‌ای با صدای محیطی نرم و بدون هیچ متنی."
       },
       "prompt": "Make a 15-second meditative cinematic landscape with no text at all: dusk over a procedural terrain with layered mountain ridges, drifting mist, an aurora ribbon in the sky, a slowly rising moon, fireflies, a slow crane move. A gentle original ambient score (pads, a soft pluck, sparse bells). Palette: deep indigo to rose gold. Make it so beautiful that someone would loop it. Go all out.",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 10,
+      "poster": 7,
       "readme": {
         "from": 0,
         "dur": 15,
-        "w": 720,
-        "fps": 15,
-        "q": 70
+        "w": 480,
+        "fps": 12,
+        "q": 62
       }
     },
     {
@@ -802,15 +1029,15 @@
         "fa": "معرفی یک آدم — مایا چن"
       },
       "desc": {
-        "en": "The person-intro preset with Persian copy: only the text changed. `--lang fa` mirrors the whole layout right-to-left and writes Persian digits; the score is generated from the same spec.",
-        "fa": "پریست «معرفی یک آدم» با متن فارسی: فقط متن عوض شده. گزینهٔ `--lang fa` کل چیدمان را راست‌به‌چپ می‌کند و ارقام را فارسی می‌نویسد؛ موسیقی هم از همان مشخصات ساخته می‌شود."
+        "en": "The person-intro preset with Persian copy: only the text changed. `--lang fa` mirrors the whole layout right-to-left and writes Persian digits; nine one-idea shots, one badge that becomes an icon per skill, and a score generated from the same spec.",
+        "fa": "پریست «معرفی یک آدم» با متن فارسی: فقط متن عوض شده. گزینهٔ `--lang fa` کل چیدمان را راست‌به‌چپ می‌کند و ارقام را فارسی می‌نویسد؛ نه شاتِ تک‌ایده‌ای، یک نشان که برای هر مهارت به یک آیکون تبدیل می‌شود، و موسیقی‌ای که از همان مشخصات ساخته می‌شود."
       },
       "prompt": "یک موشن‌گرافی ۱۵ ثانیه‌ای فارسی برای معرفی یک آدم بساز: مایا چن، طراح ارشد محصول از تورنتو (جزئیات را خودت بساز). نام و عنوان، سه مهارت، سه عدد (سال تجربه، پروژه‌های تحویل‌شده، جوایز) و یک نقل‌قول کوتاه را نشان بده و با شناسهٔ @mayachen تمام کن. تمیز، مدرن و پرانرژی. موسیقی و صداگذاری اورجینال. تمام‌قد برو.",
       "encode": {
         "w": 1280,
         "crf": 22
       },
-      "poster": 2.2,
+      "poster": 3,
       "readme": {
         "from": 0,
         "dur": 15,
@@ -822,36 +1049,100 @@
   ],
   "tasks": [
     {
-      "id": "person-intro-15s",
+      "id": "person-intro-motion-15s",
       "title": {
         "en": "Introduce a person",
         "fa": "معرفی یک آدم"
       },
-      "prompt": "Make a 15-second motion graphics video that introduces a person: Maya Chen, a senior product designer from Toronto (invent the details). Show her name and role, three skills, three numbers (years of experience, projects shipped, awards) and a short quote, and end on her handle @mayachen. Clean, modern, energetic — the kind of intro a personal brand would open a talk or a portfolio with. Original music and sound design. Go all out."
+      "prompt": "Make a 15-second motion graphics video that introduces a person: Maya Chen, a senior product designer from Toronto (invent the details). Show her name and role, three skills, three numbers (years of experience, projects shipped, awards) and a short quote, and end on her handle @mayachen. Clean, modern, energetic — the kind of intro a personal brand would open a talk or a portfolio with. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Original music and sound design. Go all out.",
+      "group": {
+        "en": "Everyday motion graphics",
+        "fa": "موشن‌گرافی روزمره"
+      }
     },
     {
-      "id": "promo-vertical-12s",
+      "id": "promo-vertical-motion-12s",
       "title": {
         "en": "Vertical social promo",
         "fa": "پرومو عمودی شبکه‌های اجتماعی"
       },
-      "prompt": "Make a 12-second vertical (9:16) social-media promo for a fictional coffee shop called \"Brew & Co.\" announcing three autumn drinks with prices — Maple Latte €4.50, Spiced Cold Brew €4.00, Pumpkin Mocha €4.80 — and a call to action: \"Open daily 7–19 · Main Street\". Bold type, flat shapes and simple icon drawings (cups, leaves, beans), a beat-synced edit, punchy sound. Go all out."
+      "prompt": "Make a 12-second vertical (9:16) social-media promo for a fictional coffee shop called \"Brew & Co.\" announcing three autumn drinks with prices — Maple Latte €4.50, Spiced Cold Brew €4.00, Pumpkin Mocha €4.80 — and a call to action: \"Open daily 7–19 · Main Street\". Bold type, flat shapes and simple icon drawings (cups, leaves, beans), a beat-synced edit, punchy sound. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Go all out.",
+      "group": {
+        "en": "Everyday motion graphics",
+        "fa": "موشن‌گرافی روزمره"
+      }
     },
     {
-      "id": "channel-intro-8s",
+      "id": "channel-intro-motion-8s",
       "title": {
-        "en": "Channel intro",
+        "en": "YouTube channel intro",
         "fa": "اینترو کانال"
       },
-      "prompt": "Make an 8-second YouTube channel intro for a fictional tech-review channel called \"Pixel Pulse\": a logo mark that builds itself, the name, a one-line tagline you write, punchy transitions and sound design (a hit, whooshes, a short musical sting). Bold, bright, memorable. Go all out."
+      "prompt": "Make an 8-second YouTube channel intro for a fictional tech-review channel called \"Pixel Pulse\": a logo mark that builds itself, the name, a one-line tagline you write, punchy transitions and sound design (a hit, whooshes, a short musical sting). Bold, bright, memorable. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Go all out.",
+      "group": {
+        "en": "Everyday motion graphics",
+        "fa": "موشن‌گرافی روزمره"
+      }
     },
     {
-      "id": "infographic-20s",
+      "id": "infographic-motion-20s",
       "title": {
         "en": "Animated infographic",
         "fa": "اینفوگرافیک متحرک"
       },
-      "prompt": "Make a 20-second animated infographic explainer titled \"Why sleep matters\" with three facts — adults need 7–9 hours; one night of poor sleep can cut focus by about a third; a regular bedtime improves mood — each with an animated icon or chart (moon, brain, clock), counting numbers, a clear visual hierarchy, upbeat original music and sound design. Go all out."
+      "prompt": "Make a 20-second animated infographic explainer titled \"Why sleep matters\" with three facts — adults need 7–9 hours; one night of poor sleep can cut focus by about a third; a regular bedtime improves mood — each with an animated icon or chart (moon, brain, clock), counting numbers, a clear visual hierarchy, upbeat original music and sound design. It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat. Go all out.",
+      "group": {
+        "en": "Everyday motion graphics",
+        "fa": "موشن‌گرافی روزمره"
+      }
+    },
+    {
+      "id": "data-story-lumen-15s",
+      "title": {
+        "en": "Vertical data story",
+        "fa": "داستان داده‌ای عمودی"
+      },
+      "prompt": "Make a 15-second VERTICAL (9:16) social video that makes people feel one statistic: in the fictional city of Lumen, daily bike-share rides grew from 12,000 in 2021 to 87,000 in 2025. Hook in the first second (a number slams in), one hero visual (a city of dots growing into a river of light), big readable numbers that count up, a map or line-chart moment, a beat drop where 87,000 lands, safe areas for phone UI, punchy music with a drop, and an end card with a one-line takeaway. Go all out.",
+      "group": {
+        "en": "Other kinds of film",
+        "fa": "انواع دیگر فیلم"
+      }
+    },
+    {
+      "id": "title-sequence-hollow-25s",
+      "title": {
+        "en": "Prestige title sequence",
+        "fa": "تیتراژ آغازین سریال"
+      },
+      "prompt": "Make a 25-second main-title sequence for a fictional prestige thriller series called \"THE HOLLOW HOURS\" (a night-shift detective in a city that never sleeps) — Saul Bass meets a modern streaming title. Build everything from abstract shapes, light, grain and type: cut-paper layers that peel apart, a flickering neon sign, rain streaking down glass with bokeh street lights, a clock whose hands unravel into thread, a silhouette made of falling particles. Credit-style typography with invented names (\"Created by …\", \"Starring …\"), a brooding original score with a heartbeat pulse and a low brass swell, and a final title lock-up that holds for two seconds. Go all out.",
+      "group": {
+        "en": "Other kinds of film",
+        "fa": "انواع دیگر فیلم"
+      }
+    },
+    {
+      "id": "ambient-landscape-15s",
+      "title": {
+        "en": "Ambient landscape, no text",
+        "fa": "منظرهٔ آرام، بدون متن"
+      },
+      "prompt": "Make a 15-second meditative cinematic landscape with no text at all: dusk over a procedural terrain with layered mountain ridges, drifting mist, an aurora ribbon in the sky, a slowly rising moon, fireflies, a slow crane move. A gentle original ambient score (pads, a soft pluck, sparse bells). Palette: deep indigo to rose gold. Make it so beautiful that someone would loop it. Go all out.",
+      "group": {
+        "en": "Other kinds of film",
+        "fa": "انواع دیگر فیلم"
+      }
+    },
+    {
+      "id": "app-explainer-pocketwise-20s",
+      "title": {
+        "en": "App explainer",
+        "fa": "اکسپلینر اپ"
+      },
+      "prompt": "Make a 20-second explainer video for \"Pocketwise\", a fictional app that turns shared household expenses into a simple monthly summary. Show the problem, the app UI (invent the screens), one satisfying data moment (numbers/chart), and end with the name and a one-line tagline. Original music and UI sound design. Go all out.",
+      "group": {
+        "en": "Other kinds of film",
+        "fa": "انواع دیگر فیلم"
+      }
     },
     {
       "id": "showreel",
@@ -859,7 +1150,11 @@
         "en": "Résumé showreel",
         "fa": "شوریل رزومه"
       },
-      "prompt": "make a dynamic 15-second motion graphics video that shows what an incredible motion designer you are, like it's your showreel for a résumé. Go all out."
+      "prompt": "make a dynamic 15-second motion graphics video that shows what an incredible motion designer you are, like it's your showreel for a résumé. Go all out.",
+      "group": {
+        "en": "The résumé showreel — each agent against itself",
+        "fa": "شوریل رزومه — هر ایجنت در برابر خودش"
+      }
     }
   ]
 }

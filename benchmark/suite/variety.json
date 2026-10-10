@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "note": "The third pass: four kinds of video that are not intros — a vertical data story, a prestige title sequence, a meditative landscape with no text, an app explainer. The prompts are the art-directed ones the earlier showcase runs used (skill only); here both conditions get them, identically.",
+  "footer": "---\nBenchmark rules (identical for every run): work only inside the current folder; make the video with code — no stock footage, no AI video/image generation, no downloaded media unless the brief names it; deliver the finished file as ./final.mp4 (H.264 video + AAC audio, with sound); when done, reply with its path and two lines on what you built.",
+  "sets": {
+    "variety": [
+      "data-story-lumen-15s",
+      "title-sequence-hollow-25s",
+      "ambient-landscape-15s",
+      "app-explainer-pocketwise-20s"
+    ],
+    "all": [
+      "data-story-lumen-15s",
+      "title-sequence-hollow-25s",
+      "ambient-landscape-15s",
+      "app-explainer-pocketwise-20s"
+    ]
+  },
+  "tasks": [
+    {
+      "id": "data-story-lumen-15s",
+      "domain": "data",
+      "aspect": "9:16",
+      "duration": 15,
+      "lang": "en",
+      "title": "Vertical data story",
+      "prompt": "Make a 15-second VERTICAL (9:16) social video that makes people feel one statistic: in the fictional city of Lumen, daily bike-share rides grew from 12,000 in 2021 to 87,000 in 2025. Hook in the first second (a number slams in), one hero visual (a city of dots growing into a river of light), big readable numbers that count up, a map or line-chart moment, a beat drop where 87,000 lands, safe areas for phone UI, punchy music with a drop, and an end card with a one-line takeaway. Go all out."
+    },
+    {
+      "id": "title-sequence-hollow-25s",
+      "domain": "cinematic",
+      "aspect": "16:9",
+      "duration": 25,
+      "lang": "en",
+      "title": "Prestige title sequence",
+      "prompt": "Make a 25-second main-title sequence for a fictional prestige thriller series called \"THE HOLLOW HOURS\" (a night-shift detective in a city that never sleeps) — Saul Bass meets a modern streaming title. Build everything from abstract shapes, light, grain and type: cut-paper layers that peel apart, a flickering neon sign, rain streaking down glass with bokeh street lights, a clock whose hands unravel into thread, a silhouette made of falling particles. Credit-style typography with invented names (\"Created by …\", \"Starring …\"), a brooding original score with a heartbeat pulse and a low brass swell, and a final title lock-up that holds for two seconds. Go all out."
+    },
+    {
+      "id": "ambient-landscape-15s",
+      "domain": "generative",
+      "aspect": "16:9",
+      "duration": 15,
+      "lang": "en",
+      "title": "Ambient landscape, no text",
+      "prompt": "Make a 15-second meditative cinematic landscape with no text at all: dusk over a procedural terrain with layered mountain ridges, drifting mist, an aurora ribbon in the sky, a slowly rising moon, fireflies, a slow crane move. A gentle original ambient score (pads, a soft pluck, sparse bells). Palette: deep indigo to rose gold. Make it so beautiful that someone would loop it. Go all out."
+    },
+    {
+      "id": "app-explainer-pocketwise-20s",
+      "domain": "explainer",
+      "aspect": "16:9",
+      "duration": 20,
+      "lang": "en",
+      "title": "App explainer",
+      "prompt": "Make a 20-second explainer video for \"Pocketwise\", a fictional app that turns shared household expenses into a simple monthly summary. Show the problem, the app UI (invent the screens), one satisfying data moment (numbers/chart), and end with the name and a one-line tagline. Original music and UI sound design. Go all out."
+    }
+  ]
+}

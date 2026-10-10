@@ -61,6 +61,12 @@ Every condition gets the identical task text and the identical delivery footer (
 node benchmark/run.mjs --suite-file benchmark/suite/simple.json --suite simple --models gpt-6-astra --effort xhigh
 ```
 
+[`suite/motion.json`](suite/motion.json) — the same four everyday jobs (person intro · channel intro · vertical promo · animated infographic) with one more sentence in the prompt, given identically to both conditions: *"it has to feel like real motion design, not a slideshow — objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat."* It exists because the first everyday pass (above) showed that a plain prompt gets slide decks from both conditions; it is the second pass in the [development log](notes.md). The with-skill runs of the second pass use a snapshot of the skill taken before the runs (`--conditions baseline,skill=<snapshot>`), so later edits cannot leak into the numbers.
+
+```bash
+node benchmark/run.mjs --suite-file benchmark/suite/motion.json --suite motion --models gpt-6-astra --effort xhigh --run-id motion-xhigh --skill-version 2.3.0
+```
+
 [`suite/suite.json`](suite/suite.json) — fair-comparison tasks (sets `headline`, `quick`, `core`, `full`, `showcase`):
 
 | id | domain | what it stresses |
@@ -114,7 +120,7 @@ The runner exports `PCV_BENCH_CWD`, `PCV_BENCH_CONDITION` and `PCV_BENCH_SKILL` 
 The Claude Code results in the report were made in interactive sessions and measured afterwards:
 
 ```bash
-node benchmark/measure.mjs my-film.mp4 --task showreel-15s --label "Claude Code + Cinewright" --agent "Claude Code, interactive" --skill 2.2.0 \
+node benchmark/measure.mjs my-film.mp4 --task showreel-15s --label "Claude Code + Cinewright" --agent "Claude Code, interactive" --skill 2.3.0 \
      --project ./my-film-folder --out benchmark/results/my-results
 ```
 

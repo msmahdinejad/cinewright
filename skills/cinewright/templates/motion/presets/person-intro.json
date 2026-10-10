@@ -1,11 +1,26 @@
 {
-  "bpm": 120, "duration": 15, "mood": "upbeat", "wipe": "stripes",
+  "bpm": 120, "duration": 15, "mood": "upbeat", "transition": "whip",
   "theme": { "preset": "poster" },
+  "carry": { "fill": "a", "fill2": "c", "keys": [
+    { "at": 0.15, "dur": 0.9, "x": 0.76, "y": 0.5, "size": 0.5, "letter": "AM" },
+    { "at": 2.2, "dur": 0.6, "x": 0.2227, "y": 0.5, "size": 0.5, "icon": "pen", "fill": "a", "fill2": "c" },
+    { "at": 3.25, "dur": 0.5, "x": 0.7773, "y": 0.5, "size": 0.5, "icon": "layers", "fill": "b", "fill2": "d" },
+    { "at": 4.25, "dur": 0.5, "x": 0.2227, "y": 0.5, "size": 0.5, "icon": "play", "fill": "c", "fill2": "d" },
+    { "at": 5.2, "dur": 0.6, "x": 0.93, "y": 0.13, "size": 0.085, "letter": "AM", "fill": "b", "fill2": "b" },
+    { "at": 6.75, "dur": 0.4, "x": 0.93, "y": 0.13, "size": 0.085, "letter": "AM", "fill": "c", "fill2": "c" },
+    { "at": 8.25, "dur": 0.4, "x": 0.93, "y": 0.13, "size": 0.085, "letter": "AM", "fill": "b", "fill2": "b" },
+    { "at": 9.8, "dur": 0.5, "x": 0.93, "y": 0.13, "size": 0.085, "letter": "AM", "fill": "c", "fill2": "a" },
+    { "at": 12.25, "dur": 0.85, "x": 0.5, "y": 0.56, "w": 0.74, "h": 0.17, "text": "@alexmorgan", "ts": 0.1, "fill": "a", "fill2": "c" }
+  ] },
   "scenes": [
-    { "type": "title", "at": 0, "kicker": "HELLO, I'M", "lines": ["Alex", "Morgan"], "sub": "Brand & product designer · Berlin", "avatar": "AM", "badges": ["pen", "bolt", "star"], "bg": "flat" },
-    { "type": "chips", "at": 3, "title": "What I do", "items": [ { "label": "Brand identity", "icon": "pen", "note": "logos · systems" }, { "label": "Product design", "icon": "layers", "note": "apps · web" }, { "label": "Motion", "icon": "play", "note": "intros · UI" } ], "wipe": "circle", "bgColor": "c" },
-    { "type": "stats", "at": 6, "title": "In numbers", "items": [ { "value": 8, "suffix": "+", "label": "years of craft", "icon": "clock" }, { "value": 120, "label": "projects shipped", "icon": "briefcase" }, { "value": 14, "label": "design awards", "icon": "trophy" } ], "wipe": "slide", "bgColor": "d" },
-    { "type": "quote", "at": 9, "text": "Good design feels invisible — until it's missing.", "who": "Alex Morgan", "role": "Brand & product designer", "wipe": "stripes", "bgColor": "a" },
-    { "type": "cta", "at": 11.5, "line": "Let's make something great", "handle": "@alexmorgan", "sub": "alexmorgan.design", "button": "Say hello", "wipe": "flood", "bgColor": "b" }
+    { "type": "title", "at": 0, "kicker": "HELLO, I'M", "lines": ["Alex", "Morgan"], "styles": ["slideL", "slam"], "sub": "Brand & product designer · Berlin", "art": true, "bg": "flat" },
+    { "type": "hit", "at": 2.5, "text": "Brand identity", "sub": "logos · systems", "carried": true, "color": "b", "layout": "right", "transition": "iris", "transitionDur": 0.6 },
+    { "type": "hit", "at": 3.5, "text": "Product design", "sub": "apps · web", "carried": true, "color": "c", "layout": "left", "transition": "whip", "transitionDur": 0.5 },
+    { "type": "hit", "at": 4.5, "text": "Motion", "sub": "intros · UI", "carried": true, "color": "a", "layout": "right", "transition": "zoom", "transitionDur": 0.5 },
+    { "type": "fact", "at": 5.5, "value": 8, "suffix": "+", "text": "years of craft", "icon": "clock", "color": "d", "layout": "left", "transition": "cut" },
+    { "type": "fact", "at": 7, "value": 120, "text": "projects shipped", "icon": "briefcase", "color": "b", "layout": "right", "transition": "whip", "transitionDur": 0.5 },
+    { "type": "fact", "at": 8.5, "value": 14, "text": "design awards", "icon": "trophy", "color": "a", "layout": "left", "transition": "blinds", "transitionDur": 0.55 },
+    { "type": "quote", "at": 10, "text": "Good design feels invisible — until it's missing.", "who": "Alex Morgan", "role": "Brand & product designer", "transition": "zoom", "transitionDur": 0.6, "bgColor": "ink" },
+    { "type": "cta", "at": 12, "line": "Let's talk.", "handle": false, "sub": "alexmorgan.design", "button": "Say hello", "transition": "whip", "bgColor": "d" }
   ]
 }

@@ -9,6 +9,7 @@
 //   node tools/qc.mjs frames file.mp4 3.5,12     full-size PNG stills from the encoded file → qc/
 //   node tools/qc.mjs palette image.png [--n 6]  dominant colours (hex) + luminance, to match a brand/reference photo
 //   node tools/qc.mjs look [file.mp4]           frame FILL: is the picture full or thin lines on empty black? (median fill, empty frames, dark+sparse) — also part of `check`
+//   node tools/qc.mjs loop [file.mp4]           seamless-loop check: does the last frame flow into the first? (the jump at the seam vs a normal frame-to-frame change)
 //   node tools/qc.mjs craft                      studio-mode gate on the PROJECT (not the mp4): brief.md complete? >= 6 atlas techniques from >= 4 families? >= 4 transitions? deterministic code? 3 review rounds? (also part of `check`)
 import { spawnSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
@@ -203,6 +204,18 @@ function qcLook(file) {
 }
 
 /* ───────────────────────── craft (studio mode): did the plan, the code and the process meet the ambition budget? ───────────────────────── */
+/* ───────────────────────── loop: is the seam invisible? ───────────────────────── */
+function qcLoop(file) {
+  console.log('\n── loop: ' + file);
+  const w = 96, h = 54, r = run(FFMPEG, ['-v', 'error', '-i', file, '-vf', `scale=${w}:${h}:flags=area,format=gray`, '-f', 'rawvideo', '-'], { maxBuffer: 1 << 29, encoding: 'buffer' });
+  const buf = r.stdout || Buffer.alloc(0), n = Math.floor(buf.length / (w * h)); if (n < 3) { note('FAIL', 'could not decode frames'); return; }
+  const fr = i => buf.subarray(i * w * h, (i + 1) * w * h), diff = (a, b) => { let d = 0; for (let k = 0; k < a.length; k++) d += Math.abs(a[k] - b[k]); return d / a.length; };
+  const steps = []; for (let i = 1; i < n; i++) steps.push(diff(fr(i - 1), fr(i))); const sorted = [...steps].sort((a, b) => a - b), typ = sorted[Math.floor(sorted.length * .5)], p90 = sorted[Math.floor(sorted.length * .9)];
+  const seam = diff(fr(n - 1), fr(0)), lim = Math.max(1.5, typ * 2.5, p90 * 1.2);
+  console.log(`  info  frame-to-frame change: median ${typ.toFixed(2)} · 90th percentile ${p90.toFixed(2)} · at the seam (last → first) ${seam.toFixed(2)}  (0–255 mean absolute difference, ${n} frames)`);
+  seam <= lim ? note('PASS', `the loop is seamless: the jump from the last frame to the first (${seam.toFixed(2)}) is no bigger than a normal step`) : note('WARN', `visible jump at the loop seam: last → first changes ${seam.toFixed(2)} vs ${typ.toFixed(2)} for a normal frame — make every motion periodic in the loop length (atlas: edit-seamless-loop) and do not render the frame at t = duration (it equals t = 0)`);
+}
+
 async function qcCraft() {
   console.log('\n── craft (studio mode: plan · code · process)');
   const rd = f => { try { return fs.readFileSync(path.join(ROOT, f), 'utf8'); } catch { return null; } };
@@ -217,6 +230,13 @@ async function qcCraft() {
     if (brief.length < 500) note('WARN', `brief.md is only ${brief.length} characters — a real brief names the concept, the style bible and a shot list`);
     const missing = [['promise', /promise|وعده/i], ['visual verb', /verb|فعل/i], ['hero moment', /hero|اوج/i], ['last image', /last image|final image|ending|تصویر آخر|پایان/i], ['shot list', /shots?\b|shot ?list|storyboard|شات|استوری/i]].filter(([, re]) => !re.test(brief)).map(([n]) => n);
     missing.length >= 2 ? note('WARN', `brief.md does not mention: ${missing.join(', ')} (see the step-1 checklist in SKILL.md)`) : note('PASS', 'brief.md covers the concept checklist');
+    const beatCut = /^[\s>*#-]*\**style\**\s*[:：]\s*beat-?cut/im.test(brief);
+    /\bcontinuity\b|carried|carry|match.?cut|پیوستگی/i.test(brief) || beatCut || restrained() ? note('PASS', 'brief.md says how each scene turns into the next (continuity)') : note('WARN', 'brief.md has no "Continuity" line — say how every scene turns into the next: a carried object, a camera move, a matched shape, a cut on the beat. Without it the film is a deck of slides (references/anti-slideshow.md); a deliberate beat-cut film says "Style: beat-cut"');
+    {   // pacing: motion graphics are made of SHOTS (one idea each, ~1–2 s), not slides (a heading and three cards, 3–5 s). Count the rows of the shot list.
+      const dm = html && /"?duration"?\s*[:=]\s*(\d+(?:\.\d+)?)/.exec(html), dur = dm ? +dm[1] : null, rows = brief.split('\n').filter(l => /^\s*\|/.test(l) && /\d+(?:\.\d+)?\s*s?\s*[–—-]\s*\d/.test(l) && !/^\s*\|[\s:|-]+\|?\s*$/.test(l)).length;
+      const paced = /^[\s>*#-]*\**pacing\**\s*[:：]/im.test(brief) || restrained();
+      if (dur && dur >= 6 && rows) { const avg = dur / rows; avg <= 2.5 ? note('PASS', `shot list: ${rows} shots in ${dur} s (average ${avg.toFixed(1)} s) — fast enough to read as motion graphics`) : note(paced ? 'INFO' : 'WARN', `shot list has ${rows} shot${rows === 1 ? '' : 's'} for ${dur} s (average ${avg.toFixed(1)} s each) — that is a slide deck. Motion graphics run at 1–2 s per shot: give every idea (each skill, each number, each line of the quote) its own shot, ~${Math.ceil(dur / 1.5)} rows for this film (references/anti-slideshow.md "Shots, not slides"). A deliberately slow film says "Pacing: <why>" in brief.md`); }
+    }
     const hex = new Set((brief.match(/#[0-9a-f]{6}\b/gi) || []).map(x => x.toLowerCase()));
     hex.size >= 4 ? note('PASS', `style bible has a palette (${hex.size} colours)`) : note('WARN', `brief.md lists ${hex.size} hex colours — write the 5-token palette (bg · base · accent · accent2 · light)`);
     const tokens = [...new Set([...brief.matchAll(/`([a-z][a-z0-9]*(?:-[a-z0-9]+)+)`/g)].map(m => m[1]))];
@@ -235,6 +255,22 @@ async function qcCraft() {
     if (nScenes >= 4 || trans.size) trans.size >= 4 ? note('PASS', `${trans.size} different transitions: ${[...trans].join(', ')}`) : note('WARN', `${trans.size} different transition(s)${trans.size ? ' (' + [...trans].join(', ') + ')' : ''} — vary them (≥ 4: whip, zoomBlurCut, glitch, iris, liquid, burn … see gallery/transitions.jpg); match cuts beat generic fades`);
     const engines = [/\bScene3D\b|\bGeo\.\w+\(/.test(code) && '3D renderer', /\bParts\b|\bnew Parts\b|\bEmitter\b/.test(code) && 'GPU particles', /\bgl\s*:|\bgl\s*\(|\bfx\.bg\s*\(|\bgfx\.pass\s*\(/.test(code) && 'GPU shaders'].filter(Boolean);
     /\bMG\.film\s*\(/.test(code) ? note('PASS', 'motion-graphics kit (flat 2D by design: type, colour, wipes, icons, counters, sound from one spec)') : engines.length ? note('PASS', `GPU engines in use besides 2D canvas: ${engines.join(', ')}`) : note('WARN', 'video.html draws everything with 2D canvas — the 3D renderer, particles and shader backgrounds are what make a film look expensive. A hero object (a product, ring, bottle, logo, planet) should be a Scene3D mesh with an environment, a floor and depth of field, not an outline: node tools/atlas.mjs show product-ring-macro · product-pedestal · text3d-chrome. Skip this only if the style system deliberately restricts it, and say so in brief.md');
+    if (/\bMG\.film\s*\(/.test(code)) {   // motion-kit films: are the scene changes continuous (camera / carried object) or a deck of slides with colour wipes?
+      try {
+        const m = /<script id="cues"[^>]*>([\s\S]*?)<\/script>/.exec(html), spec = m && JSON.parse(m[1]), sc = (spec && spec.scenes) || [], travelKinds = ['whip', 'push', 'zoom', 'iris', 'blinds'], beatCut = !!brief && /^[\s>*#-]*\**style\**\s*[:：]\s*beat-?cut/im.test(brief) || restrained();
+        if (spec && sc.length >= 3) {
+          const travel = sc.slice(1).filter(s => { const raw = s.transition ?? (s.wipe ? null : spec.transition); return raw ? travelKinds.includes(String(raw)) : !(s.wipe || spec.wipe); }).length, bnd = sc.length - 1;
+          travel * 2 >= bnd ? note('PASS', `scene changes travel: ${travel} of ${bnd} are camera/shape transitions (whip · push · zoom · iris · blinds)`) : note(beatCut ? 'INFO' : 'WARN', `only ${travel} of ${bnd} scene changes are camera/shape transitions — the rest are colour wipes or cuts, which read as a deck of slides. Use "transition": "whip" | "push" | "zoom" | "iris" | "blinds" (references/motion-graphics.md)`);
+          sc.length >= 4 && !spec.carry && !beatCut ? note('WARN', 'no "carry" object in the spec — nothing connects the scenes; add one object that travels and transforms across them (references/anti-slideshow.md), or declare "Style: beat-cut" in brief.md') : spec.carry && note('PASS', 'a carried object connects the scenes');
+        }
+        if (spec && sc.length >= 2 && spec.duration >= 6) {   // shots, not slides: how many ideas per second, and are the items laid out as rows of cards?
+          const shots = sc.reduce((n, s) => n + (s.type === 'words' ? Math.max(1, (s.words || []).length) : 1), 0), avg = spec.duration / shots, paced = !!brief && /^[\s>*#-]*\**pacing\**\s*[:：]/im.test(brief) || restrained();
+          avg <= 2.2 ? note('PASS', `${shots} shots in ${spec.duration} s (average ${avg.toFixed(1)} s)`) : note(paced ? 'INFO' : 'WARN', `${shots} shot${shots === 1 ? '' : 's'} in ${spec.duration} s (average ${avg.toFixed(1)} s) — scenes that long are slides. Split content into one-idea shots of 1–2 s ("hit", "fact", "words", "quote"), about ${Math.ceil(spec.duration / 1.5)} for this film (references/anti-slideshow.md)`);
+          const rowsOf = sc.filter(s => ['chips', 'stats', 'list'].includes(s.type));
+          if (rowsOf.length >= 2 && !paced) note('WARN', `${rowsOf.length} scenes are rows of cards (${[...new Set(rowsOf.map(s => s.type))].join(', ')}) — a heading above three cards is the layout of a slide deck. Give each item its own shot: a "hit" per skill, a "fact" per number (references/motion-graphics.md)`);
+        }
+      } catch { /* the spec is not plain JSON — skip */ }
+    }
     if (/K\.FONTS|font[:=]/.test(code) && !/loadFonts\s*\(/.test(code)) note('WARN', 'video.html draws text but never calls K.loadFonts([...]) — it will render in a fallback font');
     if (brief && /persian|farsi|فارسی|rtl/i.test(brief) && !/[؀-ۿ]/.test(code) && !/[؀-ۿ]/.test(audio || '')) note('WARN', 'the brief mentions Persian/RTL but video.html contains no Persian text — is the text in another file, or missing?');
   }
@@ -256,9 +292,10 @@ else if (cmd === 'frames') qcFrames(path.resolve(positional[0]), positional[1] |
 else if (cmd === 'palette') qcPalette(path.resolve(positional[0]));
 else if (cmd === 'look') qcLook(inputFile(['.mp4', '.mov', '.webm', '.mkv']));
 else if (cmd === 'craft') await qcCraft();
+else if (cmd === 'loop') qcLoop(inputFile(['.mp4', '.mov', '.webm', '.mkv']));
 else if (cmd === 'check') { const f = inputFile(['.mp4', '.mov', '.webm', '.mkv']); qcVideo(f); qcEnergy(f); qcLook(f); qcAudio(f); await qcCraft(); }
-else { console.error('unknown command. try: check | craft | look | video | audio | energy | sheet | frames | palette'); process.exit(1); }
-if (cmd === 'check' || cmd === 'craft' || cmd === 'look' || cmd === 'video' || cmd === 'audio' || cmd === 'energy') {
+else { console.error('unknown command. try: check | craft | look | loop | video | audio | energy | sheet | frames | palette'); process.exit(1); }
+if (cmd === 'check' || cmd === 'craft' || cmd === 'look' || cmd === 'video' || cmd === 'audio' || cmd === 'energy' || cmd === 'loop') {
   const f = results.filter(r => r[0] === 'FAIL').length, w = results.filter(r => r[0] === 'WARN').length;
   console.log(`\n${f ? '✘' : w ? '!' : '✔'} ${f} failure(s), ${w} warning(s).${f || w ? ' Fix or consciously accept each, then re-run.' : ' Ship it.'}`); process.exit(f ? 2 : 0);
 }

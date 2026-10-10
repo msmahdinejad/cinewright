@@ -10,7 +10,7 @@ Start every run in an **empty folder**. Single-quote the prompt in PowerShell so
 
 ## Everyday motion graphics (the `motion` kit — fast, and it looks designed)
 
-These are the jobs people ask for most. The skill starts from the `motion` template (a film described as data: ten scene types, seven themes, wipes, icons, music and sound from the same spec), so a good first cut arrives quickly and you spend the rest on copy, colour and timing. Be specific about **the facts that must appear** and **the format**; leave the look to the agent or name a theme (`poster` — bold flat colour and condensed caps · `night` · `studio` · `warm` · `ocean` · `mint`).
+These are the jobs people ask for most. The skill starts from the `motion` template (a film described as data: eleven scene types cut into one-idea shots, seven themes, a carried object, travelling transitions, icons, music and sound from the same spec), so a good first cut arrives quickly and you spend the rest on copy, colour and timing. Be specific about **the facts that must appear** and **the format**; leave the look to the agent or name a theme (`poster` — bold flat colour and condensed caps · `night` · `studio` · `warm` · `ocean` · `mint`). **Want it to move like real motion design?** Say so — one sentence is enough, and it is exactly what the benchmark's second pass adds to every prompt: *“It has to feel like real motion design, not a slideshow: objects and type travel and transform from one scene into the next, the camera moves, and every cut lands on the beat.”*
 
 **Introduce a person**
 ```text

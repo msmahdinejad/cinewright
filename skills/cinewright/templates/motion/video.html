@@ -10,8 +10,9 @@
 <canvas id="out"></canvas>
 
 <!-- THE FILM IS THIS SPEC. Edit the copy, the theme, the scenes and their times; picture (mg.js) and sound (audio.mjs) are both drawn from it.
-     Scene types: title · chips · stats · quote · list · fact · chart · logo · cta · words — fields per type: references/motion-graphics.md (skill folder).
-     Times in seconds; scenes start on beats (bpm 120 → every 0.5 s). "wipe" = the transition INTO that scene: stripes · circle · slide · flood · blocks · diagonal.
+     Scene types: title · hit · fact · words · quote · logo · cta · chart · chips · stats · list — fields per type: references/motion-graphics.md (skill folder).
+     Cut the film into SHOTS: one idea per scene, 1–2 s each (hit = a word or phrase, fact = a number); only the opener and the ending run longer than 2.5 s. chips / stats / list are rows of cards — a slide layout, use sparingly.
+     Times in seconds; scenes start on beats (bpm 120 → every 0.5 s). "transition" = how the camera gets INTO that scene: whip · push · zoom · iris · blinds · cut (legacy colour "wipe": stripes · circle · slide · flood · blocks · diagonal). "carry" = the one object that travels through the film.
      Item i of a scene appears at  at + (lead ?? .3) + i * (step ?? beat/2). -->
 <script id="cues" type="application/json">
 {{SPEC}}

@@ -1,0 +1,96 @@
+{
+  "schema": 2,
+  "id": "motion-xhigh/infographic-motion-20s__gpt-6-astra__skill__r1",
+  "kind": "run",
+  "task": "infographic-motion-20s",
+  "domain": "explainer",
+  "condition": "skill",
+  "rep": 1,
+  "agentFamily": "codex",
+  "label": "Codex gpt-6-astra + Cinewright",
+  "agent": "codex-cli 0.148.0",
+  "model": "gpt-6-astra",
+  "effort": "xhigh",
+  "skill": "2.3.0",
+  "date": "2026-10-10",
+  "wallSeconds": 1376,
+  "exitCode": 0,
+  "timedOut": false,
+  "attempts": 1,
+  "note": "",
+  "video": {
+    "ok": true,
+    "duration": 20,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264",
+    "pixFmt": "yuv420p",
+    "hasAudio": true,
+    "audioCodec": "aac",
+    "sizeMB": 14.76,
+    "audio": {
+      "lufs": -14.1,
+      "lra": 1.2,
+      "truePeak": -0.9,
+      "silentShare": 0
+    },
+    "energy": {
+      "median": 0.0091,
+      "mean": 0.0224,
+      "quietPct": 5,
+      "cuts": 1,
+      "longestStatic": 0,
+      "curve": "█▂▁█▅█▄▁▁▂█▂█▁▆▇▂▂▁▅▃▂█▃▁▂█▂▁▇▇▁▇█▂▁▁"
+    },
+    "look": {
+      "medianFill": 22,
+      "emptyPct": 0,
+      "darkPct": 0
+    },
+    "scenes": {
+      "changes": 0,
+      "perMinute": 0
+    }
+  },
+  "session": {
+    "events": 172,
+    "itemTypes": {
+      "error": 2,
+      "agent_message": 7,
+      "command_execution": 104,
+      "todo_list": 5,
+      "web_search": 6,
+      "reasoning": 35,
+      "mcp_tool_call": 10
+    },
+    "turns": 1,
+    "inputTokens": 7184466,
+    "outputTokens": 28409,
+    "cachedInputTokens": 6804608,
+    "imageViews": 0,
+    "touchedSkill": true,
+    "usedAtlas": true,
+    "usedInspire": true,
+    "finalMessage": "`./final.mp4`\n\nBuilt a 20-second motion-design infographic where a moon transforms into a sleep meter, brain, clock, and smiling sunrise.  \nIncludes the three facts, counting numbers, beat-synced transitions, original electropop music, and synchronized sound design."
+  },
+  "project": {
+    "briefWritten": true,
+    "briefChars": 3650,
+    "reviewRounds": 3,
+    "hasVideoHtml": true,
+    "craft": {
+      "failures": 0,
+      "warnings": 0
+    }
+  },
+  "files": {
+    "sheet": "sheet.jpg",
+    "preview": "preview.webp"
+  },
+  "integrity": {
+    "skillVisible": true,
+    "touchedSkill": true,
+    "contaminated": false
+  }
+}

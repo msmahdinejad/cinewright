@@ -92,6 +92,24 @@ g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 3 * u * 2; g.beginPath(); 
 
 ## mg-spec-structure — Describe the film as data
 tags: motion graphics spec json scenes structure editing beats pacing template
-use: any everyday motion-graphics job: write `scenes` with `at` times on beats (0.5 s grid at 120 BPM), one idea per scene, 2.5–4 s each, a fast `words` burst somewhere, a last image that holds ≥ 1.5 s
+use: any everyday motion-graphics job: write `scenes` with `at` times on beats (0.5 s grid at 120 BPM), one idea per shot (`hit`, `fact`, `words`), 1–2 s each — 9–12 shots for a 15 s film — with a longer opener and a last image that holds ≥ 1.5 s
 how: start from the closest `--preset` of the `motion` template, replace the copy, then change scene order, durations, `bgColor` and wipes until the colour rhythm and pacing curve feel right; the same spec is read by the picture (mg.js) and the sound (audio.mjs)
-avoid: equal scene lengths; two text-heavy scenes in a row
+avoid: equal scene lengths; a heading above rows of cards (`chips` · `stats` · `list`) as the structure of the film; two text-heavy shots in a row
+
+## mg-travel-transitions — Scenes that travel: whip, push, zoom, iris, blinds
+tags: motion graphics transition camera whip push zoom iris blinds continuity anti-slideshow between scenes
+use: the default way to change scene in a motion-graphics film: both scenes stay visible while the camera travels (`"transition": "whip"` in the spec; `push` in vertical films, `iris` opens the next scene inside a circle from the carried object, `zoom` flies through, `blinds` reveals it in strips, `cut` punches in on the beat)
+how: set one spec-wide `transition` and vary two or three scenes; the move is centred on the scene's `at` (peak speed on the downbeat), 0.65–0.8 s, an eased curve with a small wind-up and a soft shadow on the incoming panel; render the final with `--motion-blur 6 --shutter .5` so the whip smears along its travel; entrances inside the new scene start about 0.3 s after it settles
+avoid: colour wipes between every pair of scenes; the same transition more than twice in a row; a transition that is still moving when the new scene's first item lands
+
+## mg-carry-object — One object that travels through the whole film
+tags: motion graphics carry match cut continuity object morph avatar mark handle anti-slideshow
+use: any film with three or more scenes: ONE shape (an avatar, the logo mark, an icon disc) lives above the scenes and moves, resizes, changes colour and content between them (`spec.carry` with `keys`) — it turns a deck of slides into one continuous piece; it usually ends as the handle, the logo or the call-to-action
+how: `carry: { fill, keys: [ { at, x, y, size, letter | icon | text }, … ] }` — the first key is where it appears, every later key is a move (default 0.75 s: a wind-up, a stretch along its travel, a settle); scenes keep its space free and can hand their art over (`fact { carried: true }`, `cta { handle: false }`, `logo { mark: 'none' }`); the `iris` transition opens from its position
+avoid: a carried object that sits on top of text; more than one carried object; moving it at every boundary (let it rest for a shot or two so the eye can read it)
+
+## mg-hit-shots — Shots, not slides: one idea per second or two
+tags: motion graphics hit shot pacing anti-slideshow skills numbers speakers kinetic type one idea flood poster
+use: every list of things in a motion-graphics film — three skills, three numbers, speakers, menu items, steps, features: give each its own shot of 1–1.5 s (`hit` for a word or phrase, `fact` for a number) instead of a heading above three cards; the carried disc turns into each item's icon, the flood colour flips on every cut, entrances alternate (slam · slideL · rise)
+how: `{ "type": "hit", "at": 2.5, "text": "Brand identity", "sub": "logos · systems", "carried": true, "color": "b", "layout": "right", "transition": "iris", "transitionDur": 0.6 }` then the next `hit` one second later with `layout: "left"` and another `color`; carry keys start 0.25 s before each shot (x 0.2227 for layout right, 0.7773 for left, size 0.5); entrances compress to the shot length (`MG.shotK`); `transitionDur` 0.45–0.6 s between 1-second shots; `qc craft` counts shots per second
+avoid: more than ~7 words per shot; two neighbouring shots with the same layout, colour and transition; a shot longer than 2.5 s that is not the opener or the ending; `chips` / `stats` / `list` as the skeleton of the film (they are for dashboards and price lists)
